@@ -58,12 +58,11 @@ class Object(Base): # type: ignore
     v_coord = sa.Column(sa.Float())
     heading = sa.Column(sa.Float())
     velocity_kts = sa.Column(sa.Float())
-    impacted = sa.Column(sa.INTEGER())
+    impacted = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     impacted_dist = sa.Column(sa.Float())
-    parent = sa.Column(sa.INTEGER())
+    parent = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     parent_dist =sa.Column(sa.Float())
     updates = sa.Column(sa.Integer())
-    postgresql_partition_by='range(session_id)'
 
 
 Event = sa.Table(
