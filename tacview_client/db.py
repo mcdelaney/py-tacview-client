@@ -29,10 +29,10 @@ class Session(Base): # type: ignore
 class Impact(Base): # type: ignore
     __tablename__ = "impact"
     id = sa.Column(sa.Integer, primary_key=True)
-    session_id = sa.Column(sa.INTEGER())
-    killer = sa.Column(sa.INTEGER())
-    target = sa.Column(sa.INTEGER())
-    weapon = sa.Column(sa.INTEGER())
+    session_id = sa.Column(sa.INTEGER(), sa.ForeignKey('session.session_id'))
+    killer = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
+    target = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
+    weapon = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     time_offset = sa.Column(sa.Numeric())
     impact_dist = sa.Column(sa.Numeric())
 
@@ -69,13 +69,14 @@ class Object(Base): # type: ignore
     parent = sa.Column(sa.INTEGER())
     parent_dist =sa.Column(sa.Float())
     updates = sa.Column(sa.Integer())
+    postgresql_partition_by='range(session_id)'
 
 
 Event = sa.Table(
     "event",
     metadata,
     sa.Column('id', sa.INTEGER(), sa.ForeignKey('object.id')),
-    sa.Column('session_id', sa.INTEGER()),
+    sa.Column('session_id', sa.INTEGER(), sa.ForeignKey('session.session_id')),
     sa.Column('last_seen', sa.Float()),
     sa.Column('alive', sa.Boolean()),
     sa.Column('lat', sa.Float()),

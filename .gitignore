@@ -2,7 +2,8 @@ scratch.py
 data/**/**
 tests/data/**/**
 **.pyc
-
+alembic/**/**
+alembic.ini
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
