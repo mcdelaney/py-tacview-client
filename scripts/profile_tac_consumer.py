@@ -6,9 +6,9 @@ import sys
 from pathlib import Path
 import yappi # type: ignore
 
-sys.path.append(str(Path('.').parent.absolute()))
+sys.path.append(str(Path('.').parent.absolute().joinpath('tacview_client')))
 sys.path.append(str(Path('.').parent.absolute().joinpath('tests')))
-from tacview_client import client, db # type: ignore
+import client, db # type: ignore
 import serve_test_data # type: ignore
 
 
