@@ -2,11 +2,9 @@
 import argparse
 import asyncio
 from functools import partial
-from math import inf
 from multiprocessing import Process
 import sys
 from pathlib import Path
-import time
 
 import yappi # type: ignore
 
