@@ -6,7 +6,6 @@ from tacview_client.client import line_to_obj, Ref
 pytestmark = pytest.mark.asyncio
 
 
-
 @pytest.fixture
 async def ref_obj():
     """Fixture to generate a database and ref."""

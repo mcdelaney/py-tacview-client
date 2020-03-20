@@ -6,9 +6,7 @@ Results are parsed into usable format, and then written to a postgres database.
 from io import BytesIO
 import asyncio
 from datetime import datetime
-import gzip
 from math import sqrt, cos, sin, radians
-from pathlib import Path
 from typing import Optional, Any, Dict, List, Tuple
 import time
 import struct
