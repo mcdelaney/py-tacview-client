@@ -259,7 +259,8 @@ def determine_contact(rec, ref: Ref, type='parent'):
     color_query = f""" color in ('{"','".join(accpt_colors)}')"""
     id_query = f" tac_id != {rec.tac_id} "
     query = f""" SELECT tac_id FROM object
-    WHERE {query_filter} AND {color_query} AND {id_query}
+        WHERE {query_filter} AND {color_query} AND {id_query}
+        AND session_id = {rec.session_id}
     """
     try:
         with CON.cursor() as cur:
@@ -658,7 +659,7 @@ async def consumer(host=HOST,
     CON = pg.connect(dsn)
     lines_read = 0
     sock = AsyncSocketReader(host, port)
-    copy_writer = BinCopyWriter(DB_URL, 10)
+    copy_writer = BinCopyWriter(dsn, 10)
     await sock.open_connection()
     init_time = time.time()
     last_log = float(0.0)
@@ -751,30 +752,4 @@ def main(host, port=42674, debug=False, max_iters=None, bulk=False, dsn=DB_URL):
     """Start event loop to consume stream."""
     loop = asyncio.get_event_loop()
     asyncio.run(consumer(host, port, max_iters, bulk, dsn))
-
-
-if __name__=='__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--host', type=str, required=True,
-                        help='Tacview host ip to connect to.')
-    parser.add_argument('--port', type=int, required=False,
-                        default=42674, help='Port to connect on.')
-    parser.add_argument('--bulk', action='store_true',
-                        help='Should the program run in bulk mode?')
-    parser.add_argument('--debug', action='store_true',
-                        help='Should the program run in debug mode?')
-    parser.add_argument('--postgres_dsn', type=str,
-                        default=DB_URL,
-                        help='DSN for connection to the postgres server.')
-    args = parser.parse_args()
-    try:
-        main(host=args.host,
-             port=args.port,
-             debug=args.debug,
-             max_iters=None,
-             bulk=args.bulk,
-             dsn=args.dsn)
-    except Exception as err:
-        pass
 

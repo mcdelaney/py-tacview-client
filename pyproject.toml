@@ -20,6 +20,8 @@ jupyter = "^1.0.0"
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
+[tool.poetry.scripts]
+tacview = "tacview_client.cli:main"
 
 [tool.poetry.urls]
 issues = "https://github.com/mcdelaney/py-tacview-client/issues"

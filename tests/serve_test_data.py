@@ -13,7 +13,12 @@ from google.cloud import storage
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger('test_server')
-LOG.propagate=False
+logFormatter = logging.Formatter(
+        "%(asctime)s [%(name)s] [%(levelname)-5.5s]  %(message)s")
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+LOG.addHandler(consoleHandler)
+LOG.propagate = False
 LOG.setLevel(logging.INFO)
 
 
@@ -42,22 +47,28 @@ async def handle_req(reader, writer, filename: str) -> None:
         writer.close()
 
 
-def run_server(filename: str) -> None:
+def run_server(filename: str, port: str) -> None:
     """Read from Tacview socket."""
-    LOG.info('Serving tests data at 127.0.0.1:5555...')
+    LOG.info(f'Serving tests data at 127.0.0.1:{port}. ..')
     loop = asyncio.get_event_loop()
     loop.create_task(asyncio.start_server(partial(handle_req, filename=filename),
-                                          "127.0.0.1", "5555"))
+                                          "127.0.0.1", port))
     loop.run_forever()
 
 
-def main(filename: str) -> None:
+def main(filename: str, port: str) -> None:
     try:
-        run_server(filename)
+        run_server(filename, port)
     except KeyboardInterrupt:
         LOG.info("Keyboard interupt!")
 
 
 if __name__ == "__main__":
-    main(filename='tests/data/tacview-test2.txt')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--filename', required=True, type=str,
+                        help='Path to a taview acmi file that should be served locally.')
+    parser.add_argument('--port', required=False, type=str, default='5555',
+                        help='Port on which the data should be served.')
+    args = parser.parse_args()
+    main(filename=args.filename, port=args.port)
 
