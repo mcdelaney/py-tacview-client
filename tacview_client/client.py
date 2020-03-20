@@ -14,14 +14,10 @@ from uuid import uuid1
 import sys
 
 import asyncpg
-import psycopg2 as pg
 import uvloop
 
 from tacview_client.config import DB_URL, get_logger
 
-
-CON = None
-ASYNC_CON = None
 CLIENT = 'tacview-client'
 PASSWORD = '0'
 STREAM_PROTOCOL = "XtraLib.Stream.0"
@@ -112,10 +108,10 @@ class Ref:  # pylint: disable=too-many-instance-attributes
                         VALUES ($1, $2, $3, $4, $5, $6, $7)
                         RETURNING session_id
                 """
-
-                self.session_id = await ASYNC_CON.fetchval(
-                    sql, self.lat, self.lon, self.title, self.datasource,
-                    self.author, self.file_version, self.start_time)
+                async with ASYNC_CON.acquire() as con:
+                    self.session_id = await con.fetchval(
+                        sql, self.lat, self.lon, self.title, self.datasource,
+                        self.author, self.file_version, self.start_time)
 
                 LOG.info("Session session data saved...")
         except IndexError:
@@ -214,7 +210,7 @@ def compute_dist(p_1, p_2):
                 (p_2[2] - p_1[2])**2)
 
 
-def determine_contact(rec, ref: Ref, type='parent'):
+async def determine_contact(rec, ref: Ref, type='parent'):
     """Determine the parent of missiles, rockets, and bombs."""
     if type not in ['parent', 'impacted']:
         raise ValueError("Type must be impacted or parent!")
@@ -247,9 +243,10 @@ def determine_contact(rec, ref: Ref, type='parent'):
         AND session_id = {rec.session_id}
     """
     try:
-        with CON.cursor() as cur:
-            cur.execute(query)
-            nearby_objs = cur.fetchall()
+        async with ASYNC_CON.acquire() as con:
+            nearby_objs = await con.fetch(query)
+            # cur.execute(query)
+            # nearby_objs = cur.fetchall()
     except Exception as err:
         LOG.info(query)
         raise err
@@ -296,7 +293,7 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
         rec.updates += 1
 
         if 'Weapon' in rec.Type:
-            impacted = determine_contact(rec, type='impacted', ref=ref)
+            impacted = await determine_contact(rec, type='impacted', ref=ref)
             if impacted:
                 rec.impacted = impacted[0]
                 rec.impacted_dist = impacted[1]
@@ -363,7 +360,7 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     rec.compute_velocity()
 
     if rec.updates == 1 and rec.should_have_parent():
-        parent_info = determine_contact(rec, type='parent', ref=ref)
+        parent_info = await determine_contact(rec, type='parent', ref=ref)
         if parent_info:
             rec.parent = parent_info[0]
             rec.parent_dist = parent_info[1]
@@ -378,7 +375,8 @@ async def insert_impact(rec, impact_time):
     """
     vals = (rec.session_id, rec.parent, rec.impacted, rec.id,
             impact_time, rec.impacted_dist)
-    await ASYNC_CON.execute(sql, *vals)
+    async with ASYNC_CON.acquire() as con:
+        await con.execute(sql, *vals)
 
 
 async def create_single(obj):
@@ -412,11 +410,8 @@ async def create_single(obj):
 
         RETURNING id
         """
-    obj.id = await ASYNC_CON.fetchval(sql, *vals)
-    # with CON.cursor() as cur:
-    #     cur.execute(sql, vals)
-    #     obj.id = cur.fetchone()[0]
-    # CON.commit()
+    async with ASYNC_CON.acquire() as con:
+        obj.id = await con.fetchval(sql, *vals)
     obj.written = True
 
 
@@ -507,16 +502,22 @@ class BinCopyWriter:
             WHERE row_number = 1
             ON CONFLICT (id)
             DO UPDATE SET session_id=EXCLUDED.session_id,
-                last_seen=EXCLUDED.last_seen, alive=EXCLUDED.alive,
-                lat=EXCLUDED.lat, lon=EXCLUDED.lon, alt=EXCLUDED.alt,
-                roll=EXCLUDED.roll, pitch=EXCLUDED.pitch, yaw=EXCLUDED.yaw,
-                u_coord=EXCLUDED.u_coord, v_coord=EXCLUDED.v_coord,
-                heading=EXCLUDED.heading, velocity_kts=EXCLUDED.velocity_kts,
+                last_seen=EXCLUDED.last_seen,
+                alive=EXCLUDED.alive,
+                lat=EXCLUDED.lat,
+                lon=EXCLUDED.lon,
+                alt=EXCLUDED.alt,
+                roll=EXCLUDED.roll,
+                pitch=EXCLUDED.pitch,
+                yaw=EXCLUDED.yaw,
+                u_coord=EXCLUDED.u_coord,
+                v_coord=EXCLUDED.v_coord,
+                heading=EXCLUDED.heading,
+                velocity_kts=EXCLUDED.velocity_kts,
                 updates=EXCLUDED.updates
             WHERE object.updates < EXCLUDED.updates;
 
             DROP INDEX tmp_idx;
-
             DROP TABLE "{tbl_uuid}";
         """
 
@@ -585,10 +586,10 @@ class BinCopyWriter:
     async def cleanup(self) -> None:
         """Shut down and ensure all data is written."""
         self.min_insert_size = -1 # ensure everything gets flushed
-        await self.async_insert(force=True)
+        await self.insert_data(force=True)
         self.db_event_time = sum(self.event_times)
 
-    async def async_insert(self, force=False) -> None:
+    async def insert_data(self, force=False) -> None:
         if not force and self.batch_size > self.insert_count:
             LOG.debug("Not enough data for insert....")
             return
@@ -596,7 +597,8 @@ class BinCopyWriter:
         LOG.debug(f'Inserting {self.insert_count} records...')
         self.insert.write(self.copy_trailer)
         self.insert.seek(0)
-        await ASYNC_CON._copy_in(self.cmd , self.insert, 100)
+        async with ASYNC_CON.acquire() as con:
+            await con._copy_in(self.cmd , self.insert, 100)
         self.insert.close()
         self.create_byte_buffer()
 
@@ -609,9 +611,8 @@ async def consumer(host: str,
     """Main method to consume stream."""
     LOG.info("Starting tacview client with settings: "
              "debug: %s -- batch-size: %s", DEBUG, batch_size)
-    global CON, ASYNC_CON
-    CON = pg.connect(dsn)
-    ASYNC_CON = await asyncpg.connect(DB_URL)
+    global ASYNC_CON
+    ASYNC_CON = await asyncpg.create_pool(DB_URL)
     copy_writer = BinCopyWriter(dsn, batch_size)
     sock = AsyncStreamReader(host, port)
     await sock.open_connection()
@@ -630,7 +631,7 @@ async def consumer(host: str,
 
             if obj[0:1] == b"#":
                 sock.update_time(obj)
-                await copy_writer.async_insert()
+                await copy_writer.insert_data()
 
                 runtime = time.time() - init_time
                 log_check = runtime - last_log
@@ -651,7 +652,7 @@ async def consumer(host: str,
                 copy_writer.add_data(obj)
 
             if max_iters and max_iters < lines_read:
-                await copy_writer.async_insert()
+                await copy_writer.insert_data()
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
 
@@ -679,6 +680,11 @@ async def consumer(host: str,
             LOG.info('Exiting tacview-client!')
             return
 
+        except asyncpg.UniqueViolationError:
+                    LOG.error("The file you are trying to process is already in the database! "
+                              "To re-process it, delete all associated rows.")
+                    sys.exit(1)
+
         except Exception as err:
             LOG.error("Unhandled Exception!"
                       "Writing remaining updates to db and exiting!")
@@ -686,22 +692,21 @@ async def consumer(host: str,
             raise err
 
 
-def check_results():
+async def check_results():
     """Collect summary statistics on object and event records."""
-    with CON.cursor() as cur:
-        cur.execute(
+    con = await asyncpg.connect(DB_URL)
+    result = await con.fetchrow(
                 """SELECT COUNT(*) objects, COUNT(parent) parents,
                 (SELECT COUNT(*) FROM impact) impacts,
                 MAX(updates) max_upate, SUM(updates) total_updates,
                 (SELECT COUNT(*) events FROM event) as total_events,
                 COUNT(CASE WHEN alive THEN 1 END) total_alive
                 FROM object""")
-        result = cur.fetchone()
 
     print("Results:\nobjects: {} \nparents: {} \nimpacts: {}"
             "\nmax_updates: {} \ntotal updates: {}"
             "\ntotal events: {} \ntotal alive: {}".format(*list(result)))
-    CON.close()
+    await con.close()
 
 def main(host, port, max_iters, batch_size, dsn, debug=False):
     """Start event loop to consume stream."""

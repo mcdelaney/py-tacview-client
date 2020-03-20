@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import asyncio
 from functools import partial
 from math import inf
 from multiprocessing import Process
@@ -45,7 +46,7 @@ if __name__=='__main__':
                 dsn=config.DB_URL)
 
     if not args.profile:
-        client.check_results()
+        asyncio.run(client.check_results())
 
     server_proc.terminate() # type: ignore
 

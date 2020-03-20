@@ -45,7 +45,7 @@ async def handle_req(reader, writer, filename: Path) -> None:
 
 def run_server(filename: Path, port: str) -> None:
     """Read from Tacview socket."""
-    LOG.info(f'Serving tests data at 127.0.0.1:{port}. ..')
+    LOG.info(f'Serving Tacview file {filename} 127.0.0.1:{port}. ..')
     uvloop.install()
     loop = asyncio.get_event_loop()
     loop.create_task(asyncio.start_server(partial(handle_req, filename=filename),

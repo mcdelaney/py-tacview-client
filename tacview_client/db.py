@@ -3,21 +3,15 @@ import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from tacview_client.config import DB_URL
 
-
 engine = sa.create_engine(DB_URL)
 metadata = sa.MetaData(engine)
 Base = declarative_base(engine, metadata)
-
-# class Colors(sa.Enum):
-#     Red = 1
-#     Blue = 2
-#     Violet = 3
 
 
 class Session(Base): # type: ignore
     __tablename__ = 'session'
     session_id = sa.Column(sa.Integer, primary_key=True)
-    start_time = sa.Column(sa.TIMESTAMP())
+    start_time = sa.Column(sa.TIMESTAMP(), unique=True)
     datasource = sa.Column(sa.String())
     author = sa.Column(sa.String())
     file_version = sa.Column(sa.Float())
