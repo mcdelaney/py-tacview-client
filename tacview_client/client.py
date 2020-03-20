@@ -718,20 +718,3 @@ def main(host, port, max_iters, batch_size, dsn, debug=False):
     """Start event loop to consume stream."""
     uvloop.install()
     asyncio.run(consumer(host, port, max_iters, batch_size, dsn))
-
-# objects: 1264
-# parents: 562
-# impacts: 66
-# max_updates: 18085
-# total updates: 422089
-# total events: 422994
-# total alive: 807
-
-
-# objects: 1264
-# parents: 600
-# impacts: 68
-# max_updates: 18085
-# total updates: 422089
-# total events: 422994
-# total alive: 796
