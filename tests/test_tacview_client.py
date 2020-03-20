@@ -1,12 +1,17 @@
 """Test tacview parser."""
 import asyncio
 import pytest
+from tacview_client import __version__
 from tacview_client.client import line_to_obj, Ref
 
-pytestmark = pytest.mark.asyncio
+# pytestmark = pytest.mark.asyncio
+
+def test_version():
+    assert __version__ == '0.1.3'
 
 
 @pytest.fixture
+@pytest.mark.asyncio
 async def ref_obj():
     """Fixture to generate a database and ref."""
     ref = Ref()
@@ -20,6 +25,7 @@ async def ref_obj():
     return ref
 
 
+@pytest.mark.asyncio
 async def test_update_string(ref_obj):
     """Test that update strings are parsed properly."""
     new_string = bytearray(b"802,T=6.3596289|5.139203|342.67|||7.3|729234.25|-58312.28|,"
@@ -39,7 +45,7 @@ async def test_update_string(ref_obj):
             continue
         assert value == getattr(parsed, key)
 
-
+@pytest.mark.asyncio
 async def test_new_entry_without_alt(ref_obj):
     """Test that a new record with no altitude is assigned 1.0."""
     input_bytes = bytearray(b"4001,T=4.6361975|6.5404775|||357.8|-347259.72|380887.44|,"
@@ -48,7 +54,7 @@ async def test_new_entry_without_alt(ref_obj):
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
     assert parsed.alt == 1.0
 
-
+@pytest.mark.asyncio
 async def test_negative_integer_alt(ref_obj):
     input_bytes = bytearray(b"4001,T=4.6361975|6.5404775|||357.8|-347259.72|380887.44|,"
                            b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
@@ -59,7 +65,7 @@ async def test_negative_integer_alt(ref_obj):
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
     assert parsed.alt == -2.0
 
-
+@pytest.mark.asyncio
 async def test_line_parser(ref_obj):
     """Test that update strings are parsed properly."""
     input_bytes = bytearray(b"802,T=6.3596289|5.139203|342.67|||7.3|729234.25|-58312.28|,"
