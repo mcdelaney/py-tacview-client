@@ -181,22 +181,18 @@ class ObjectRec:
     def compute_velocity(self) -> None:
         """Calculate velocity given the distance from the last point."""
         new_cart_coords = get_cartesian_coord(self.lat, self.lon, self.alt)
-        # new_cart_coords = tuple((self.v_coord, self.u_coord, self.alt))
-        if self.cart_coords is not None and self.secs_since_last_seen and self.secs_since_last_seen > 0:
-            true_dist = compute_dist(new_cart_coords, self.cart_coords)
-            self.velocity_kts = (true_dist /
-                                 self.secs_since_last_seen) / 1.94384
+        if self.cart_coords and self.secs_since_last_seen and self.secs_since_last_seen > 0:
+            t_dist = compute_dist(new_cart_coords, self.cart_coords)
+            self.velocity_kts = (t_dist / self.secs_since_last_seen) / 1.94384
         self.cart_coords = new_cart_coords
 
-    def should_have_parent(self):
+    def should_have_parent(self) -> bool:
+        parented_types = ('weapon', 'projectile', 'decoy', 'container', 'flare')
         tval = self.Type.lower()
-        return any([
-            t in tval
-            for t in ['weapon', 'projectile',
-                      'decoy',
-                      'container',
-                      'flare']
-        ])
+        for t in parented_types:
+            if t in tval:
+                return True
+        return False
 
 
 def get_cartesian_coord(lat, lon, h):
