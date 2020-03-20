@@ -6,10 +6,9 @@ import asyncio
 from asyncio.log import logging
 import gzip
 from functools import partial
-import sys
-from pathlib import Path
 
-from google.cloud import storage
+import uvloop
+
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger('test_server')
@@ -50,6 +49,7 @@ async def handle_req(reader, writer, filename: str) -> None:
 def run_server(filename: str, port: str) -> None:
     """Read from Tacview socket."""
     LOG.info(f'Serving tests data at 127.0.0.1:{port}. ..')
+    uvloop.install()
     loop = asyncio.get_event_loop()
     loop.create_task(asyncio.start_server(partial(handle_req, filename=filename),
                                           "127.0.0.1", port))

@@ -25,7 +25,7 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     server_proc = Process(target=partial(
-        serve_test_data.main, filename=args.filename))
+        serve_test_data.main, filename=args.filename, port='5555'))
     server_proc.start()
 
     db.drop_and_recreate_tables()

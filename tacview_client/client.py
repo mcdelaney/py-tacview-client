@@ -14,6 +14,7 @@ from uuid import uuid1
 
 import psycopg2 as pg
 from tacview_client.config import DB_URL, get_logger
+import uvloop
 
 
 CON = None
@@ -750,6 +751,6 @@ def check_results():
 
 def main(host, port=42674, debug=False, max_iters=None, bulk=False, dsn=DB_URL):
     """Start event loop to consume stream."""
-    loop = asyncio.get_event_loop()
+    uvloop.install()
     asyncio.run(consumer(host, port, max_iters, bulk, dsn))
 
