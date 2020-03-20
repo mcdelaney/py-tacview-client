@@ -15,9 +15,10 @@ class Session(Base): # type: ignore
     start_time = sa.Column(sa.TIMESTAMP())
     datasource = sa.Column(sa.String())
     author = sa.Column(sa.String())
+    file_version = sa.Column(sa.Float())
     title = sa.Column(sa.String())
-    lat = sa.Column(sa.Numeric())
-    lon = sa.Column(sa.Numeric())
+    lat = sa.Column(sa.Float())
+    lon = sa.Column(sa.Float())
 
 
 class Impact(Base): # type: ignore
