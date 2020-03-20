@@ -18,6 +18,7 @@ class Session(Base): # type: ignore
     title = sa.Column(sa.String())
     lat = sa.Column(sa.Float())
     lon = sa.Column(sa.Float())
+    client_version = sa.Column(sa.String())
 
 
 class Impact(Base): # type: ignore
@@ -86,15 +87,14 @@ Event = sa.Table(
 )
 
 
-def drop_and_recreate_tables():
-    """Initialize the database and execute create table statements."""
+def create_tables():
+    """Initalize the database schema."""
+    print("Connecting to db....")
     con = engine.connect()
-
-    for table in ['Session', 'Object', 'Event', 'Impact']:
-        con.execute(f"drop table if exists {table} CASCADE")
-
+    print("Creating tables...")
     metadata.create_all()
 
+    print("Creating views...")
     con.execute(
         """
         CREATE VIEW obj_events AS
@@ -124,3 +124,14 @@ def drop_and_recreate_tables():
         """)
 
     con.close()
+    print("All tables and views created successfully!")
+
+
+def drop_tables():
+    """Drop all existing tables."""
+    print('Dropping all tables....')
+    con = engine.connect()
+    for table in ['Session', 'Object', 'Event', 'Impact']:
+        con.execute(f"drop table if exists {table} CASCADE")
+    con.close()
+    print("All tables dropped...")

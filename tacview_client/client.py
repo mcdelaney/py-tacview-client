@@ -17,6 +17,7 @@ import asyncpg
 import uvloop
 
 from tacview_client.config import DB_URL, get_logger
+from tacview_client import __version__
 
 CLIENT = 'tacview-client'
 PASSWORD = '0'
@@ -42,7 +43,7 @@ class Ref:  # pylint: disable=too-many-instance-attributes
     """Hold and extract Reference values used as offsets."""
     __slots__ = ('session_id', 'lat', 'lon', 'title', 'datasource', 'author',
                  'file_version', 'start_time', 'time_offset', 'all_refs',
-                 'time_since_last', 'obj_store')
+                 'time_since_last', 'obj_store', 'client_version')
     def __init__(self):
         self.session_id: Optional[int] = None
         self.lat: Optional[float] = None
@@ -56,6 +57,7 @@ class Ref:  # pylint: disable=too-many-instance-attributes
         self.all_refs: bool = False
         self.time_since_last: float = 0.0
         self.obj_store: Dict[int, ObjectRec] = {}
+        self.client_version = __version__
 
     def update_time(self, offset):
         """Update the refence time attribute with a new offset."""
@@ -104,14 +106,16 @@ class Ref:  # pylint: disable=too-many-instance-attributes
             if self.all_refs and not self.session_id:
                 LOG.info("All Refs found...writing session data to db...")
                 sql = """INSERT into session (lat, lon, title,
-                                datasource, author, file_version, start_time)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7)
+                                datasource, author, file_version, start_time,
+                                client_version)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                         RETURNING session_id
                 """
                 async with ASYNC_CON.acquire() as con:
                     self.session_id = await con.fetchval(
                         sql, self.lat, self.lon, self.title, self.datasource,
-                        self.author, self.file_version, self.start_time)
+                        self.author, self.file_version, self.start_time,
+                        self.client_version)
 
                 LOG.info("Session session data saved...")
         except IndexError:

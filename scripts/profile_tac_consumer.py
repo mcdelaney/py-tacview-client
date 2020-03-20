@@ -30,7 +30,8 @@ if __name__=='__main__':
         serve_file.main, filename=args.filename, port=5555))
     server_proc.start()
 
-    db.drop_and_recreate_tables()
+    db.drop_tables()
+    db.create_tables()
 
     if args.profile:
         yappi.set_clock_type('cpu')
