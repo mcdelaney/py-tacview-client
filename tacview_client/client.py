@@ -23,6 +23,7 @@ from tacview_client.config import DB_URL, get_logger
 
 
 CON = None
+ASYNC_CON = None
 CLIENT = 'tacview-client'
 PASSWORD = '0'
 STREAM_PROTOCOL = "XtraLib.Stream.0"
@@ -68,7 +69,7 @@ class Ref:  # pylint: disable=too-many-instance-attributes
         self.time_since_last = offset - self.time_offset
         self.time_offset = offset
 
-    def parse_ref_obj(self, line):
+    async def parse_ref_obj(self, line):
         """
         Attempt to extract ReferenceLatitude, ReferenceLongitude or
         ReferenceTime from a line object.
@@ -110,15 +111,13 @@ class Ref:  # pylint: disable=too-many-instance-attributes
                 LOG.info("All Refs found...writing session data to db...")
                 sql = """INSERT into session (lat, lon, title,
                                 datasource, author, file_version, start_time)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7)
                         RETURNING session_id
                 """
-                with CON.cursor() as cur:
-                    cur.execute(sql, (self.lat, self.lon, self.title,
-                                      self.datasource, self.author,
-                                      self.file_version, self.start_time))
-                    self.session_id = cur.fetchone()[0]
-                CON.commit()
+
+                self.session_id = await ASYNC_CON.fetchval(
+                    sql, self.lat, self.lon, self.title, self.datasource,
+                    self.author, self.file_version, self.start_time)
 
                 LOG.info("Session session data saved...")
         except IndexError:
@@ -291,7 +290,7 @@ def determine_contact(rec, ref: Ref, type='parent'):
     return closest
 
 
-def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
+async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     """Parse a textline from tacview into an ObjectRec."""
     # secondary_update = None
     if raw_line[0:1] == b"0":
@@ -307,12 +306,7 @@ def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
             if impacted:
                 rec.impacted = impacted[0]
                 rec.impacted_dist = impacted[1]
-                sql = create_impact_stmt()
-                vals = (ref.session_id, rec.parent, rec.impacted, rec.id,
-                        ref.time_offset, rec.impacted_dist)
-                with CON.cursor() as cur:
-                    cur.execute(sql, vals)
-                CON.commit()
+                await insert_impact(rec, ref.time_offset)
         return rec
 
     comma = raw_line.find(b',')
@@ -383,28 +377,17 @@ def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     return rec
 
 
-def create_impact_stmt():
-    return """INSERT into impact (
-        session_id, killer, target, weapon, time_offset, impact_dist)
-        VALUES(%s, %s, %s, %s, %s, %s)
-        """
-
-    # """
-    # WITH src AS (
-    #     UPDATE serial_rate
-    #     SET rate = 22.53, serial_key = '0002'
-    #     WHERE serial_key = '002' AND id = '01'
-    #     RETURNING *
-    #     )
-    # UPDATE serial_table dst
-    # SET serial_key = src.serial_key
-    # FROM src
-    # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
-    # WHERE dst.id = '01' AND dst.serial_key  = '002';
-    # """
+async def insert_impact(rec, impact_time):
+    sql = """INSERT into impact (session_id, killer, target,
+                    weapon, time_offset, impact_dist)
+                VALUES($1, $2, $3, $4, $5, $6)
+    """
+    vals = (rec.session_id, rec.parent, rec.impacted, rec.id,
+            impact_time, rec.impacted_dist)
+    await ASYNC_CON.execute(sql, *vals)
 
 
-def create_single(obj):
+async def create_single(obj):
     """Insert a single newly create record to database."""
     vals = (obj.tac_id,
             obj.session_id,
@@ -427,18 +410,19 @@ def create_single(obj):
             pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
             impacted_dist, parent, parent_dist, updates
         )
-        --VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-        --   $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
+           $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
 
-        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-           %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        --VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+        --   %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 
         RETURNING id
         """
-    with CON.cursor() as cur:
-        cur.execute(sql, vals)
-        obj.id = cur.fetchone()[0]
-    CON.commit()
+    obj.id = await ASYNC_CON.fetchval(sql, *vals)
+    # with CON.cursor() as cur:
+    #     cur.execute(sql, vals)
+    #     obj.id = cur.fetchone()[0]
+    # CON.commit()
     obj.written = True
 
 
@@ -542,13 +526,26 @@ class BinCopyWriter:
             DROP TABLE "{tbl_uuid}";
         """
 
-    def __init__(self, dsn: str, batch_size: int = 10000, pool = None):
+        # """
+        # WITH src AS (
+        #     UPDATE serial_rate
+        #     SET rate = 22.53, serial_key = '0002'
+        #     WHERE serial_key = '002' AND id = '01'
+        #     RETURNING *
+        #     )
+        # UPDATE serial_table dst
+        # SET serial_key = src.serial_key
+        # FROM src
+        # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
+        # WHERE dst.id = '01' AND dst.serial_key  = '002';
+        # """
+
+    def __init__(self, dsn: str, batch_size: int = 10000):
         self.dsn = dsn
         self.batch_size = batch_size
         self.build_fmt_string()
         self.create_byte_buffer()
         self.insert_count = 0
-        self.pool = pool
 
     def build_fmt_string(self):
         {
@@ -596,7 +593,6 @@ class BinCopyWriter:
         self.min_insert_size = -1 # ensure everything gets flushed
         await self.async_insert(force=True)
         self.db_event_time = sum(self.event_times)
-        await self.pool.close()
 
     async def async_insert(self, force=False) -> None:
         if not force and self.batch_size > self.insert_count:
@@ -604,10 +600,9 @@ class BinCopyWriter:
             return
 
         LOG.debug(f'Inserting {self.insert_count} records...')
-        async with self.pool.acquire() as con:
-            self.insert.write(self.copy_trailer)
-            self.insert.seek(0)
-            await con._copy_in(self.cmd , self.insert, 100)
+        self.insert.write(self.copy_trailer)
+        self.insert.seek(0)
+        await ASYNC_CON._copy_in(self.cmd , self.insert, 100)
         self.insert.close()
         self.create_byte_buffer()
 
@@ -620,23 +615,23 @@ async def consumer(host: str,
     """Main method to consume stream."""
     LOG.info("Starting tacview client with settings: "
              "debug: %s -- batch-size: %s", DEBUG, batch_size)
-    global CON
+    global CON, ASYNC_CON
     CON = pg.connect(dsn)
-    lines_read = 0
-    pool = await asyncpg.create_pool(DB_URL, min_size=1,max_size=10)
-    copy_writer = BinCopyWriter(dsn, batch_size, pool)
+    ASYNC_CON = await asyncpg.connect(DB_URL)
+    copy_writer = BinCopyWriter(dsn, batch_size)
     sock = AsyncStreamReader(host, port)
     await sock.open_connection()
     init_time = time.time()
+    lines_read = 0
     last_log = float(0.0)
     line_proc_time = float(0.0)
     while True:
         try:
-            obj = await sock.read_stream() # type: ignore
+            obj = await sock.read_stream()
             lines_read += 1
 
             if not sock.all_refs:
-                sock.parse_ref_obj(obj)
+                await sock.parse_ref_obj(obj)
                 continue
 
             if obj[0:1] == b"#":
@@ -653,12 +648,12 @@ async def consumer(host: str,
                     last_log = runtime
             else:
                 t1 = time.time()
-                obj = line_to_obj(obj, sock)
+                obj = await line_to_obj(obj, sock)
                 line_proc_time += (time.time() - t1)
                 if not obj:
                     continue
                 if not obj.written:
-                    create_single(obj)
+                    await create_single(obj)
                 copy_writer.add_data(obj)
 
             if max_iters and max_iters < lines_read:
