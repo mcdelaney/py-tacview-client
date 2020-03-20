@@ -15,6 +15,7 @@ import struct
 from uuid import uuid1
 import sys
 
+import asyncpg
 import psycopg2 as pg
 import uvloop
 
@@ -233,15 +234,15 @@ def determine_contact(rec, ref: Ref, type='parent'):
         accpt_colors = ['Blue', 'Red'
                         ] if rec.Color == 'Violet' else [rec.Color]
 
-        query_filter = " (type not like ('%Decoy%')"\
-            " AND type not like ('%Misc%')"\
-            " AND type not like ('%Weapon%')"\
-            " AND type not like ('%Projectile%')"\
-            " AND type not like ('%Ground+Light+Human+Air+Parachutist%'))"
+        query_filter = " (type not like '%Decoy%'"\
+            " AND type not like 'Misc%'"\
+            " AND type not like 'Weapon%'"\
+            " AND type not like 'Projectile%'"\
+            " AND type not like 'Ground+Light+Human+Air+Parachutist%')"
 
     elif type == 'impacted':
         accpt_colors = ['Red'] if rec.Color == 'Blue' else ['Red']
-        query_filter = " type like ('%Air+%')"
+        query_filter = " type like 'Air+%'"
 
     else:
         raise NotImplementedError
@@ -299,7 +300,7 @@ def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     if raw_line[0:1] == b'-':
         rec = ref.obj_store[int(raw_line[1:], 16)]
         rec.alive = False
-        mark_dead(rec.id)
+        rec.updates += 1
 
         if 'Weapon' in rec.Type:
             impacted = determine_contact(rec, type='impacted', ref=ref)
@@ -388,11 +389,6 @@ def create_impact_stmt():
         VALUES(%s, %s, %s, %s, %s, %s)
         """
 
-def mark_dead(obj_id) -> None:
-    """Mark a single record as dead."""
-    with CON.cursor() as cur:
-        cur.execute(" UPDATE object SET alive = FALSE WHERE id = %s;", [obj_id])
-    CON.commit()
     # """
     # WITH src AS (
     #     UPDATE serial_rate
@@ -483,7 +479,7 @@ class AsyncStreamReader(Ref):
                 LOG.info('Connection opened with successful handshake...')
                 break
             except ConnectionError:
-                LOG.error('Connection attempt failed....retry in 3 sec...')
+                LOG.error('Connection attempt failed....retrying in 3 sec...')
                 await asyncio.sleep(3)
 
     async def read_stream(self):
@@ -538,19 +534,21 @@ class BinCopyWriter:
                 roll=EXCLUDED.roll, pitch=EXCLUDED.pitch, yaw=EXCLUDED.yaw,
                 u_coord=EXCLUDED.u_coord, v_coord=EXCLUDED.v_coord,
                 heading=EXCLUDED.heading, velocity_kts=EXCLUDED.velocity_kts,
-                updates=EXCLUDED.updates;
+                updates=EXCLUDED.updates
+            WHERE object.updates < EXCLUDED.updates;
 
             DROP INDEX tmp_idx;
 
             DROP TABLE "{tbl_uuid}";
         """
 
-    def __init__(self, dsn: str, min_insert_size: int = -1):
+    def __init__(self, dsn: str, batch_size: int = 10000, pool = None):
         self.dsn = dsn
-        self.min_insert_size = min_insert_size
+        self.batch_size = batch_size
         self.build_fmt_string()
         self.create_byte_buffer()
         self.insert_count = 0
+        self.pool = pool
 
     def build_fmt_string(self):
         {
@@ -593,41 +591,40 @@ class BinCopyWriter:
         self.insert.write(packed)
         self.insert_count += 1
 
-    def insert_data(self) -> None:
-        """If data is in buffer, execute binary copy and update."""
-        if self.min_insert_size > self.insert_count:
-            LOG.debug("Not enough data for insert....")
-            return
-        LOG.debug(f'Inserting {self.insert_count} records...')
-        self.insert.write(self.copy_trailer)
-        self.insert.seek(0)
-
-        with CON.cursor() as cur:
-            cur.copy_expert(self.cmd, self.insert)
-        CON.commit()
-
-        self.insert.close()
-        self.create_byte_buffer()
-
-    def cleanup(self) -> None:
+    async def cleanup(self) -> None:
         """Shut down and ensure all data is written."""
         self.min_insert_size = -1 # ensure everything gets flushed
-        self.insert_data()
+        await self.async_insert(force=True)
         self.db_event_time = sum(self.event_times)
+        await self.pool.close()
+
+    async def async_insert(self, force=False) -> None:
+        if not force and self.batch_size > self.insert_count:
+            LOG.debug("Not enough data for insert....")
+            return
+
+        LOG.debug(f'Inserting {self.insert_count} records...')
+        async with self.pool.acquire() as con:
+            self.insert.write(self.copy_trailer)
+            self.insert.seek(0)
+            await con._copy_in(self.cmd , self.insert, 100)
+        self.insert.close()
+        self.create_byte_buffer()
 
 
 async def consumer(host: str,
                    port: int,
                    max_iters: Optional[int],
-                   bulk: bool,
+                   batch_size: int,
                    dsn:str) -> None:
     """Main method to consume stream."""
-    LOG.info("Starting consumer with settings: "
-             "debug: %s --  iters %s -- bulk-mode: %s", DEBUG, max_iters, bulk)
+    LOG.info("Starting tacview client with settings: "
+             "debug: %s -- batch-size: %s", DEBUG, batch_size)
     global CON
     CON = pg.connect(dsn)
     lines_read = 0
-    copy_writer = BinCopyWriter(dsn, 10)
+    pool = await asyncpg.create_pool(DB_URL, min_size=1,max_size=10)
+    copy_writer = BinCopyWriter(dsn, batch_size, pool)
     sock = AsyncStreamReader(host, port)
     await sock.open_connection()
     init_time = time.time()
@@ -635,7 +632,6 @@ async def consumer(host: str,
     line_proc_time = float(0.0)
     while True:
         try:
-
             obj = await sock.read_stream() # type: ignore
             lines_read += 1
 
@@ -645,14 +641,14 @@ async def consumer(host: str,
 
             if obj[0:1] == b"#":
                 sock.update_time(obj)
-                if not bulk:
-                    await copy_writer.insert_data()
+                await copy_writer.async_insert()
 
                 runtime = time.time() - init_time
                 log_check = runtime - last_log
                 if log_check > 0.05:
                     ln_sec = lines_read / runtime
-                    sys.stdout.write("\rReading at {:.3f} lines/second".format(ln_sec))
+                    sys.stdout.write("\rEvents processed: {:,} at {:,.2f} events/sec".format(
+                        lines_read, ln_sec))
                     sys.stdout.flush()
                     last_log = runtime
             else:
@@ -666,12 +662,13 @@ async def consumer(host: str,
                 copy_writer.add_data(obj)
 
             if max_iters and max_iters < lines_read:
+                await copy_writer.async_insert()
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
 
         except (KeyboardInterrupt, MaxIterationsException,
                 ServerExitException, asyncio.IncompleteReadError):
-            copy_writer.cleanup()
+            await copy_writer.cleanup()
             await sock.close()
             total_time = time.time() - init_time
             LOG.info('Total Lines Processed : %s', str(lines_read))
@@ -717,7 +714,24 @@ def check_results():
             "\ntotal events: {} \ntotal alive: {}".format(*list(result)))
     CON.close()
 
-def main(host, port, max_iters, bulk, dsn, debug=False):
+def main(host, port, max_iters, batch_size, dsn, debug=False):
     """Start event loop to consume stream."""
     uvloop.install()
-    asyncio.run(consumer(host, port, max_iters, bulk, dsn))
+    asyncio.run(consumer(host, port, max_iters, batch_size, dsn))
+
+# objects: 1264
+# parents: 562
+# impacts: 66
+# max_updates: 18085
+# total updates: 422089
+# total events: 422994
+# total alive: 807
+
+
+# objects: 1264
+# parents: 600
+# impacts: 68
+# max_updates: 18085
+# total updates: 422089
+# total events: 422994
+# total alive: 796

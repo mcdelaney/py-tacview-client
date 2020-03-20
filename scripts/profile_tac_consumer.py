@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 from functools import partial
+from math import inf
 from multiprocessing import Process
 import sys
 from pathlib import Path
@@ -21,10 +22,10 @@ if __name__=='__main__':
                         help='Set this flag to run yappi profiler')
     parser.add_argument('--filename', type=Path, required=True,
                         help='Filename to process')
-    parser.add_argument('--bulk', action='store_true',
-                        help='Should the program run in bulk mode?')
+    parser.add_argument('--batch_size', required=False,
+                        type=int, default=500000,
+                        help='Number of records to be combined in write batches')
     args = parser.parse_args()
-
 
     server_proc = Process(target=partial(
         serve_file.main, filename=args.filename, port=5555))
@@ -40,7 +41,7 @@ if __name__=='__main__':
                 port=5555,
                 debug=False,
                 max_iters=args.iters,
-                bulk=args.bulk,
+                batch_size=args.batch_size,
                 dsn=config.DB_URL)
 
     if not args.profile:

@@ -8,6 +8,11 @@ engine = sa.create_engine(DB_URL)
 metadata = sa.MetaData(engine)
 Base = declarative_base(engine, metadata)
 
+# class Colors(sa.Enum):
+#     Red = 1
+#     Blue = 2
+#     Violet = 3
+
 
 class Session(Base): # type: ignore
     __tablename__ = 'session'
@@ -38,13 +43,14 @@ class Object(Base): # type: ignore
     tac_id = sa.Column(sa.INTEGER)
     session_id = sa.Column(sa.Integer, sa.ForeignKey('session.session_id'))
     name = sa.Column(sa.String())
-    color = sa.Column(sa.String())
+    color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"))
     country = sa.Column(sa.String())
     grp = sa.Column(sa.String())
     pilot = sa.Column(sa.String())
     type = sa.Column(sa.String())
     alive = sa.Column(sa.Boolean())
-    coalition = sa.Column(sa.String())
+    coalition = sa.Column(sa.Enum("Enemies", "Allies", "Neutral",
+                                  name="coalition_enum"))
     first_seen = sa.Column(sa.Float())
     last_seen = sa.Column(sa.Float())
 
