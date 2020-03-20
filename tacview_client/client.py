@@ -6,15 +6,19 @@ Results are parsed into usable format, and then written to a postgres database.
 from io import BytesIO
 import asyncio
 from datetime import datetime
+import gzip
 from math import sqrt, cos, sin, radians
+from pathlib import Path
 from typing import Optional, Any, Dict, List, Tuple
 import time
 import struct
 from uuid import uuid1
+import sys
 
 import psycopg2 as pg
-from tacview_client.config import DB_URL, get_logger
 import uvloop
+
+from tacview_client.config import DB_URL, get_logger
 
 
 CON = None
@@ -40,36 +44,28 @@ LOG = get_logger()
 
 class Ref:  # pylint: disable=too-many-instance-attributes
     """Hold and extract Reference values used as offsets."""
+    __slots__ = ('session_id', 'lat', 'lon', 'title', 'datasource', 'author',
+                 'file_version', 'start_time', 'time_offset', 'all_refs',
+                 'time_since_last', 'obj_store')
     def __init__(self):
         self.session_id: Optional[int] = None
         self.lat: Optional[float] = None
         self.lon: Optional[float] = None
         self.title: Optional[str] = None
-        self.datasource: Optional[str] = None
-        self.author: Optional[str] = None
+        self.datasource: Optional[str]
+        self.file_version: Optional[float] = None
+        self.author: Optional[str]
         self.start_time: Optional[datetime] = None
         self.time_offset: float = 0.0
         self.all_refs: bool = False
         self.time_since_last: float = 0.0
-        self.diff_since_last: float = 0.0
         self.obj_store: Dict[int, ObjectRec] = {}
-        self.all_refs: bool = False
-        self.written: bool = False
-        self.time_since_last_events: float = 0.0
 
     def update_time(self, offset):
         """Update the refence time attribute with a new offset."""
         offset = float(offset[1:])
-        self.diff_since_last = offset - self.time_offset
-        self.time_since_last += self.diff_since_last
-        self.time_since_last_events += self.diff_since_last
+        self.time_since_last = offset - self.time_offset
         self.time_offset = offset
-
-    def update_db(self):
-        self.time_since_last = 0.0
-
-    def write_events_db(self):
-        self.time_since_last_events = 0.0
 
     def parse_ref_obj(self, line):
         """
@@ -99,51 +95,44 @@ class Ref:  # pylint: disable=too-many-instance-attributes
                 LOG.debug('Ref Author found...')
                 self.author = val[1].decode('UTF-8')
 
+            elif val[0] == b'FileVersion':
+                LOG.debug('Ref Author found...')
+                self.file_version = float(val[1])
+
             elif val[0] == b'RecordingTime':
                 LOG.debug('Ref time found...')
                 self.start_time = datetime.strptime(val[1].decode('UTF-8'),
                                               '%Y-%m-%dT%H:%M:%S.%fZ')
 
-            self.all_refs = all(f
-                                for f in [self.lat and self.lon and self.start_time])
-            if self.all_refs and not self.written:
+            self.all_refs = bool(self.lat and self.lon and self.start_time)
+            if self.all_refs and not self.session_id:
                 LOG.info("All Refs found...writing session data to db...")
-                sess_ser = self.ser()
-                sql = f"""INSERT into session (lat, lon, title, datasource, author, start_time)
-                        VALUES (%s, %s, %s, %s, %s, %s)
+                sql = """INSERT into session (lat, lon, title,
+                                datasource, author, file_version, start_time)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
                         RETURNING session_id
                 """
                 with CON.cursor() as cur:
-                    cur.execute(sql, list(sess_ser.values()))
+                    cur.execute(sql, (self.lat, self.lon, self.title,
+                                      self.datasource, self.author,
+                                      self.file_version, self.start_time))
                     self.session_id = cur.fetchone()[0]
                 CON.commit()
 
-                self.written = True
                 LOG.info("Session session data saved...")
         except IndexError:
             pass
 
-    def ser(self):
-        """Serialize relevant Session fields for export."""
-        return {
-            'lat': self.lat,
-            'lon': self.lon,
-            'title': self.title,
-            'datasource': self.datasource,
-            'author': self.author,
-            'start_time': self.start_time
-        }
-
-
-# @dataclass
+from dataclasses import dataclass
+@dataclass
 class ObjectRec:
-    __slots__ = [
+    __slots__ = (
         'id', 'tac_id', 'first_seen', 'last_seen', 'session_id', 'alive', 'Name',
         'Color', 'Country', 'grp', 'Pilot', 'Type', 'Coalition', 'lat', 'lon',
         'alt', 'roll', 'pitch', 'yaw', 'u_coord', 'v_coord', 'heading',
         'impacted', 'impacted_dist', 'parent', 'parent_dist', 'updates',
         'velocity_kts', 'secs_since_last_seen', 'written', 'cart_coords'
-    ]
+    )
 
     def __init__(
             self,
@@ -157,7 +146,7 @@ class ObjectRec:
         self.last_seen = last_seen
         self.session_id = session_id
 
-        self.alive: int = 1
+        self.alive: bool = True
         self.Name: Optional[str] = None
         self.Color: Optional[str] = None
         self.Country: Optional[str] = None
@@ -191,7 +180,7 @@ class ObjectRec:
         self.secs_since_last_seen = value - self.last_seen
         self.last_seen = value
 
-    def compute_velocity(self, time_since_last_frame: float) -> None:
+    def compute_velocity(self) -> None:
         """Calculate velocity given the distance from the last point."""
         new_cart_coords = get_cartesian_coord(self.lat, self.lon, self.alt)
         # new_cart_coords = tuple((self.v_coord, self.u_coord, self.alt))
@@ -275,7 +264,7 @@ def determine_contact(rec, ref: Ref, type='parent'):
     for nearby in nearby_objs:
         near = ref.obj_store[nearby[0]]
         if ((near.last_seen <= offset_min
-             and not (near.Type.startswith('Ground') and near.alive == 1))
+             and not (near.Type.startswith('Ground') and near.alive == True))
                 and (abs(near.alt - rec.alt) < 2000)
                 and (abs(near.lat - rec.lat) <= 0.0005)
                 and (abs(near.lon - rec.lon) <= 0.0005)):
@@ -309,7 +298,7 @@ def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
 
     if raw_line[0:1] == b'-':
         rec = ref.obj_store[int(raw_line[1:], 16)]
-        rec.alive = 0
+        rec.alive = False
         mark_dead(rec.id)
 
         if 'Weapon' in rec.Type:
@@ -382,7 +371,7 @@ def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     except Exception as err:
         raise err
 
-    rec.compute_velocity(ref.time_since_last)
+    rec.compute_velocity()
 
     if rec.updates == 1 and rec.should_have_parent():
         parent_info = determine_contact(rec, type='parent', ref=ref)
@@ -391,23 +380,6 @@ def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
             rec.parent_dist = parent_info[1]
 
     return rec
-
-
-def create_object_stmt():
-    return """INSERT into object (
-            tac_id, session_id, name, color, country, grp, pilot, type,
-            alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
-            pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
-            impacted_dist, parent, parent_dist, updates
-        )
-        --VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-        --   $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
-
-        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-           %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-
-        RETURNING id
-        """
 
 
 def create_impact_stmt():
@@ -419,12 +391,8 @@ def create_impact_stmt():
 def mark_dead(obj_id) -> None:
     """Mark a single record as dead."""
     with CON.cursor() as cur:
-        cur.execute(" UPDATE object SET alive = 0 WHERE id = %s;", [obj_id])
+        cur.execute(" UPDATE object SET alive = FALSE WHERE id = %s;", [obj_id])
     CON.commit()
-    # await DB.execute(f"""
-    #     UPDATE object SET alive = 0 WHERE id = {obj_id};
-    # """)
-
     # """
     # WITH src AS (
     #     UPDATE serial_rate
@@ -457,7 +425,20 @@ def create_single(obj):
             obj.velocity_kts, obj.impacted, obj.impacted_dist,
             obj.parent, obj.parent_dist, obj.updates)
 
-    sql = create_object_stmt()
+    sql =  """INSERT into object (
+            tac_id, session_id, name, color, country, grp, pilot, type,
+            alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
+            pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
+            impacted_dist, parent, parent_dist, updates
+        )
+        --VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
+        --   $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
+
+        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+           %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+
+        RETURNING id
+        """
     with CON.cursor() as cur:
         cur.execute(sql, vals)
         obj.id = cur.fetchone()[0]
@@ -473,18 +454,16 @@ class MaxIterationsException(Exception):
     """Throw this exception when max iters < total_iters."""
 
 
-class AsyncSocketReader:
+class AsyncStreamReader(Ref):
+    reader: asyncio.StreamReader
+    writer: asyncio.StreamWriter
     """Read from Tacview socket."""
     def __init__(self, host, port, debug=False):
-        self.host = host
-        self.port = port
-        self.reader: Optional[asyncio.StreamReader] = None
-        self.ref = Ref()
-        self.writer: Optional[asyncio.StreamWriter] = None
+        super().__init__()
+        self.host: str = host
+        self.port: int = port
         self.sink = "log/raw_sink.txt"
-        self.data = bytearray()
         self.debug = debug
-        self.msg = None
         if self.debug:
             open(self.sink, 'w').close()
 
@@ -501,13 +480,7 @@ class AsyncSocketReader:
                 LOG.info('Connection opened...sending handshake...')
                 self.writer.write(HANDSHAKE)
                 await self.reader.readline()
-
-                LOG.info('Connection opened...creating db and reading refs...')
-                while not self.ref.all_refs:
-                    obj = await self.read_stream()
-                    if obj[0:2] == b"0,":
-                        self.ref.parse_ref_obj(obj)
-                        continue
+                LOG.info('Connection opened with successful handshake...')
                 break
             except ConnectionError:
                 LOG.error('Connection attempt failed....retry in 3 sec...')
@@ -522,9 +495,6 @@ class AsyncSocketReader:
         """Close the socket connection and reset ref object."""
         self.writer.close()
         await self.writer.wait_closed()
-        self.reader = None
-        self.writer = None
-        self.ref = Ref()
 
 
 class BinCopyWriter:
@@ -532,7 +502,7 @@ class BinCopyWriter:
     db_event_time: float = 0.0
     event_times: List = []
     insert: BytesIO
-    fmt_str: str = '>h ii ii id ii id id id id id id id id id id ii'
+    fmt_str: str = '>h ii ii id i? id id id id id id id id id id ii'
     copy_header = struct.pack('>11sii', b'PGCOPY\n\377\r\n\0', 0, 0)
     copy_trailer =  struct.pack('>h', -1)
     tbl_uuid = str(uuid1()).replace("-", '_')
@@ -589,9 +559,6 @@ class BinCopyWriter:
             "DOUBLE": ('id', 8),
             "NUMERIC": ('id', 8)
         }
-        # for col in columns.values():
-        #     fmt, sz = types[str(col.type)]
-        #     self.fmt_str.append(fmt)
 
     def create_byte_buffer(self) -> None:
         self.insert = BytesIO()
@@ -605,7 +572,7 @@ class BinCopyWriter:
                     4, obj.id,
                     4, obj.session_id,
                     8, obj.last_seen,
-                    4, obj.alive,
+                    1, obj.alive,
                     8, obj.lat,
                     8, obj.lon,
                     8, obj.alt,
@@ -634,10 +601,11 @@ class BinCopyWriter:
         LOG.debug(f'Inserting {self.insert_count} records...')
         self.insert.write(self.copy_trailer)
         self.insert.seek(0)
-        # conn = pg.connect(self.dsn)
+
         with CON.cursor() as cur:
             cur.copy_expert(self.cmd, self.insert)
-        # CON.commit()
+        CON.commit()
+
         self.insert.close()
         self.create_byte_buffer()
 
@@ -648,56 +616,56 @@ class BinCopyWriter:
         self.db_event_time = sum(self.event_times)
 
 
-async def consumer(host=HOST,
-                   port=PORT,
-                   max_iters=None,
-                   bulk=False,
-                   dsn:str = DB_URL) -> None:
+async def consumer(host: str,
+                   port: int,
+                   max_iters: Optional[int],
+                   bulk: bool,
+                   dsn:str) -> None:
     """Main method to consume stream."""
     LOG.info("Starting consumer with settings: "
              "debug: %s --  iters %s -- bulk-mode: %s", DEBUG, max_iters, bulk)
     global CON
     CON = pg.connect(dsn)
     lines_read = 0
-    sock = AsyncSocketReader(host, port)
     copy_writer = BinCopyWriter(dsn, 10)
+    sock = AsyncStreamReader(host, port)
     await sock.open_connection()
     init_time = time.time()
     last_log = float(0.0)
     line_proc_time = float(0.0)
-
     while True:
         try:
-            obj = await sock.read_stream()
+
+            obj = await sock.read_stream() # type: ignore
             lines_read += 1
+
+            if not sock.all_refs:
+                sock.parse_ref_obj(obj)
+                continue
+
             if obj[0:1] == b"#":
-                sock.ref.update_time(obj)
+                sock.update_time(obj)
                 if not bulk:
-                    copy_writer.insert_data()
+                    await copy_writer.insert_data()
 
                 runtime = time.time() - init_time
                 log_check = runtime - last_log
-                if log_check > 5 or obj == b"#0":
-                    secs_ahead = sock.ref.time_offset - (
-                        (time.time() - init_time))
-                    ln_sec = round(lines_read / runtime, 2)
-                    LOG.info(
-                        f"Runtime: {round(runtime, 2)} - Sec ahead: {round(secs_ahead, 2)}..."
-                        f"Lines/sec: {ln_sec} - Total: {lines_read}")
+                if log_check > 0.05:
+                    ln_sec = lines_read / runtime
+                    sys.stdout.write("\rReading at {:.3f} lines/second".format(ln_sec))
+                    sys.stdout.flush()
                     last_log = runtime
-
             else:
                 t1 = time.time()
-                obj = line_to_obj(obj, sock.ref)
+                obj = line_to_obj(obj, sock)
+                line_proc_time += (time.time() - t1)
+                if not obj:
+                    continue
+                if not obj.written:
+                    create_single(obj)
+                copy_writer.add_data(obj)
 
-                if obj:
-                    line_proc_time += (time.time() - t1)
-                    if not obj.written:
-                        create_single(obj)
-
-                    copy_writer.add_data(obj)
-
-            if max_iters and max_iters <= lines_read:
+            if max_iters and max_iters < lines_read:
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
 
@@ -713,7 +681,7 @@ async def consumer(host=HOST,
             LOG.info('Pct Line Proc Time: %.2f', line_proc_time / total_time)
             LOG.info('Lines/second: %.4f', lines_read / total_time)
             total = {}
-            for obj in sock.ref.obj_store.values():
+            for obj in sock.obj_store.values():
                 if obj.should_have_parent() and not obj.parent:
                     try:
                         total[obj.Type] += 1
@@ -740,7 +708,7 @@ def check_results():
                 (SELECT COUNT(*) FROM impact) impacts,
                 MAX(updates) max_upate, SUM(updates) total_updates,
                 (SELECT COUNT(*) events FROM event) as total_events,
-                SUM(alive) total_alive
+                COUNT(CASE WHEN alive THEN 1 END) total_alive
                 FROM object""")
         result = cur.fetchone()
 
@@ -749,8 +717,7 @@ def check_results():
             "\ntotal events: {} \ntotal alive: {}".format(*list(result)))
     CON.close()
 
-def main(host, port=42674, debug=False, max_iters=None, bulk=False, dsn=DB_URL):
+def main(host, port, max_iters, bulk, dsn, debug=False):
     """Start event loop to consume stream."""
     uvloop.install()
     asyncio.run(consumer(host, port, max_iters, bulk, dsn))
-

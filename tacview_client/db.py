@@ -43,7 +43,7 @@ class Object(Base): # type: ignore
     grp = sa.Column(sa.String())
     pilot = sa.Column(sa.String())
     type = sa.Column(sa.String())
-    alive = sa.Column(sa.INTEGER())
+    alive = sa.Column(sa.Boolean())
     coalition = sa.Column(sa.String())
     first_seen = sa.Column(sa.Float())
     last_seen = sa.Column(sa.Float())
@@ -71,7 +71,7 @@ Event = sa.Table(
     sa.Column('id', sa.INTEGER(), sa.ForeignKey('object.id')),
     sa.Column('session_id', sa.INTEGER()),
     sa.Column('last_seen', sa.Float()),
-    sa.Column('alive', sa.INTEGER()),
+    sa.Column('alive', sa.Boolean()),
     sa.Column('lat', sa.Float()),
     sa.Column('lon', sa.Float()),
     sa.Column('alt', sa.Float()),

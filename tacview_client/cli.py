@@ -1,10 +1,13 @@
 import argparse
+from pathlib import Path
 from tacview_client import config, client
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', type=str, required=True,
+    parser.add_argument('--host', type=str, required=False,
                         help='Tacview host ip to connect to.')
+    parser.add_argument('--filename', type=Path, required=False,
+                        help='Path to valid tacview acmi file that should be read.')
     parser.add_argument('--port', type=int, required=False,
                         default=42674, help='Port to connect on.')
     parser.add_argument('--bulk', action='store_true',
@@ -18,13 +21,15 @@ def main():
 
     try:
         client.main(host=args.host,
-             port=args.port,
-             debug=args.debug,
-             max_iters=None,
-             bulk=args.bulk,
-             dsn=args.postgres_dsn)
+                    filename=args.filename,
+                    port=args.port,
+                    debug=args.debug,
+                    max_iters=None,
+                    bulk=args.bulk,
+                    dsn=args.postgres_dsn)
     except KeyboardInterrupt:
         print("tacview-client shutting down...")
     except Exception as err:
+        print(err)
         raise err
 
