@@ -1,9 +1,11 @@
 """Model definitions for database."""
 import sqlalchemy as sa
+import os
 from sqlalchemy.ext.declarative import declarative_base
 from tacview_client.config import DB_URL
 
-engine = sa.create_engine(DB_URL)
+db_url = os.getenv("TACVIEW_DSN", DB_URL)
+engine = sa.create_engine(db_url)
 metadata = sa.MetaData(engine)
 Base = declarative_base(engine, metadata)
 
