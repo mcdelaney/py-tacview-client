@@ -7,7 +7,7 @@ from io import BytesIO
 import asyncio
 from datetime import datetime
 from math import sqrt, cos, sin, radians
-from typing import Optional, Any, Dict, List, Tuple
+from typing import Iterable, Optional, Any, Dict, List, Sequence, Tuple
 import time
 import struct
 from multiprocessing import Process
@@ -39,6 +39,7 @@ COORD_KEY_LEN = len(COORD_KEYS)
 HOST = '147.135.8.169'  # Hoggit Gaw
 PORT = 42674
 DEBUG = False
+CONTACT_TIME = 0.0
 
 LOG = get_logger()
 
@@ -47,7 +48,8 @@ class Ref:  # pylint: disable=too-many-instance-attributes
     """Hold and extract Reference values used as offsets."""
     __slots__ = ('session_id', 'lat', 'lon', 'title', 'datasource', 'author',
                  'file_version', 'start_time', 'time_offset', 'all_refs',
-                 'time_since_last', 'obj_store', 'client_version')
+                 'time_since_last', 'obj_store', 'client_version',
+                 'status')
     def __init__(self):
         self.session_id: Optional[int] = None
         self.lat: Optional[float] = None
@@ -61,7 +63,8 @@ class Ref:  # pylint: disable=too-many-instance-attributes
         self.all_refs: bool = False
         self.time_since_last: float = 0.0
         self.obj_store: Dict[int, ObjectRec] = {}
-        self.client_version = __version__
+        self.client_version: str = __version__
+        self.status: str = 'In Progress'
 
     def update_time(self, offset):
         """Update the refence time attribute with a new offset."""
@@ -111,15 +114,15 @@ class Ref:  # pylint: disable=too-many-instance-attributes
                 LOG.info("All Refs found...writing session data to db...")
                 sql = """INSERT into session (lat, lon, title,
                                 datasource, author, file_version, start_time,
-                                client_version)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                                client_version, status)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                         RETURNING session_id
                 """
                 async with ASYNC_CON.acquire() as con:
                     self.session_id = await con.fetchval(
                         sql, self.lat, self.lon, self.title, self.datasource,
                         self.author, self.file_version, self.start_time,
-                        self.client_version)
+                        self.client_version, self.status)
 
                 LOG.info("Session session data saved...")
         except IndexError:
@@ -173,12 +176,14 @@ class ObjectRec:
         self.velocity_kts: float = 0.0
         self.secs_since_last_seen: Optional[float] = None
         self.written: bool = False
-        self.cart_coords: Optional[Tuple] = None
+        self.cart_coords: Optional[Sequence] = None
 
     def update_val(self, key: str, value: Any) -> None:
+        """Set value for a given key."""
         setattr(self, key, value)
 
     def update_last_seen(self, value: float) -> None:
+        """Set the last seen time offset for a record."""
         self.secs_since_last_seen = value - self.last_seen
         self.last_seen = value
 
@@ -191,6 +196,7 @@ class ObjectRec:
         self.cart_coords = new_cart_coords
 
     def should_have_parent(self) -> bool:
+        """Check if an object should have a parent record."""
         parented_types = ('weapon', 'projectile', 'decoy', 'container', 'flare')
         tval = self.Type.lower()
         for t in parented_types:
@@ -198,8 +204,19 @@ class ObjectRec:
                 return True
         return False
 
+    def can_be_parent(self) -> bool:
+        """Check if an object is a member of types that could be parents."""
+        not_parent_types = ('Decoy', 'Misc', 'Weapon', 'Projectile',
+                            'Ground+Light+Human+Air+Parachutist')
+        tval = self.Type
+        for t in not_parent_types:
+            if t in tval:
+                return False
+        else:
+            return True
 
-def get_cartesian_coord(lat, lon, h):
+
+def get_cartesian_coord(lat, lon, h) -> Sequence:
     """Convert coords from geodesic to cartesian."""
     a = 6378137.0
     rf = 298.257223563
@@ -212,78 +229,62 @@ def get_cartesian_coord(lat, lon, h):
     return X, Y, Z
 
 
-def compute_dist(p_1, p_2):
+def compute_dist(p_1: Sequence, p_2: Sequence) -> float:
     """Compute cartesian distance between points."""
     return sqrt((p_2[0] - p_1[0])**2 + (p_2[1] - p_1[1])**2 +
                 (p_2[2] - p_1[2])**2)
 
 
-async def determine_contact(rec, ref: Ref, type='parent'):
+async def determine_contact(rec, ref: Ref, contact_type='parent'):
     """Determine the parent of missiles, rockets, and bombs."""
-    if type not in ['parent', 'impacted']:
-        raise ValueError("Type must be impacted or parent!")
+    global CONTACT_TIME
+    t1 = time.time()
 
-    LOG.debug(f"Determing {type} for object id: %s -- %s-%s...", rec.id,
+    LOG.debug(f"Determing {contact_type} for object id: %s -- %s-%s...", rec.id,
               rec.Name, rec.Type)
-    offset_min = rec.last_seen - 2.5
 
-    if type == "parent":
-        accpt_colors = ['Blue', 'Red'
-                        ] if rec.Color == 'Violet' else [rec.Color]
+    if contact_type == "parent":
+        if rec.Color == 'Violet':
+            acpt_colors = ['Red', 'Blue']
+        else:
+            acpt_colors = [rec.Color]
 
-        query_filter = " (type not like '%Decoy%'"\
-            " AND type not like 'Misc%'"\
-            " AND type not like 'Weapon%'"\
-            " AND type not like 'Projectile%'"\
-            " AND type not like 'Ground+Light+Human+Air+Parachutist%')"
-
-    elif type == 'impacted':
-        accpt_colors = ['Red'] if rec.Color == 'Blue' else ['Red']
-        query_filter = " type like 'Air+%'"
+    elif contact_type == 'impacted':
+        acpt_colors = ['Red'] if rec.Color == 'Blue' else ['Blue']
 
     else:
         raise NotImplementedError
 
-    color_query = f""" color in ('{"','".join(accpt_colors)}')"""
-    id_query = f" tac_id != {rec.tac_id} "
-    query = f""" SELECT tac_id FROM object
-        WHERE {query_filter} AND {color_query} AND {id_query}
-        AND session_id = {rec.session_id}
-    """
-    try:
-        async with ASYNC_CON.acquire() as con:
-            nearby_objs = await con.fetch(query)
-            # cur.execute(query)
-            # nearby_objs = cur.fetchall()
-    except Exception as err:
-        LOG.info(query)
-        raise err
-
     closest = []
-    for nearby in nearby_objs:
-        near = ref.obj_store[nearby[0]]
-        if ((near.last_seen <= offset_min
-             and not (near.Type.startswith('Ground') and near.alive == True))
-                and (abs(near.alt - rec.alt) < 2000)
-                and (abs(near.lat - rec.lat) <= 0.0005)
-                and (abs(near.lon - rec.lon) <= 0.0005)):
+    n_checked = 0
+    offset_time = rec.last_seen - 2.5
+
+    for near in ref.obj_store.values():
+        if not near.can_be_parent or near.tac_id == rec.tac_id or \
+            near.Color not in acpt_colors:
+            continue
+        if contact_type == 'impacted' and not near.Type.startswith('Air+'):
             continue
 
-        prox = compute_dist(rec.cart_coords, near.cart_coords)
-        LOG.debug("Distance to object %s - %s is %s...", near.Name, near.Type,
-                  str(prox))
+        if (offset_time > near.last_seen and (
+            not ('Ground' in near.Type.lower() and near.alive == True))):
+            continue
+
+        n_checked += 1
+        prox = compute_dist(rec.cart_coords, near.cart_coords) # type: ignore
+        LOG.debug("Distance to rec %s-%s is %d...", near.Name, near.Type, prox)
         if not closest or (prox < closest[1]):
             closest = [near.id, prox, near.Name, near.Pilot, near.Type]
+    CONTACT_TIME += (time.time() - t1)
 
     if not closest:
         return None
 
-    if closest[1] > 1000:
+    if closest[1] > 200 and contact_type == 'parent':
         LOG.warning(
-            f"Rejecting closest {type} for {rec.id}-{rec.Name}-{rec.Type}: "
-            "%s %sm...%d checked!",  closest[4],
-            str(closest[1]), len(nearby_objs))
-
+            f"Rejecting closest {contact_type} for "
+            f"{rec.id}-{rec.Name}-{rec.Type}: "
+            f"{closest[4]} {closest[1]}m...{n_checked} checked!")
         return None
 
     return closest
@@ -300,8 +301,9 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
         rec.alive = False
         rec.updates += 1
 
-        if 'Weapon' in rec.Type:
-            impacted = await determine_contact(rec, type='impacted', ref=ref)
+        if 'Weapon' in rec.Type or 'Projectile' in rec.Type:
+            impacted = await determine_contact(rec, contact_type='impacted',
+                                               ref=ref)
             if impacted:
                 rec.impacted = impacted[0]
                 rec.impacted_dist = impacted[1]
@@ -368,7 +370,8 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     rec.compute_velocity()
 
     if rec.updates == 1 and rec.should_have_parent():
-        parent_info = await determine_contact(rec, type='parent', ref=ref)
+        parent_info = await determine_contact(rec, contact_type='parent',
+                                              ref=ref)
         if parent_info:
             rec.parent = parent_info[0]
             rec.parent_dist = parent_info[1]
@@ -402,19 +405,17 @@ async def create_single(obj):
             obj.first_seen, obj.last_seen, obj.lat, obj.lon, obj.alt, obj.roll,
             obj.pitch, obj.yaw, obj.u_coord, obj.v_coord, obj.heading,
             obj.velocity_kts, obj.impacted, obj.impacted_dist,
-            obj.parent, obj.parent_dist, obj.updates)
+            obj.parent, obj.parent_dist, obj.updates,
+            obj.can_be_parent())
 
     sql =  """INSERT into object (
             tac_id, session_id, name, color, country, grp, pilot, type,
             alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
             pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
-            impacted_dist, parent, parent_dist, updates
+            impacted_dist, parent, parent_dist, updates, can_be_parent
         )
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-           $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
-
-        --VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-        --   %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+           $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
 
         RETURNING id
         """
@@ -423,8 +424,9 @@ async def create_single(obj):
     obj.written = True
 
 
-class ServerExitException(Exception):
-    """Throw this exception when there is a socket read timeout."""
+class EndOfFileException(Exception):
+    """Throw this exception when the server sends a null string,
+    indicating end of file.."""
 
 
 class MaxIterationsException(Exception):
@@ -466,12 +468,18 @@ class AsyncStreamReader(Ref):
     async def read_stream(self):
         """Read lines from socket stream."""
         data = bytearray(await self.reader.readuntil(b"\n"))
+        if not data:
+            raise EndOfFileException
         return data[:-1]
 
-    async def close(self):
+    async def close(self, status):
         """Close the socket connection and reset ref object."""
         self.writer.close()
         await self.writer.wait_closed()
+        LOG.info(f"Marking session status: {status}...")
+        await ASYNC_CON.execute("""UPDATE session SET status = $1
+                                WHERE session_id = $2""",
+                                status, self.session_id)
 
 
 class BinCopyWriter:
@@ -529,19 +537,19 @@ class BinCopyWriter:
             DROP TABLE "{tbl_uuid}";
         """
 
-        # """
-        # WITH src AS (
-        #     UPDATE serial_rate
-        #     SET rate = 22.53, serial_key = '0002'
-        #     WHERE serial_key = '002' AND id = '01'
-        #     RETURNING *
-        #     )
-        # UPDATE serial_table dst
-        # SET serial_key = src.serial_key
-        # FROM src
-        # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
-        # WHERE dst.id = '01' AND dst.serial_key  = '002';
-        # """
+    # """
+    # WITH src AS (
+    #     UPDATE serial_rate
+    #     SET rate = 22.53, serial_key = '0002'
+    #     WHERE serial_key = '002' AND id = '01'
+    #     RETURNING *
+    #     )
+    # UPDATE serial_table dst
+    # SET serial_key = src.serial_key
+    # FROM src
+    # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
+    # WHERE dst.id = '01' AND dst.serial_key  = '002';
+    # """
 
     def __init__(self, dsn: str, batch_size: int = 10000):
         self.dsn = dsn
@@ -648,6 +656,7 @@ async def consumer(host: str,
                     sys.stdout.write("\rEvents processed: {:,} at {:,.2f} events/sec".format(
                         lines_read, ln_sec))
                     sys.stdout.flush()
+
                     last_log = runtime
             else:
                 t1 = time.time()
@@ -664,15 +673,17 @@ async def consumer(host: str,
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
 
-        except (KeyboardInterrupt, MaxIterationsException,
-                ServerExitException, asyncio.IncompleteReadError):
+        except (KeyboardInterrupt, MaxIterationsException, EndOfFileException,
+                asyncio.IncompleteReadError) as err:
+            LOG.info(f'Starting shutdown due to: {err.__class__.__name__}')
             await copy_writer.cleanup()
-            await sock.close()
+            await sock.close(status='Success')
             total_time = time.time() - init_time
             LOG.info('Total Lines Processed : %s', str(lines_read))
             LOG.info('Total seconds running : %.2f', total_time)
             LOG.info('Pct Event Write Time: %.2f',
                      copy_writer.db_event_time / total_time)
+            LOG.info('Pct Get Contact Time: %.2f', CONTACT_TIME / total_time)
             LOG.info('Pct Line Proc Time: %.2f', line_proc_time / total_time)
             LOG.info('Lines/second: %.4f', lines_read / total_time)
             total = {}
@@ -689,11 +700,13 @@ async def consumer(host: str,
             return
 
         except asyncpg.UniqueViolationError:
-                    LOG.error("The file you are trying to process is already in the database! "
-                              "To re-process it, delete all associated rows.")
-                    sys.exit(1)
+            LOG.error("The file you are trying to process is already in the database! "
+                        "To re-process it, delete all associated rows.")
+            sys.exit(1)
 
         except Exception as err:
+            await sock.close(status='Error')
+
             LOG.error("Unhandled Exception!"
                       "Writing remaining updates to db and exiting!")
             LOG.error(err)

@@ -1,6 +1,8 @@
 """Model definitions for database."""
-import sqlalchemy as sa
 import os
+import sys
+
+import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from tacview_client.config import DB_URL
 
@@ -21,6 +23,7 @@ class Session(Base): # type: ignore
     lat = sa.Column(sa.Float())
     lon = sa.Column(sa.Float())
     client_version = sa.Column(sa.String())
+    status = sa.Column(sa.String())
 
 
 class Impact(Base): # type: ignore
@@ -30,8 +33,8 @@ class Impact(Base): # type: ignore
     killer = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     target = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     weapon = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
-    time_offset = sa.Column(sa.Numeric())
-    impact_dist = sa.Column(sa.Numeric())
+    time_offset = sa.Column(sa.Float())
+    impact_dist = sa.Column(sa.Float())
 
 
 class Object(Base): # type: ignore
@@ -40,7 +43,8 @@ class Object(Base): # type: ignore
     tac_id = sa.Column(sa.INTEGER)
     session_id = sa.Column(sa.Integer, sa.ForeignKey('session.session_id'))
     name = sa.Column(sa.String())
-    color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"))
+    color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"),
+                      index=True)
     country = sa.Column(sa.String())
     grp = sa.Column(sa.String())
     pilot = sa.Column(sa.String())
@@ -66,6 +70,7 @@ class Object(Base): # type: ignore
     parent = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     parent_dist =sa.Column(sa.Float())
     updates = sa.Column(sa.Integer())
+    can_be_parent = sa.Column(sa.Boolean(), index=True)
 
 
 Event = sa.Table(
@@ -89,13 +94,25 @@ Event = sa.Table(
 )
 
 
+def connect():
+    """Create sa connection to database."""
+    try:
+        print("Connecting to db....")
+        con =  engine.connect()
+        print("Connection established...")
+        return con
+    except Exception as err:
+        print(err)
+        print("Could not connect to datatbase!"
+              " Make sure that the TACVIEW_DSN environment variable is set!")
+        sys.exit(1)
+
+
 def create_tables():
     """Initalize the database schema."""
-    print("Connecting to db....")
-    con = engine.connect()
+    con = connect()
     print("Creating tables...")
     metadata.create_all()
-
     print("Creating views...")
     con.execute(
         """
@@ -131,8 +148,8 @@ def create_tables():
 
 def drop_tables():
     """Drop all existing tables."""
+    con = connect()
     print('Dropping all tables....')
-    con = engine.connect()
     for table in ['Session', 'Object', 'Event', 'Impact']:
         con.execute(f"drop table if exists {table} CASCADE")
     con.close()
