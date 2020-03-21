@@ -10,13 +10,17 @@ from math import sqrt, cos, sin, radians
 from typing import Optional, Any, Dict, List, Tuple
 import time
 import struct
+from multiprocessing import Process
+from functools import partial
 from uuid import uuid1
 import sys
+import os
 
 import asyncpg
 import uvloop
 
 from tacview_client.config import DB_URL, get_logger
+from tacview_client import serve_file
 from tacview_client import __version__
 
 CLIENT = 'tacview-client'
@@ -716,3 +720,21 @@ def main(host, port, max_iters, batch_size, dsn, debug=False):
     """Start event loop to consume stream."""
     uvloop.install()
     asyncio.run(consumer(host, port, max_iters, batch_size, dsn))
+
+
+def serve_and_read(filename, port):
+    dsn = os.getenv("TACVIEW_DSN")
+    server_proc = Process(target=partial(
+        serve_file.main, filename=filename, port=port))
+    server_proc.start()
+    try:
+        main(host='127.0.0.1',
+                    port=port,
+                    debug=False,
+                    max_iters=None,
+                    batch_size=100000,
+                    dsn=dsn)
+    except Exception as err:
+        LOG.error(err)
+    finally:
+        server_proc.terminate()
