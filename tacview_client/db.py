@@ -99,7 +99,7 @@ def create_tables():
     print("Creating views...")
     con.execute(
         """
-        CREATE VIEW obj_events AS
+        CREATE OR REPLACE VIEW obj_events AS
             SELECT * FROM event evt
             INNER JOIN (SELECT id, session_id, name, color, pilot, first_seen,
                         type, grp, coalition, impacted, parent

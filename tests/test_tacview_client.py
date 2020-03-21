@@ -7,7 +7,7 @@ from tacview_client.client import line_to_obj, Ref
 # pytestmark = pytest.mark.asyncio
 
 def test_version():
-    assert __version__ == '0.1.5'
+    assert __version__ == '0.1.6'
 
 
 @pytest.fixture
