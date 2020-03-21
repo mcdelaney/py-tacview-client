@@ -1,7 +1,10 @@
 """Shared config settings for the app."""
 from asyncio.log import logging
+import os
 from pathlib import Path
-DB_URL = 'postgresql://0.0.0.0:5432/dcs?user=prod&password=pwd'
+
+DB_URL = os.getenv("TACVIEW_DSN",
+                   'postgresql://0.0.0.0:5432/dcs?user=prod&password=pwd')
 
 
 def get_logger() -> logging.Logger:
