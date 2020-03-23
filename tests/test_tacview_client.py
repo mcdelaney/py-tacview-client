@@ -1,13 +1,15 @@
 """Test tacview parser."""
 import asyncio
 import pytest
+# import sys
+# sys.path.append("..")
 from tacview_client import __version__
 from tacview_client.client import line_to_obj, Ref
 
 # pytestmark = pytest.mark.asyncio
 
 def test_version():
-    assert __version__ == '0.1.20'
+    assert __version__ == '0.1.22'
 
 
 @pytest.fixture
@@ -48,7 +50,7 @@ async def test_update_string(ref_obj):
 @pytest.mark.asyncio
 async def test_new_entry_without_alt(ref_obj):
     """Test that a new record with no altitude is assigned 1.0."""
-    input_bytes = bytearray(b"4001,T=4.6361975|6.5404775|||357.8|-347259.72|380887.44|,"
+    input_bytes = bytearray(b"4001,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
                            b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
                            b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru")
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
@@ -56,12 +58,12 @@ async def test_new_entry_without_alt(ref_obj):
 
 @pytest.mark.asyncio
 async def test_negative_integer_alt(ref_obj):
-    input_bytes = bytearray(b"4001,T=4.6361975|6.5404775|||357.8|-347259.72|380887.44|,"
+    input_bytes = bytearray(b"4001,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
                            b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
                            b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru")
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
 
-    input_bytes = bytearray(b"4001,T=6.96369|4.0232604|-2")
+    input_bytes = bytearray(b"4001,T=6.96369|4.0232604|-2||")
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
     assert parsed.alt == -2.0
 

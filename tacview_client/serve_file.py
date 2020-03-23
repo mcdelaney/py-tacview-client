@@ -2,6 +2,7 @@
 """Serve a local tacview file via sockets.
 """
 import asyncio
+from asyncio import CancelledError
 from asyncio.log import logging
 import gzip
 from pathlib import Path
@@ -9,18 +10,12 @@ from functools import partial
 
 import uvloop
 
-logging.basicConfig(level=logging.INFO)
-LOG = logging.getLogger('test_server')
-logFormatter = logging.Formatter(
-        "%(asctime)s [%(name)s] [%(levelname)-5.5s]  %(message)s")
-consoleHandler = logging.StreamHandler()
-consoleHandler.setFormatter(logFormatter)
-LOG.addHandler(consoleHandler)
-LOG.propagate = False
-LOG.setLevel(logging.INFO)
+from tacview_client.config import get_logger
+LOG = get_logger()
 
 
-async def handle_req(reader, writer, filename: Path) -> None:
+async def handle_req(reader: asyncio.StreamReader, writer: asyncio.StreamWriter,
+                     filename: Path) -> None:
     """Send data."""
     try:
         LOG.info('Connection started...')
@@ -35,26 +30,49 @@ async def handle_req(reader, writer, filename: Path) -> None:
             if not line:
                 break
             writer.write(line)
-
+            check = await reader.read()
+            if check and check == -1:
+                break
         await writer.drain()
         writer.close()
         LOG.info("All lines sent...closing...")
-    except (ConnectionResetError, BrokenPipeError):
+    except (ConnectionResetError, BrokenPipeError, CancelledError):
+        LOG.info("Cancel received..shutting down...")
         writer.close()
+    LOG.info('Exiting...')
 
 
-def run_server(filename: Path, port: str) -> None:
-    """Read from Tacview socket."""
-    LOG.info(f'Serving Tacview file {filename} 127.0.0.1:{port}. ..')
-    uvloop.install()
-    loop = asyncio.get_event_loop()
-    loop.create_task(asyncio.start_server(partial(handle_req, filename=filename),
-                                          "127.0.0.1", port))
-    loop.run_forever()
-
-
-def main(filename: Path, port: str) -> None:
+async def serve_file(filename: Path, port: int) -> None:
+    server = await asyncio.start_server(
+                    partial(handle_req, filename=filename),
+                    "127.0.0.1", port)
     try:
-        run_server(filename, port)
+        await server.serve_forever()
+    except CancelledError:
+        LOG.error("Cancel error caught!")
+        server.close()
+
+
+def main(filename: Path, port: int) -> None:
+    """Read from Tacview socket."""
+    uvloop.install()
+    LOG.info(f'Serving Tacview file {filename} 127.0.0.1:{port}. ..')
+    loop = asyncio.get_event_loop()
+    task = loop.create_task(serve_file(filename, port))
+    try:
+        loop.run_until_complete(task)
     except KeyboardInterrupt:
         LOG.info("Keyboard interupt!")
+        task.cancel()
+    except Exception as err:
+        task.cancel()
+        raise err
+
+
+if __name__=='__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--filename', type=Path, help='Filename for server')
+    parser.add_argument('--port', type=int, help='Port for server')
+    args = parser.parse_args()
+    main(args.filename, args.port)

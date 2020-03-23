@@ -11,6 +11,7 @@ from typing import Iterable, Optional, Any, Dict, List, Sequence, Tuple
 import time
 import struct
 from multiprocessing import Process
+from pathlib import Path
 from functools import partial
 from uuid import uuid1
 import sys
@@ -34,7 +35,16 @@ HANDSHAKE = ('\n'.join([STREAM_PROTOCOL, TACVIEW_PROTOCOL, CLIENT, PASSWORD]) +
 
 COORD_KEYS = ('lon', 'lat', 'alt', 'roll', 'pitch', 'yaw', 'u_coord',
               'v_coord', 'heading')
-COORD_KEY_LEN = len(COORD_KEYS)
+COORD_KEY_LEN = len(COORD_KEYS)-1
+
+COORD_KEYS_SHORT = ('lon', 'lat', 'alt', 'u_coord', 'v_coord')
+COORD_KEY_SHORT_LEN = len(COORD_KEYS_SHORT)-1
+
+COORD_KEYS_MED = ('lon', 'lat', 'alt', 'roll', 'pitch', 'yaw')
+COORD_KEYS_MED_LEN = len(COORD_KEYS_MED) -1
+
+COORD_KEYS_X_SHORT = ('lon', 'lat', 'alt')
+COORD_KEYS_X_SHORT_LEN = len(COORD_KEYS_X_SHORT) - 1
 
 HOST = '147.135.8.169'  # Hoggit Gaw
 PORT = 42674
@@ -343,7 +353,23 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                 i = 0
                 pipe_pos_end = -1
                 pipes_remaining = True
-                while i < COORD_KEY_LEN and pipes_remaining:
+                npipe = val.count(b'|')
+                if npipe == 8:
+                    C_KEYS = COORD_KEYS
+                    C_LEN = COORD_KEY_LEN
+                elif npipe == 5:
+                    C_KEYS = COORD_KEYS_MED
+                    C_LEN = COORD_KEYS_MED_LEN
+                elif npipe == 4:
+                    C_KEYS = COORD_KEYS_SHORT
+                    C_LEN = COORD_KEY_SHORT_LEN
+                elif npipe == 2:
+                    C_KEYS = COORD_KEYS_X_SHORT
+                    C_LEN = COORD_KEYS_X_SHORT_LEN
+                else:
+                    raise ValueError("COORD COUNT EITHER 8, 5, OR 4!", npipe, raw_line.decode('UTF-8'))
+
+                while i < C_LEN and pipes_remaining:
                     pipe_pos_start = pipe_pos_end + 1
                     pipe_pos_end = val.find(b'|', pipe_pos_start)
                     if pipe_pos_end == -1:
@@ -353,7 +379,7 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                         coord = val[pipe_pos_start:pipe_pos_end]
 
                     if coord != b'':
-                        c_key = COORD_KEYS[i]
+                        c_key = C_KEYS[i]
                         if c_key == "lat":
                             rec.lat = float(coord) + ref.lat
                         elif c_key == "lon":
@@ -736,6 +762,9 @@ def main(host, port, max_iters, batch_size, dsn, debug=False):
 
 
 def serve_and_read(filename, port):
+    filename = Path(filename)
+    if not filename.exists():
+        raise FileExistsError(filename)
     dsn = os.getenv("TACVIEW_DSN")
     server_proc = Process(target=partial(
         serve_file.main, filename=filename, port=port))
@@ -747,6 +776,7 @@ def serve_and_read(filename, port):
                     max_iters=None,
                     batch_size=100000,
                     dsn=dsn)
+        server_proc.join()
     except Exception as err:
         LOG.error(err)
     finally:

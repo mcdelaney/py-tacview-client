@@ -4,7 +4,7 @@ from multiprocessing import Process
 from pathlib import Path
 import sys
 
-from tacview_client import config, client, serve_file, db
+from . import config, client, serve_file, db
 
 
 class TacviewCli:
@@ -56,19 +56,19 @@ class TacviewCli:
             print("File does not exist at location: %s" % args.filename)
             sys.exit(1)
 
-        if args.host in ['localhost', '127.0.0.1', '0.0.0.0'] and args.filename:
-            print("Localhost and filename configured...will start server to host file...")
-            server_proc = Process(target=partial(
-                serve_file.main, filename=args.filename, port=args.port))
-            server_proc.start()
-
         try:
-            client.main(host=args.host,
-                        port=args.port,
-                        debug=args.debug,
-                        max_iters=None,
-                        batch_size=args.batch_size,
-                        dsn=args.postgres_dsn)
+            if args.host in ['localhost', '127.0.0.1', '0.0.0.0'] and args.filename:
+                print("Localhost and filename configured...will start server to host file...")
+                server_proc = Process(target=partial(
+                    serve_file.main, filename=args.filename, port=args.port))
+                server_proc.start()
+                client.main(host=args.host,
+                            port=args.port,
+                            debug=args.debug,
+                            max_iters=None,
+                            batch_size=args.batch_size,
+                            dsn=args.postgres_dsn)
+                server_proc.join()
         except KeyboardInterrupt:
             print("tacview-client shutting down...")
         except Exception as err:
