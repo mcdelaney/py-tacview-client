@@ -367,6 +367,7 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                     C_KEYS = COORD_KEYS_X_SHORT
                     C_LEN = COORD_KEYS_X_SHORT_LEN
                 else:
+                    LOG.error("Coord count error!")
                     raise ValueError("COORD COUNT EITHER 8, 5, OR 4!", npipe, raw_line.decode('UTF-8'))
 
                 while i < C_LEN and pipes_remaining:
@@ -506,6 +507,7 @@ class AsyncStreamReader(Ref):
         await ASYNC_CON.execute("""UPDATE session SET status = $1
                                 WHERE session_id = $2""",
                                 status, self.session_id)
+        LOG.info('Session marked as success!')
 
 
 class BinCopyWriter:
