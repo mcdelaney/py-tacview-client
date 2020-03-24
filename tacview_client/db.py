@@ -93,6 +93,58 @@ Event = sa.Table(
 )
 
 
+IMPACT_VIEW = """
+CREATE OR REPLACE VIEW impact_comb AS (
+WITH TMP AS (
+    SELECT
+        id as impact_id, impact_dist,
+        killer, killer_name, killer_type,
+        target, target_name, target_type,
+        weapon, weapon_name
+
+    FROM impact
+    INNER JOIN (SELECT id killer, pilot killer_name, name killer_type
+                FROM object) kill
+    USING (killer)
+    INNER JOIN (SELECT id target, pilot as target_name, name as target_type
+                FROM object) tar
+    USING(target)
+    INNER JOIN (SELECT id weapon, name AS weapon_name
+                FROM object
+                WHERE type like ('%Missile%') and NAME IS NOT NULL) weap
+    USING (weapon)
+    WHERE killer IS NOT NULL AND
+        target IS NOT NULL AND weapon IS NOT NULL
+        AND impact_dist < 10
+),
+TMP2 as (
+    SELECT start_time as kill_timestamp,
+        killer_name, killer_type, killer as killer_id,
+        target_name, target_type, target as target_id,
+        weapon_name, weapon_type, weapon as weapon_id,
+        impact_dist, impact_id,
+        weapon_first_time, weapon_last_time
+    FROM tmp t
+    INNER JOIN (SELECT id as weapon,
+                first_seen as weapon_first_time,
+                last_seen AS weapon_last_time
+            FROM object
+            ) weap_time
+    USING (weapon)
+    INNER JOIN (select id as killer, session_id FROM object) sess1
+    USING (killer)
+    INNER JOIN (select session_id, start_time FROM session) sess2
+    USING (session_id)
+    LEFT JOIN (SELECT name AS weapon_name, category AS weapon_type
+                FROM weapon_types) weap_type
+    USING (weapon_name)
+)
+SELECT * FROM tmp2
+)
+"""
+
+
+
 def connect():
     """Create sa connection to database."""
     try:
@@ -141,6 +193,7 @@ def create_tables():
             GROUP BY session_id, name, type, parent, pilot
         """)
 
+    con.execute(IMPACT_VIEW)
     con.close()
     print("All tables and views created successfully!")
 
