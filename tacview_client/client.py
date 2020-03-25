@@ -5,9 +5,10 @@ Results are parsed into usable format, and then written to a postgres database.
 """
 from io import BytesIO
 import asyncio
+import logging
 from datetime import datetime
 from math import sqrt, cos, sin, radians
-from typing import Iterable, Optional, Any, Dict, List, Sequence, Tuple
+from typing import Optional, Any, Dict, List, Sequence
 import time
 import struct
 from multiprocessing import Process
@@ -304,6 +305,7 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     """Parse a textline from tacview into an ObjectRec."""
     # secondary_update = None
     if raw_line[0:1] == b"0":
+        LOG.debug("Raw line starts with 0...")
         return None
 
     if raw_line[0:1] == b'-':
@@ -663,10 +665,12 @@ async def consumer(host: str,
     init_time = time.time()
     lines_read = 0
     last_log = float(0.0)
+    print_log = float(0.0)
     line_proc_time = float(0.0)
     while True:
         try:
             obj = await sock.read_stream()
+            LOG.debug(obj)
             lines_read += 1
 
             if not sock.all_refs:
@@ -679,13 +683,19 @@ async def consumer(host: str,
 
                 runtime = time.time() - init_time
                 log_check = runtime - last_log
+                print_check = runtime - print_log
                 if log_check > 0.05:
                     ln_sec = lines_read / runtime
                     sys.stdout.write("\rEvents processed: {:,} at {:,.2f} events/sec".format(
                         lines_read, ln_sec))
                     sys.stdout.flush()
-
                     last_log = runtime
+
+                    if print_check > 10:
+                        LOG.info("Events processed: {:,} at {:,.2f} events/sec".format(
+                            lines_read, ln_sec))
+                        print_log = runtime
+
             else:
                 t1 = time.time()
                 obj = await line_to_obj(obj, sock)
@@ -760,6 +770,8 @@ async def check_results():
 def main(host, port, max_iters, batch_size, dsn, debug=False):
     """Start event loop to consume stream."""
     uvloop.install()
+    if debug:
+        LOG.setLevel(logging.DEBUG)
     asyncio.run(consumer(host, port, max_iters, batch_size, dsn))
 
 

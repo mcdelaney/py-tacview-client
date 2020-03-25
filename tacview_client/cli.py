@@ -68,7 +68,7 @@ class TacviewCli:
                             max_iters=None,
                             batch_size=args.batch_size,
                             dsn=args.postgres_dsn)
-                server_proc.join()
+                server_proc.terminate()
         except KeyboardInterrupt:
             print("tacview-client shutting down...")
         except Exception as err:

@@ -24,6 +24,8 @@ if __name__=='__main__':
     parser.add_argument('--batch_size', required=False,
                         type=int, default=500000,
                         help='Number of records to be combined in write batches')
+    parser.add_argument('--debug', action='store_true',
+                        help='Should we run in debug mode?')
     args = parser.parse_args()
 
     server_proc = Process(target=partial(
@@ -39,7 +41,7 @@ if __name__=='__main__':
 
     client.main(host='127.0.0.1',
                 port=5555,
-                debug=False,
+                debug=args.debug,
                 max_iters=args.iters,
                 batch_size=args.batch_size,
                 dsn=config.DB_URL)

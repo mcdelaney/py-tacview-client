@@ -3,8 +3,8 @@
 """
 import asyncio
 from asyncio import CancelledError
-from asyncio.log import logging
 import gzip
+import zipfile
 from pathlib import Path
 from functools import partial
 
@@ -20,19 +20,22 @@ async def handle_req(reader: asyncio.StreamReader, writer: asyncio.StreamWriter,
     try:
         LOG.info('Connection started...')
         if filename.suffix =='.gz':
+            LOG.info('Opening gzfile...')
             fp_ = gzip.open(filename, 'rb')
+        elif zipfile.is_zipfile(filename):
+            LOG.info('Opening zipfile...')
+            zfile = zipfile.ZipFile(filename)
+            fp_ = zfile.open(zfile.filelist[0], 'r')
         else:
             fp_ = filename.open('rb')
         await reader.read(4026)
 
         while True:
-            line = fp_.read()
+            line = fp_.readline()
             if not line:
+                LOG.info("No remaining line...breaking...")
                 break
             writer.write(line)
-            check = await reader.read()
-            if check and check == -1:
-                break
         await writer.drain()
         writer.close()
         LOG.info("All lines sent...closing...")
