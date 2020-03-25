@@ -14,7 +14,7 @@ Base = declarative_base(engine, metadata)
 class Session(Base): # type: ignore
     __tablename__ = 'session'
     session_id = sa.Column(sa.Integer, primary_key=True)
-    start_time = sa.Column(sa.TIMESTAMP(), unique=True)
+    start_time = sa.Column(sa.TIMESTAMP(timezone=True), unique=True)
     datasource = sa.Column(sa.String())
     author = sa.Column(sa.String())
     file_version = sa.Column(sa.Float())

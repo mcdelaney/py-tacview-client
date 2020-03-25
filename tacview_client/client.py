@@ -11,6 +11,7 @@ from math import sqrt, cos, sin, radians
 from typing import Optional, Any, Dict, List, Sequence
 import time
 import struct
+import pytz
 from multiprocessing import Process
 from pathlib import Path
 from functools import partial
@@ -119,6 +120,8 @@ class Ref:  # pylint: disable=too-many-instance-attributes
                 LOG.debug('Ref time found...')
                 self.start_time = datetime.strptime(val[1].decode('UTF-8'),
                                               '%Y-%m-%dT%H:%M:%S.%fZ')
+                self.start_time = self.start_time.replace(microsecond=0)
+                self.start_time = self.start_time.replace(tzinfo=pytz.UTC)
 
             self.all_refs = bool(self.lat and self.lon and self.start_time)
             if self.all_refs and not self.session_id:
@@ -737,10 +740,11 @@ async def consumer(host: str,
             LOG.info('Exiting tacview-client!')
             return
 
-        except asyncpg.UniqueViolationError:
+        except asyncpg.UniqueViolationError as err:
             LOG.error("The file you are trying to process is already in the database! "
                         "To re-process it, delete all associated rows.")
-            sys.exit(1)
+            await sock.close(status='Error')
+            raise err
 
         except Exception as err:
             await sock.close(status='Error')

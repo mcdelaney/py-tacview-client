@@ -52,7 +52,7 @@ async def serve_file(filename: Path, port: int) -> None:
     try:
         await server.serve_forever()
     except CancelledError:
-        LOG.error("Cancel error caught!")
+        LOG.error("Cancel error caught! Shutting down file server...")
         server.close()
 
 
