@@ -711,7 +711,7 @@ async def consumer(host: str,
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
 
-        except (KeyboardInterrupt, MaxIterationsException, EndOfFileException,
+        except (MaxIterationsException, EndOfFileException,
                 asyncio.IncompleteReadError) as err:
             LOG.info(f'Starting shutdown due to: {err.__class__.__name__}')
             await copy_writer.cleanup()
