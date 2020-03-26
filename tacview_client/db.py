@@ -17,10 +17,10 @@ class Session(Base): # type: ignore
     start_time = sa.Column(sa.TIMESTAMP(timezone=True), unique=True)
     datasource = sa.Column(sa.String())
     author = sa.Column(sa.String())
-    file_version = sa.Column(sa.Float())
+    file_version = sa.Column(sa.REAL())
     title = sa.Column(sa.String())
-    lat = sa.Column(sa.Float())
-    lon = sa.Column(sa.Float())
+    lat = sa.Column(sa.REAL())
+    lon = sa.Column(sa.REAL())
     client_version = sa.Column(sa.String())
     status = sa.Column(sa.String())
 
@@ -32,8 +32,8 @@ class Impact(Base): # type: ignore
     killer = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     target = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     weapon = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
-    time_offset = sa.Column(sa.Float())
-    impact_dist = sa.Column(sa.Float())
+    time_offset = sa.Column(sa.REAL())
+    impact_dist = sa.Column(sa.REAL())
 
 
 class Object(Base): # type: ignore
@@ -42,8 +42,7 @@ class Object(Base): # type: ignore
     tac_id = sa.Column(sa.INTEGER)
     session_id = sa.Column(sa.Integer, sa.ForeignKey('session.session_id'))
     name = sa.Column(sa.String())
-    color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"),
-                      index=True)
+    color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"))
     country = sa.Column(sa.String())
     grp = sa.Column(sa.String())
     pilot = sa.Column(sa.String())
@@ -51,44 +50,44 @@ class Object(Base): # type: ignore
     alive = sa.Column(sa.Boolean())
     coalition = sa.Column(sa.Enum("Enemies", "Allies", "Neutral",
                                   name="coalition_enum"))
-    first_seen = sa.Column(sa.Float())
-    last_seen = sa.Column(sa.Float())
+    first_seen = sa.Column(sa.REAL())
+    last_seen = sa.Column(sa.REAL())
 
-    lat = sa.Column(sa.Float())
-    lon = sa.Column(sa.Float())
-    alt = sa.Column(sa.Float() )
-    roll = sa.Column(sa.Float())
-    pitch = sa.Column(sa.Float())
-    yaw = sa.Column(sa.Float())
-    u_coord = sa.Column(sa.Float())
-    v_coord = sa.Column(sa.Float())
-    heading = sa.Column(sa.Float())
-    velocity_kts = sa.Column(sa.Float())
+    lat = sa.Column(sa.REAL())
+    lon = sa.Column(sa.REAL())
+    alt = sa.Column(sa.REAL() )
+    roll = sa.Column(sa.REAL())
+    pitch = sa.Column(sa.REAL())
+    yaw = sa.Column(sa.REAL())
+    u_coord = sa.Column(sa.REAL())
+    v_coord = sa.Column(sa.REAL())
+    heading = sa.Column(sa.REAL())
+    velocity_kts = sa.Column(sa.REAL())
     impacted = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
-    impacted_dist = sa.Column(sa.Float())
+    impacted_dist = sa.Column(sa.REAL())
     parent = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
-    parent_dist =sa.Column(sa.Float())
+    parent_dist =sa.Column(sa.REAL())
     updates = sa.Column(sa.Integer())
-    can_be_parent = sa.Column(sa.Boolean(), index=True)
+    can_be_parent = sa.Column(sa.Boolean())
 
 
 Event = sa.Table(
     "event",
     metadata,
-    sa.Column('id', sa.INTEGER(), sa.ForeignKey('object.id')),
+    sa.Column('id', sa.INTEGER(), sa.ForeignKey('object.id'), index=True),
     sa.Column('session_id', sa.INTEGER(), sa.ForeignKey('session.session_id')),
-    sa.Column('last_seen', sa.Float()),
+    sa.Column('last_seen', sa.REAL()),
     sa.Column('alive', sa.Boolean()),
-    sa.Column('lat', sa.Float()),
-    sa.Column('lon', sa.Float()),
-    sa.Column('alt', sa.Float()),
-    sa.Column('roll', sa.Float()),
-    sa.Column('pitch', sa.Float()),
-    sa.Column('yaw', sa.Float()),
-    sa.Column('u_coord', sa.Float()),
-    sa.Column('v_coord', sa.Float()),
-    sa.Column('heading', sa.Float()),
-    sa.Column('velocity_kts', sa.Float()),
+    sa.Column('lat', sa.REAL()),
+    sa.Column('lon', sa.REAL()),
+    sa.Column('alt', sa.REAL()),
+    sa.Column('roll', sa.REAL()),
+    sa.Column('pitch', sa.REAL()),
+    sa.Column('yaw', sa.REAL()),
+    sa.Column('u_coord', sa.REAL()),
+    sa.Column('v_coord', sa.REAL()),
+    sa.Column('heading', sa.REAL()),
+    sa.Column('velocity_kts', sa.REAL()),
     sa.Column('updates', sa.INTEGER())
 )
 
@@ -143,48 +142,37 @@ def create_tables():
 
     con.execute(
         sa.text("""
-        CREATE OR REPLACE VIEW impact_comb AS (
+         CREATE OR REPLACE VIEW impact_comb AS (
              SELECT start_time as kill_timestamp,
                     killer_name, killer_type, killer as killer_id,
                     target_name, target_type, target as target_id,
                     weapon_name, weapon_type, weapon as weapon_id,
-                    impact_dist, impact_id,
-                    weapon_first_time, weapon_last_time
-                FROM  (
-                SELECT
-                    id as impact_id, impact_dist,
-                    killer, killer_name, killer_type,
-                    target, target_name, target_type,
-                    weapon, weapon_name
-
-                FROM impact
-                INNER JOIN (SELECT id killer, pilot killer_name, name killer_type
-                            FROM object) kill
+                    impact_dist, id AS impact_id,
+                    weapon_first_time, weapon_last_time, session_id
+                FROM  impact
+                INNER JOIN (SELECT id killer, pilot killer_name, name killer_type,
+                            start_time
+                            FROM object
+                            INNER JOIN (select session_id, start_time FROM session) sess2
+			                USING (session_id)) kill
                 USING (killer)
                 INNER JOIN (SELECT id target, pilot as target_name, name as target_type
                             FROM object) tar
                 USING(target)
-                INNER JOIN (SELECT id weapon, name AS weapon_name
+                INNER JOIN (SELECT id weapon, name AS weapon_name,
+                                first_seen as weapon_first_time,
+                                last_seen AS weapon_last_time, weapon_type
                             FROM object
+                            LEFT JOIN (SELECT name, category AS weapon_type
+                                       FROM weapon_types) weap_type
+
+                            USING (name)
                             WHERE type like ('%Missile%') and NAME IS NOT NULL) weap
                 USING (weapon)
                 WHERE killer IS NOT NULL AND
                     target IS NOT NULL AND weapon IS NOT NULL
                     AND impact_dist < 10
-            ) t
-                INNER JOIN (SELECT id as weapon,
-                            first_seen as weapon_first_time,
-                            last_seen AS weapon_last_time
-                        FROM object
-                        ) weap_time
-                USING (weapon)
-                INNER JOIN (select id as killer, session_id FROM object) sess1
-                USING (killer)
-                INNER JOIN (select session_id, start_time FROM session) sess2
-                USING (session_id)
-                LEFT JOIN (SELECT name AS weapon_name, category AS weapon_type
-                            FROM weapon_types) weap_type
-                USING (weapon_name)
+
         )
         """))
     con.close()

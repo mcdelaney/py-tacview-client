@@ -520,7 +520,7 @@ class BinCopyWriter:
     db_event_time: float = 0.0
     event_times: List = []
     insert: BytesIO
-    fmt_str: str = '>h ii ii id i? id id id id id id id id id id ii'
+    fmt_str: str = '>h ii ii if i? if if if if if if if if if if ii'
     copy_header = struct.pack('>11sii', b'PGCOPY\n\377\r\n\0', 0, 0)
     copy_trailer =  struct.pack('>h', -1)
     tbl_uuid = str(uuid1()).replace("-", '_')
@@ -530,7 +530,7 @@ class BinCopyWriter:
 
             COPY public."{tbl_uuid}" FROM STDIN WITH BINARY;
 
-            CREATE INDEX tmp_idx on "{tbl_uuid}" (id);
+            CREATE INDEX tmp_idx on "{tbl_uuid}" (id, updates DESC);
 
             INSERT INTO event
             SELECT * FROM "{tbl_uuid}";
@@ -610,18 +610,18 @@ class BinCopyWriter:
             data = (15,
                     4, obj.id,
                     4, obj.session_id,
-                    8, obj.last_seen,
+                    4, obj.last_seen,
                     1, obj.alive,
-                    8, obj.lat,
-                    8, obj.lon,
-                    8, obj.alt,
-                    8, obj.roll,
-                    8, obj.pitch,
-                    8, obj.yaw,
-                    8, obj.u_coord,
-                    8, obj.v_coord,
-                    8, obj.heading,
-                    8, obj.velocity_kts,
+                    4, obj.lat,
+                    4, obj.lon,
+                    4, obj.alt,
+                    4, obj.roll,
+                    4, obj.pitch,
+                    4, obj.yaw,
+                    4, obj.u_coord,
+                    4, obj.v_coord,
+                    4, obj.heading,
+                    4, obj.velocity_kts,
                     4, obj.updates)
 
             packed = struct.pack(self.fmt_str, *data)
