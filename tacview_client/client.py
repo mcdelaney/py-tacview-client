@@ -512,7 +512,7 @@ class AsyncStreamReader(Ref):
         await ASYNC_CON.execute("""UPDATE session SET status = $1
                                 WHERE session_id = $2""",
                                 status, self.session_id)
-        LOG.info('Session marked as success!')
+        LOG.info(f'Session marked as {status}!')
 
 
 class BinCopyWriter:
