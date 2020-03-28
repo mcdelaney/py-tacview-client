@@ -796,7 +796,7 @@ def serve_and_read(filename, port):
     filename = Path(filename)
     if not filename.exists():
         raise FileExistsError(filename)
-    dsn = os.getenv("TACVIEW_DSN")
+    dsn = os.getenv("DATABASE_URL")
     server_proc = Process(target=partial(
         serve_file.main, filename=filename, port=port))
     server_proc.start()

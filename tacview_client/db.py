@@ -103,7 +103,7 @@ def connect():
     except Exception as err:
         print(err)
         print("Could not connect to datatbase!"
-              " Make sure that the TACVIEW_DSN environment variable is set!")
+              " Make sure that the DATABASE_URL environment variable is set!")
         sys.exit(1)
 
 
@@ -144,12 +144,17 @@ def create_tables():
     con.execute(
         sa.text("""
          CREATE OR REPLACE VIEW impact_comb AS (
-             SELECT start_time as kill_timestamp,
+             SELECT DATE_TRUNC('SECOND',
+                (start_time +
+                    weapon_first_time*interval '1 second')) kill_timestamp,
+                    start_time,
                     killer_name, killer_type, killer as killer_id,
                     target_name, target_type, target as target_id,
                     weapon_name, weapon_type, weapon as weapon_id,
-                    impact_dist, id AS impact_id,
-                    weapon_first_time, weapon_last_time, session_id
+                    id AS impact_id,
+                    weapon_first_time, weapon_last_time, session_id,
+                    round(cast(impact_dist as numeric), 2) impact_dist,
+                    ROUND(cast(weapon_last_time - weapon_first_time as numeric), 2) kill_duration
                 FROM  impact
                 INNER JOIN (SELECT id killer, pilot killer_name, name killer_type,
                             start_time

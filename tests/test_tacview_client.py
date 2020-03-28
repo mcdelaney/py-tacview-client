@@ -75,6 +75,14 @@ async def test_u_coord_error(ref_obj):
     input_bytes = bytearray(b"76502,T=6.6632117|4.8577435|6640.74|-57047.37|76446.19")
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
     assert parsed.v_coord == 76446.19
+    assert parsed.alt == 6640.74
+
+    input_bytes = bytearray(b"76502,T=5.8429775|4.1803246|7224.58|-139814.45|2511.76")
+    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    assert parsed.v_coord == 2511.76
+    assert parsed.u_coord == -139814.45
+    assert parsed.alt == 7224.58
+
 
 
 @pytest.mark.asyncio

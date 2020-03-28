@@ -3,7 +3,7 @@ from asyncio.log import logging
 import os
 from pathlib import Path
 
-DB_URL = os.getenv("TACVIEW_DSN",
+DB_URL = os.getenv("DATABASE_URL",
                    'postgresql://0.0.0.0:5432/dcs?user=prod&password=pwd')
 
 
