@@ -63,6 +63,20 @@ async def test_negative_integer_alt(ref_obj):
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
     assert parsed.alt == -2.0
 
+
+
+@pytest.mark.asyncio
+async def test_u_coord_error(ref_obj):
+    input_bytes = bytearray(b"76502,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
+                           b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
+                           b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru")
+    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+
+    input_bytes = bytearray(b"76502,T=6.6632117|4.8577435|6640.74|-57047.37|76446.19")
+    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    assert parsed.v_coord == 76446.19
+
+
 @pytest.mark.asyncio
 async def test_line_parser(ref_obj):
     """Test that update strings are parsed properly."""

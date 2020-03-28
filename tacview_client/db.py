@@ -88,7 +88,8 @@ Event = sa.Table(
     sa.Column('v_coord', sa.REAL()),
     sa.Column('heading', sa.REAL()),
     sa.Column('velocity_kts', sa.REAL()),
-    sa.Column('updates', sa.INTEGER())
+    sa.Column('updates', sa.INTEGER()),
+    postgresql_partition_by='LIST (session_id)'
 )
 
 
@@ -171,8 +172,6 @@ def create_tables():
                 USING (weapon)
                 WHERE killer IS NOT NULL AND
                     target IS NOT NULL AND weapon IS NOT NULL
-                    AND impact_dist < 10
-
         )
         """))
     con.close()

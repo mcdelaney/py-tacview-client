@@ -33,7 +33,8 @@ async def handle_req(reader: asyncio.StreamReader, writer: asyncio.StreamWriter,
         while True:
             line = fp_.readline()
             if not line:
-                LOG.info("No remaining line...breaking...")
+                LOG.info("No remaining line...sending term line and breaking...")
+                writer.write(b'-exit')
                 break
             writer.write(line)
         await writer.drain()

@@ -37,16 +37,16 @@ HANDSHAKE = ('\n'.join([STREAM_PROTOCOL, TACVIEW_PROTOCOL, CLIENT, PASSWORD]) +
 
 COORD_KEYS = ('lon', 'lat', 'alt', 'roll', 'pitch', 'yaw', 'u_coord',
               'v_coord', 'heading')
-COORD_KEY_LEN = len(COORD_KEYS)-1
+COORD_KEY_LEN = len(COORD_KEYS)
 
 COORD_KEYS_SHORT = ('lon', 'lat', 'alt', 'u_coord', 'v_coord')
-COORD_KEY_SHORT_LEN = len(COORD_KEYS_SHORT)-1
+COORD_KEY_SHORT_LEN = len(COORD_KEYS_SHORT)
 
 COORD_KEYS_MED = ('lon', 'lat', 'alt', 'roll', 'pitch', 'yaw')
-COORD_KEYS_MED_LEN = len(COORD_KEYS_MED) -1
+COORD_KEYS_MED_LEN = len(COORD_KEYS_MED)
 
 COORD_KEYS_X_SHORT = ('lon', 'lat', 'alt')
-COORD_KEYS_X_SHORT_LEN = len(COORD_KEYS_X_SHORT) - 1
+COORD_KEYS_X_SHORT_LEN = len(COORD_KEYS_X_SHORT)
 
 HOST = '147.135.8.169'  # Hoggit Gaw
 PORT = 42674
@@ -137,7 +137,12 @@ class Ref:  # pylint: disable=too-many-instance-attributes
                         sql, self.lat, self.lon, self.title, self.datasource,
                         self.author, self.file_version, self.start_time,
                         self.client_version, self.status)
-
+                LOG.info(f"Creating table partion for {self.session_id}...")
+                async with ASYNC_CON.acquire() as con:
+                    await con.execute(
+                        f"""CREATE TABLE event_{self.session_id} PARTITION OF event
+                            FOR VALUES IN ({self.session_id});
+                        """)
                 LOG.info("Session session data saved...")
         except IndexError:
             pass
@@ -523,17 +528,42 @@ class BinCopyWriter:
     fmt_str: str = '>h ii ii if i? if if if if if if if if if if ii'
     copy_header = struct.pack('>11sii', b'PGCOPY\n\377\r\n\0', 0, 0)
     copy_trailer =  struct.pack('>h', -1)
-    tbl_uuid = str(uuid1()).replace("-", '_')
-    cmd = f"""
-            CREATE UNLOGGED TABLE IF NOT EXISTS "{tbl_uuid}"
-                (LIKE event INCLUDING DEFAULTS);
 
-            COPY public."{tbl_uuid}" FROM STDIN WITH BINARY;
 
-            CREATE INDEX tmp_idx on "{tbl_uuid}" (id, updates DESC);
+    # """
+    # WITH src AS (
+    #     UPDATE serial_rate
+    #     SET rate = 22.53, serial_key = '0002'
+    #     WHERE serial_key = '002' AND id = '01'
+    #     RETURNING *
+    #     )
+    # UPDATE serial_table dst
+    # SET serial_key = src.serial_key
+    # FROM src
+    # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
+    # WHERE dst.id = '01' AND dst.serial_key  = '002';
+    # """
 
-            INSERT INTO event
-            SELECT * FROM "{tbl_uuid}";
+    def __init__(self, dsn: str, batch_size: int = 10000, session_id=None):
+        self.dsn = dsn
+        self.batch_size = batch_size
+        self.build_fmt_string()
+        self.create_byte_buffer()
+        self.insert_count = 0
+        self.session_id = session_id
+        self.tbl_uuid = str(uuid1()).replace("-", '_')
+
+    def make_query(self):
+        self.cmd = f"""
+            CREATE UNLOGGED TABLE IF NOT EXISTS "{self.tbl_uuid}"
+                (LIKE event_{self.session_id} INCLUDING DEFAULTS);
+
+            COPY public."{self.tbl_uuid}" FROM STDIN WITH BINARY;
+
+            CREATE INDEX tmp_idx on "{self.tbl_uuid}" (id, updates DESC);
+
+            INSERT INTO event_{self.session_id}
+            SELECT * FROM "{self.tbl_uuid}";
 
             INSERT INTO object (
                 id, session_id, last_seen, alive, lat, lon, alt, roll, pitch,
@@ -546,7 +576,7 @@ class BinCopyWriter:
                     row_number() OVER (
                         PARTITION BY id
                         ORDER BY updates DESC) as row_number
-                FROM "{tbl_uuid}"
+                FROM "{self.tbl_uuid}"
             ) evt
             WHERE row_number = 1
             ON CONFLICT (id)
@@ -567,29 +597,8 @@ class BinCopyWriter:
             WHERE object.updates < EXCLUDED.updates;
 
             DROP INDEX tmp_idx;
-            DROP TABLE "{tbl_uuid}";
+            DROP TABLE "{self.tbl_uuid}";
         """
-
-    # """
-    # WITH src AS (
-    #     UPDATE serial_rate
-    #     SET rate = 22.53, serial_key = '0002'
-    #     WHERE serial_key = '002' AND id = '01'
-    #     RETURNING *
-    #     )
-    # UPDATE serial_table dst
-    # SET serial_key = src.serial_key
-    # FROM src
-    # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
-    # WHERE dst.id = '01' AND dst.serial_key  = '002';
-    # """
-
-    def __init__(self, dsn: str, batch_size: int = 10000):
-        self.dsn = dsn
-        self.batch_size = batch_size
-        self.build_fmt_string()
-        self.create_byte_buffer()
-        self.insert_count = 0
 
     def build_fmt_string(self):
         {
@@ -642,7 +651,7 @@ class BinCopyWriter:
         if not force and self.batch_size > self.insert_count:
             LOG.debug("Not enough data for insert....")
             return
-
+        self.make_query()
         LOG.debug(f'Inserting {self.insert_count} records...')
         self.insert.write(self.copy_trailer)
         self.insert.seek(0)
@@ -682,6 +691,8 @@ async def consumer(host: str,
 
             if obj[0:1] == b"#":
                 sock.update_time(obj)
+                if not copy_writer.session_id:
+                    copy_writer.session_id = sock.session_id
                 await copy_writer.insert_data()
 
                 runtime = time.time() - init_time
@@ -710,6 +721,7 @@ async def consumer(host: str,
                 copy_writer.add_data(obj)
 
             if max_iters and max_iters < lines_read:
+                copy_writer.session_id = sock.session_id
                 await copy_writer.insert_data()
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
@@ -719,6 +731,7 @@ async def consumer(host: str,
             LOG.info(f'Starting shutdown due to: {err.__class__.__name__}')
             await copy_writer.cleanup()
             await sock.close(status='Success')
+
             total_time = time.time() - init_time
             LOG.info('Total Lines Processed : %s', str(lines_read))
             LOG.info('Total seconds running : %.2f', total_time)
