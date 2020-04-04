@@ -11,7 +11,7 @@ from functools import partial
 import uvloop
 
 from tacview_client.config import get_logger
-LOG = get_logger()
+LOG = get_logger("tacview_client_server")
 
 
 async def handle_req(reader: asyncio.StreamReader, writer: asyncio.StreamWriter,

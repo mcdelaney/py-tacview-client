@@ -7,8 +7,8 @@ DB_URL = os.getenv("DATABASE_URL",
                    'postgresql://0.0.0.0:5432/dcs?user=prod&password=pwd')
 
 
-def get_logger() -> logging.Logger:
-    log = logging.getLogger('tacview_client')
+def get_logger(logger_name="taview_client") -> logging.Logger:
+    log = logging.getLogger(logger_name)
     log.setLevel(logging.INFO)
     logFormatter = logging.Formatter(
         "%(asctime)s [%(name)s] [%(levelname)-5.5s]  %(message)s")

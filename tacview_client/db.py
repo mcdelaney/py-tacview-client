@@ -28,25 +28,25 @@ class Session(Base): # type: ignore
 class Impact(Base): # type: ignore
     __tablename__ = "impact"
     id = sa.Column(sa.Integer, primary_key=True)
-    session_id = sa.Column(sa.INTEGER(), sa.ForeignKey('session.session_id'))
+    session_id = sa.Column(sa.INTEGER(), sa.ForeignKey('session.session_id'), index=True)
     killer = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     target = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     weapon = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
     time_offset = sa.Column(sa.REAL())
-    impact_dist = sa.Column(sa.REAL())
+    impact_dist = sa.Column(sa.REAL(), index=True)
 
 
 class Object(Base): # type: ignore
     __tablename__ = "object"
     id = sa.Column(sa.INTEGER, primary_key=True)
     tac_id = sa.Column(sa.INTEGER)
-    session_id = sa.Column(sa.Integer, sa.ForeignKey('session.session_id'))
-    name = sa.Column(sa.String())
+    session_id = sa.Column(sa.Integer, sa.ForeignKey('session.session_id'), index=True)
+    name = sa.Column(sa.String(), index=True)
     color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"))
     country = sa.Column(sa.String())
     grp = sa.Column(sa.String())
     pilot = sa.Column(sa.String())
-    type = sa.Column(sa.String())
+    type = sa.Column(sa.String(), index=True)
     alive = sa.Column(sa.Boolean())
     coalition = sa.Column(sa.Enum("Enemies", "Allies", "Neutral",
                                   name="coalition_enum"))
@@ -76,7 +76,7 @@ Event = sa.Table(
     metadata,
     sa.Column('id', sa.INTEGER(), sa.ForeignKey('object.id'), index=True),
     sa.Column('session_id', sa.INTEGER(), sa.ForeignKey('session.session_id')),
-    sa.Column('last_seen', sa.REAL()),
+    sa.Column('last_seen', sa.REAL(), index=True),
     sa.Column('alive', sa.Boolean()),
     sa.Column('lat', sa.REAL()),
     sa.Column('lon', sa.REAL()),
@@ -154,26 +154,29 @@ def create_tables():
                     id AS impact_id,
                     weapon_first_time, weapon_last_time, session_id,
                     round(cast(impact_dist as numeric), 2) impact_dist,
-                    ROUND(cast(weapon_last_time - weapon_first_time as numeric), 2) kill_duration
+                    ROUND(cast(weapon_last_time - weapon_first_time as numeric), 2) kill_duration,
+                    weapon_color, target_color, killer_color
                 FROM  impact
                 INNER JOIN (SELECT id killer, pilot killer_name, name killer_type,
-                            start_time
+                            start_time, color killer_color
                             FROM object
                             INNER JOIN (select session_id, start_time FROM session) sess2
 			                USING (session_id)) kill
                 USING (killer)
-                INNER JOIN (SELECT id target, pilot as target_name, name as target_type
+                INNER JOIN (SELECT id target, pilot as target_name, name as target_type,
+                            color target_color
                             FROM object) tar
                 USING(target)
                 INNER JOIN (SELECT id weapon, name AS weapon_name,
                                 first_seen as weapon_first_time,
-                                last_seen AS weapon_last_time, weapon_type
+                                last_seen AS weapon_last_time, weapon_type,
+                                color weapon_color
                             FROM object
                             LEFT JOIN (SELECT name, category AS weapon_type
                                        FROM weapon_types) weap_type
 
                             USING (name)
-                            WHERE type like ('%Missile%') and NAME IS NOT NULL) weap
+                            WHERE type = 'Weapon+Missile' and NAME IS NOT NULL) weap
                 USING (weapon)
                 WHERE killer IS NOT NULL AND
                     target IS NOT NULL AND weapon IS NOT NULL
