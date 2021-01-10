@@ -71,6 +71,15 @@ def tacview(
                 batch_size=batch_size,
             )
             server_proc.terminate()
+        else:
+            LOG.info("Connecting to tacview stream...")
+            client.main(
+                host=host,
+                port=port,
+                debug=debug,
+                max_iters=None,
+                batch_size=500,
+            )
     except KeyboardInterrupt:
         LOG.info("tacview-client shutting down...")
     except Exception as err:
