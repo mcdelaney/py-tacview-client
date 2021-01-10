@@ -11,17 +11,17 @@ from tacview_client import client, serve_file, db, config
 LOG = config.get_logger()
 app = typer.Typer()
 
-pg_option = typer.Option(
-    ...,
-    "--postgres_dsn",
-    help="""DSN for connection to the postgres server. Format should be:\n
-    postgresql://{ip}:{port}/{dbname}?user={username}&password={password}""",
-)
+# pg_option = typer.Option(
+#     ...,
+#     "--postgres_dsn",
+#     help="""DSN for connection to the postgres server. Format should be:\n
+#     postgresql://{ip}:{port}/{dbname}?user={username}&password={password}""",
+# )
 
 
 @app.command("run")
 def tacview(
-    postgres_dsn: str = pg_option,
+    # postgres_dsn: str = pg_option,
     host: str = typer.Option(
         ...,
         "--host",
@@ -76,7 +76,6 @@ def tacview(
                 debug=debug,
                 max_iters=None,
                 batch_size=batch_size,
-                dsn=postgres_dsn,
             )
             server_proc.terminate()
     except KeyboardInterrupt:
@@ -91,14 +90,14 @@ def tacview(
 
 
 @app.command("dropdb")
-def dropdb(postgres_dsn: str = pg_option):
+def dropdb():
     """Drop database tables."""
     LOG.info("Dropping tables from specified database...")
     db.drop_tables()
 
 
 @app.command("createdb")
-def createdb(postgres_dsn: str = pg_option):
+def createdb():
     """Create database tables."""
     LOG.info("Creating tables in specified database...")
     db.create_tables()

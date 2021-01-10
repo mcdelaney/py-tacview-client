@@ -107,7 +107,7 @@ def connect():
         print(err)
         print(
             "Could not connect to datatbase!"
-            " Make sure that the DATABASE_URL environment variable is set!"
+            " Make sure that the TACVIEW_DATABASE_URL environment variable is set!"
         )
         sys.exit(1)
 

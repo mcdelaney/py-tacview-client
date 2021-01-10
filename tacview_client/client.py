@@ -801,7 +801,10 @@ class BinCopyWriter:
 
 
 async def consumer(
-    host: str, port: int, max_iters: Optional[int], batch_size: int, dsn: str
+    host: str,
+    port: int,
+    max_iters: Optional[int],
+    batch_size: int,
 ) -> None:
     """Main method to consume stream."""
     LOG.info(
@@ -809,6 +812,7 @@ async def consumer(
         DEBUG,
         batch_size,
     )
+    dsn = os.getenv("TACVIEW_DATABASE_URL")
     global ASYNC_CON
     ASYNC_CON = await asyncpg.create_pool(DB_URL)
     copy_writer = BinCopyWriter(dsn, batch_size)
@@ -941,18 +945,18 @@ async def check_results():
     await con.close()
 
 
-def main(host, port, max_iters, batch_size, dsn, debug=False):
+def main(host, port, max_iters, batch_size, debug=False):
     """Start event loop to consume stream."""
     if debug:
         LOG.setLevel(logging.DEBUG)
-    asyncio.run(consumer(host, port, max_iters, batch_size, dsn))
+    asyncio.run(consumer(host, port, max_iters, batch_size))
 
 
 def serve_and_read(filename, port):
     filename = Path(filename)
     if not filename.exists():
         raise FileExistsError(filename)
-    dsn = os.getenv("DATABASE_URL")
+    dsn = os.getenv("TACVIEW_DATABASE_URL")
     server_proc = Process(target=partial(serve_file.main, filename=filename, port=port))
     server_proc.start()
     try:
