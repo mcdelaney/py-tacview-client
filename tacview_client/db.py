@@ -11,8 +11,8 @@ metadata = sa.MetaData(engine)
 Base = declarative_base(engine, metadata)
 
 
-class Session(Base): # type: ignore
-    __tablename__ = 'session'
+class Session(Base):  # type: ignore
+    __tablename__ = "session"
     session_id = sa.Column(sa.Integer, primary_key=True)
     start_time = sa.Column(sa.TIMESTAMP(timezone=True), unique=True)
     datasource = sa.Column(sa.String())
@@ -25,22 +25,24 @@ class Session(Base): # type: ignore
     status = sa.Column(sa.String())
 
 
-class Impact(Base): # type: ignore
+class Impact(Base):  # type: ignore
     __tablename__ = "impact"
     id = sa.Column(sa.Integer, primary_key=True)
-    session_id = sa.Column(sa.INTEGER(), sa.ForeignKey('session.session_id'), index=True)
-    killer = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
-    target = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
-    weapon = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
+    session_id = sa.Column(
+        sa.INTEGER(), sa.ForeignKey("session.session_id"), index=True
+    )
+    killer = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
+    target = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
+    weapon = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
     time_offset = sa.Column(sa.REAL())
     impact_dist = sa.Column(sa.REAL(), index=True)
 
 
-class Object(Base): # type: ignore
+class Object(Base):  # type: ignore
     __tablename__ = "object"
     id = sa.Column(sa.INTEGER, primary_key=True)
     tac_id = sa.Column(sa.INTEGER)
-    session_id = sa.Column(sa.Integer, sa.ForeignKey('session.session_id'), index=True)
+    session_id = sa.Column(sa.Integer, sa.ForeignKey("session.session_id"), index=True)
     name = sa.Column(sa.String(), index=True)
     color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"))
     country = sa.Column(sa.String())
@@ -48,14 +50,15 @@ class Object(Base): # type: ignore
     pilot = sa.Column(sa.String())
     type = sa.Column(sa.String(), index=True)
     alive = sa.Column(sa.Boolean())
-    coalition = sa.Column(sa.Enum("Enemies", "Allies", "Neutral",
-                                  name="coalition_enum"))
+    coalition = sa.Column(
+        sa.Enum("Enemies", "Allies", "Neutral", name="coalition_enum")
+    )
     first_seen = sa.Column(sa.REAL())
     last_seen = sa.Column(sa.REAL())
 
     lat = sa.Column(sa.REAL())
     lon = sa.Column(sa.REAL())
-    alt = sa.Column(sa.REAL() )
+    alt = sa.Column(sa.REAL())
     roll = sa.Column(sa.REAL())
     pitch = sa.Column(sa.REAL())
     yaw = sa.Column(sa.REAL())
@@ -63,10 +66,10 @@ class Object(Base): # type: ignore
     v_coord = sa.Column(sa.REAL())
     heading = sa.Column(sa.REAL())
     velocity_kts = sa.Column(sa.REAL())
-    impacted = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
+    impacted = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
     impacted_dist = sa.Column(sa.REAL())
-    parent = sa.Column(sa.INTEGER(), sa.ForeignKey('object.id'))
-    parent_dist =sa.Column(sa.REAL())
+    parent = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
+    parent_dist = sa.Column(sa.REAL())
     updates = sa.Column(sa.Integer())
     can_be_parent = sa.Column(sa.Boolean())
 
@@ -74,22 +77,22 @@ class Object(Base): # type: ignore
 Event = sa.Table(
     "event",
     metadata,
-    sa.Column('id', sa.INTEGER(), sa.ForeignKey('object.id'), index=True),
-    sa.Column('session_id', sa.INTEGER(), sa.ForeignKey('session.session_id')),
-    sa.Column('last_seen', sa.REAL(), index=True),
-    sa.Column('alive', sa.Boolean()),
-    sa.Column('lat', sa.REAL()),
-    sa.Column('lon', sa.REAL()),
-    sa.Column('alt', sa.REAL()),
-    sa.Column('roll', sa.REAL()),
-    sa.Column('pitch', sa.REAL()),
-    sa.Column('yaw', sa.REAL()),
-    sa.Column('u_coord', sa.REAL()),
-    sa.Column('v_coord', sa.REAL()),
-    sa.Column('heading', sa.REAL()),
-    sa.Column('velocity_kts', sa.REAL()),
-    sa.Column('updates', sa.INTEGER()),
-    postgresql_partition_by='LIST (session_id)'
+    sa.Column("id", sa.INTEGER(), sa.ForeignKey("object.id"), index=True),
+    sa.Column("session_id", sa.INTEGER(), sa.ForeignKey("session.session_id")),
+    sa.Column("last_seen", sa.REAL(), index=True),
+    sa.Column("alive", sa.Boolean()),
+    sa.Column("lat", sa.REAL()),
+    sa.Column("lon", sa.REAL()),
+    sa.Column("alt", sa.REAL()),
+    sa.Column("roll", sa.REAL()),
+    sa.Column("pitch", sa.REAL()),
+    sa.Column("yaw", sa.REAL()),
+    sa.Column("u_coord", sa.REAL()),
+    sa.Column("v_coord", sa.REAL()),
+    sa.Column("heading", sa.REAL()),
+    sa.Column("velocity_kts", sa.REAL()),
+    sa.Column("updates", sa.INTEGER()),
+    postgresql_partition_by="LIST (session_id)",
 )
 
 
@@ -97,13 +100,15 @@ def connect():
     """Create sa connection to database."""
     try:
         print("Connecting to db....")
-        con =  engine.connect()
+        con = engine.connect()
         print("Connection established...")
         return con
     except Exception as err:
         print(err)
-        print("Could not connect to datatbase!"
-              " Make sure that the DATABASE_URL environment variable is set!")
+        print(
+            "Could not connect to datatbase!"
+            " Make sure that the DATABASE_URL environment variable is set!"
+        )
         sys.exit(1)
 
 
@@ -122,7 +127,8 @@ def create_tables():
                             --,time_offset AS last_offset
                         FROM object) obj
             USING (id, session_id)
-        """)
+        """
+    )
 
     con.execute(
         """
@@ -139,10 +145,12 @@ def create_tables():
             ) pilots
             USING (parent, session_id)
             GROUP BY session_id, name, type, parent, pilot
-        """)
+        """
+    )
 
     con.execute(
-        sa.text("""
+        sa.text(
+            """
          CREATE OR REPLACE VIEW impact_comb AS (
              SELECT DATE_TRUNC('SECOND',
                 (start_time +
@@ -181,7 +189,9 @@ def create_tables():
                 WHERE killer IS NOT NULL AND
                     target IS NOT NULL AND weapon IS NOT NULL
         )
-        """))
+        """
+        )
+    )
     con.close()
     print("All tables and views created successfully!")
 
@@ -189,8 +199,8 @@ def create_tables():
 def drop_tables():
     """Drop all existing tables."""
     con = connect()
-    print('Dropping all tables....')
-    for table in ['Session', 'Object', 'Event', 'Impact']:
+    print("Dropping all tables....")
+    for table in ["Session", "Object", "Event", "Impact"]:
         con.execute(f"drop table if exists {table} CASCADE")
     con.close()
     print("All tables dropped...")

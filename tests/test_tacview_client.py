@@ -1,12 +1,14 @@
 """Test tacview parser."""
 import asyncio
 import pytest
+
 # import sys
 # sys.path.append("..")
 from tacview_client import __version__
 from tacview_client.client import line_to_obj, Ref
 
 # pytestmark = pytest.mark.asyncio
+
 
 @pytest.fixture
 @pytest.mark.asyncio
@@ -26,37 +28,41 @@ async def ref_obj():
 @pytest.mark.asyncio
 async def test_update_string(ref_obj):
     """Test that update strings are parsed properly."""
-    new_string = bytearray(b"802,T=6.3596289|5.139203|342.67|||7.3|729234.25|-58312.28|,"
-                           b"Type=Ground+Static+Aerodrome,Name=FARP,Color=Blue,"
-                           b"Coalition=Enemies,Country=us")
+    new_string = bytearray(
+        b"802,T=6.3596289|5.139203|342.67|||7.3|729234.25|-58312.28|,"
+        b"Type=Ground+Static+Aerodrome,Name=FARP,Color=Blue,"
+        b"Coalition=Enemies,Country=us"
+    )
     await line_to_obj(raw_line=new_string, ref=ref_obj)
 
     update_string = bytearray(b"802,T=123.45|678.09|234.2||")
-    correct_resp = {'id': int('802', 16),
-                    'lat': 678.09,
-                    'lon': 123.45,
-                    'alt': 234.2
-                    }
+    correct_resp = {"id": int("802", 16), "lat": 678.09, "lon": 123.45, "alt": 234.2}
     parsed = await line_to_obj(raw_line=update_string, ref=ref_obj)
     for key, value in correct_resp.items():
-        if key == 'id':
+        if key == "id":
             continue
         assert value == getattr(parsed, key)
+
 
 @pytest.mark.asyncio
 async def test_new_entry_without_alt(ref_obj):
     """Test that a new record with no altitude is assigned 1.0."""
-    input_bytes = bytearray(b"4001,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
-                           b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
-                           b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru")
+    input_bytes = bytearray(
+        b"4001,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
+        b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
+        b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru"
+    )
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
     assert parsed.alt == 1.0
 
+
 @pytest.mark.asyncio
 async def test_negative_integer_alt(ref_obj):
-    input_bytes = bytearray(b"4001,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
-                           b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
-                           b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru")
+    input_bytes = bytearray(
+        b"4001,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
+        b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
+        b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru"
+    )
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
 
     input_bytes = bytearray(b"4001,T=6.96369|4.0232604|-2||")
@@ -64,12 +70,13 @@ async def test_negative_integer_alt(ref_obj):
     assert parsed.alt == -2.0
 
 
-
 @pytest.mark.asyncio
 async def test_u_coord_error(ref_obj):
-    input_bytes = bytearray(b"76502,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
-                           b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
-                           b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru")
+    input_bytes = bytearray(
+        b"76502,T=4.6361975|6.5404775||||357.8|-347259.72|380887.44|,"
+        b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
+        b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru"
+    )
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
 
     input_bytes = bytearray(b"76502,T=6.6632117|4.8577435|6640.74|-57047.37|76446.19")
@@ -84,25 +91,27 @@ async def test_u_coord_error(ref_obj):
     assert parsed.alt == 7224.58
 
 
-
 @pytest.mark.asyncio
 async def test_line_parser(ref_obj):
     """Test that update strings are parsed properly."""
-    input_bytes = bytearray(b"802,T=6.3596289|5.139203|342.67|||7.3|729234.25|-58312.28|,"
-                           b"Type=Ground+Static+Aerodrome,Name=FARP,Color=Blue,"
-                           b"Coalition=Enemies,Country=us")
+    input_bytes = bytearray(
+        b"802,T=6.3596289|5.139203|342.67|||7.3|729234.25|-58312.28|,"
+        b"Type=Ground+Static+Aerodrome,Name=FARP,Color=Blue,"
+        b"Coalition=Enemies,Country=us"
+    )
     parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
 
-    correct_resp = {'tac_id': int(b'802', 16),
-                    'lat': 5.139203,
-                    'lon': 6.3596289,
-                    'alt': 342.67,
-                    'Type': "Ground+Static+Aerodrome",
-                    'Name': "FARP",
-                    'Color': "Blue",
-                    'Coalition': "Enemies",
-                    'Country': "us",
-                    }
+    correct_resp = {
+        "tac_id": int(b"802", 16),
+        "lat": 5.139203,
+        "lon": 6.3596289,
+        "alt": 342.67,
+        "Type": "Ground+Static+Aerodrome",
+        "Name": "FARP",
+        "Color": "Blue",
+        "Coalition": "Enemies",
+        "Country": "us",
+    }
 
     for key, value in correct_resp.items():
         assert value == getattr(parsed, key)

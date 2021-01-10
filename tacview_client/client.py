@@ -20,35 +20,52 @@ import sys
 import os
 
 import asyncpg
-import uvloop
+
+try:
+    import uvloop  # type: ignore
+
+    uvloop.install()
+except (ModuleNotFoundError, NotImplementedError):
+    pass
 
 from tacview_client.config import DB_URL, get_logger
 from tacview_client import serve_file
 from tacview_client import __version__
 
-CLIENT = 'tacview-client'
-PASSWORD = '0'
+CLIENT = "tacview-client"
+PASSWORD = "0"
 STREAM_PROTOCOL = "XtraLib.Stream.0"
-TACVIEW_PROTOCOL = 'Tacview.RealTimeTelemetry.0'
+TACVIEW_PROTOCOL = "Tacview.RealTimeTelemetry.0"
 HANDSHAKE_TERMINATOR = "\0"
 
-HANDSHAKE = ('\n'.join([STREAM_PROTOCOL, TACVIEW_PROTOCOL, CLIENT, PASSWORD]) +
-             HANDSHAKE_TERMINATOR).encode('utf-8')
+HANDSHAKE = (
+    "\n".join([STREAM_PROTOCOL, TACVIEW_PROTOCOL, CLIENT, PASSWORD])
+    + HANDSHAKE_TERMINATOR
+).encode("utf-8")
 
-COORD_KEYS = ('lon', 'lat', 'alt', 'roll', 'pitch', 'yaw', 'u_coord',
-              'v_coord', 'heading')
+COORD_KEYS = (
+    "lon",
+    "lat",
+    "alt",
+    "roll",
+    "pitch",
+    "yaw",
+    "u_coord",
+    "v_coord",
+    "heading",
+)
 COORD_KEY_LEN = len(COORD_KEYS)
 
-COORD_KEYS_SHORT = ('lon', 'lat', 'alt', 'u_coord', 'v_coord')
+COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
 COORD_KEY_SHORT_LEN = len(COORD_KEYS_SHORT)
 
-COORD_KEYS_MED = ('lon', 'lat', 'alt', 'roll', 'pitch', 'yaw')
+COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
 COORD_KEYS_MED_LEN = len(COORD_KEYS_MED)
 
-COORD_KEYS_X_SHORT = ('lon', 'lat', 'alt')
+COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
 COORD_KEYS_X_SHORT_LEN = len(COORD_KEYS_X_SHORT)
 
-HOST = '147.135.8.169'  # Hoggit Gaw
+HOST = "147.135.8.169"  # Hoggit Gaw
 PORT = 42674
 DEBUG = False
 CONTACT_TIME = 0.0
@@ -58,10 +75,24 @@ LOG = get_logger()
 
 class Ref:  # pylint: disable=too-many-instance-attributes
     """Hold and extract Reference values used as offsets."""
-    __slots__ = ('session_id', 'lat', 'lon', 'title', 'datasource', 'author',
-                 'file_version', 'start_time', 'time_offset', 'all_refs',
-                 'time_since_last', 'obj_store', 'client_version',
-                 'status')
+
+    __slots__ = (
+        "session_id",
+        "lat",
+        "lon",
+        "title",
+        "datasource",
+        "author",
+        "file_version",
+        "start_time",
+        "time_offset",
+        "all_refs",
+        "time_since_last",
+        "obj_store",
+        "client_version",
+        "status",
+    )
+
     def __init__(self):
         self.session_id: Optional[int] = None
         self.lat: Optional[float] = None
@@ -76,7 +107,7 @@ class Ref:  # pylint: disable=too-many-instance-attributes
         self.time_since_last: float = 0.0
         self.obj_store: Dict[int, ObjectRec] = {}
         self.client_version: str = __version__
-        self.status: str = 'In Progress'
+        self.status: str = "In Progress"
 
     def update_time(self, offset):
         """Update the refence time attribute with a new offset."""
@@ -90,36 +121,37 @@ class Ref:  # pylint: disable=too-many-instance-attributes
         ReferenceTime from a line object.
         """
         try:
-            val = line.split(b',')[-1].split(b'=')
+            val = line.split(b",")[-1].split(b"=")
 
-            if val[0] == b'ReferenceLatitude':
-                LOG.debug('Ref latitude found...')
+            if val[0] == b"ReferenceLatitude":
+                LOG.debug("Ref latitude found...")
                 self.lat = float(val[1])
 
-            elif val[0] == b'ReferenceLongitude':
-                LOG.debug('Ref longitude found...')
+            elif val[0] == b"ReferenceLongitude":
+                LOG.debug("Ref longitude found...")
                 self.lon = float(val[1])
 
-            elif val[0] == b'DataSource':
-                LOG.debug('Ref datasource found...')
-                self.datasource = val[1].decode('UTF-8')
+            elif val[0] == b"DataSource":
+                LOG.debug("Ref datasource found...")
+                self.datasource = val[1].decode("UTF-8")
 
-            elif val[0] == b'Title':
-                LOG.debug('Ref Title found...')
-                self.title = val[1].decode('UTF-8')
+            elif val[0] == b"Title":
+                LOG.debug("Ref Title found...")
+                self.title = val[1].decode("UTF-8")
 
-            elif val[0] == b'Author':
-                LOG.debug('Ref Author found...')
-                self.author = val[1].decode('UTF-8')
+            elif val[0] == b"Author":
+                LOG.debug("Ref Author found...")
+                self.author = val[1].decode("UTF-8")
 
-            elif val[0] == b'FileVersion':
-                LOG.debug('Ref Author found...')
+            elif val[0] == b"FileVersion":
+                LOG.debug("Ref Author found...")
                 self.file_version = float(val[1])
 
-            elif val[0] == b'RecordingTime':
-                LOG.debug('Ref time found...')
-                self.start_time = datetime.strptime(val[1].decode('UTF-8'),
-                                              '%Y-%m-%dT%H:%M:%S.%fZ')
+            elif val[0] == b"RecordingTime":
+                LOG.debug("Ref time found...")
+                self.start_time = datetime.strptime(
+                    val[1].decode("UTF-8"), "%Y-%m-%dT%H:%M:%S.%fZ"
+                )
                 self.start_time = self.start_time.replace(microsecond=0)
                 self.start_time = self.start_time.replace(tzinfo=pytz.UTC)
 
@@ -134,36 +166,75 @@ class Ref:  # pylint: disable=too-many-instance-attributes
                 """
                 async with ASYNC_CON.acquire() as con:
                     self.session_id = await con.fetchval(
-                        sql, self.lat, self.lon, self.title, self.datasource,
-                        self.author, self.file_version, self.start_time,
-                        self.client_version, self.status)
+                        sql,
+                        self.lat,
+                        self.lon,
+                        self.title,
+                        self.datasource,
+                        self.author,
+                        self.file_version,
+                        self.start_time,
+                        self.client_version,
+                        self.status,
+                    )
                 LOG.info(f"Creating table partion for {self.session_id}...")
                 async with ASYNC_CON.acquire() as con:
                     await con.execute(
                         f"""CREATE TABLE event_{self.session_id} PARTITION OF event
                             FOR VALUES IN ({self.session_id});
-                        """)
+                        """
+                    )
                 LOG.info("Session session data saved...")
         except IndexError:
             pass
 
+
 from dataclasses import dataclass
+
+
 @dataclass
 class ObjectRec:
     __slots__ = (
-        'id', 'tac_id', 'first_seen', 'last_seen', 'session_id', 'alive', 'Name',
-        'Color', 'Country', 'grp', 'Pilot', 'Type', 'Coalition', 'lat', 'lon',
-        'alt', 'roll', 'pitch', 'yaw', 'u_coord', 'v_coord', 'heading',
-        'impacted', 'impacted_dist', 'parent', 'parent_dist', 'updates',
-        'velocity_kts', 'secs_since_last_seen', 'written', 'cart_coords'
+        "id",
+        "tac_id",
+        "first_seen",
+        "last_seen",
+        "session_id",
+        "alive",
+        "Name",
+        "Color",
+        "Country",
+        "grp",
+        "Pilot",
+        "Type",
+        "Coalition",
+        "lat",
+        "lon",
+        "alt",
+        "roll",
+        "pitch",
+        "yaw",
+        "u_coord",
+        "v_coord",
+        "heading",
+        "impacted",
+        "impacted_dist",
+        "parent",
+        "parent_dist",
+        "updates",
+        "velocity_kts",
+        "secs_since_last_seen",
+        "written",
+        "cart_coords",
     )
 
     def __init__(
-            self,
-            tac_id: int = None,
-            first_seen: Optional[float] = None,
-            last_seen: Optional[float] = None,
-            session_id: Optional[int] = None):
+        self,
+        tac_id: int = None,
+        first_seen: Optional[float] = None,
+        last_seen: Optional[float] = None,
+        session_id: Optional[int] = None,
+    ):
         self.id = None
         self.tac_id = tac_id
         self.first_seen = first_seen
@@ -209,14 +280,18 @@ class ObjectRec:
     def compute_velocity(self) -> None:
         """Calculate velocity given the distance from the last point."""
         new_cart_coords = get_cartesian_coord(self.lat, self.lon, self.alt)
-        if self.cart_coords and self.secs_since_last_seen and self.secs_since_last_seen > 0:
+        if (
+            self.cart_coords
+            and self.secs_since_last_seen
+            and self.secs_since_last_seen > 0
+        ):
             t_dist = compute_dist(new_cart_coords, self.cart_coords)
             self.velocity_kts = (t_dist / self.secs_since_last_seen) / 1.94384
         self.cart_coords = new_cart_coords
 
     def should_have_parent(self) -> bool:
         """Check if an object should have a parent record."""
-        parented_types = ('weapon', 'projectile', 'decoy', 'container', 'flare')
+        parented_types = ("weapon", "projectile", "decoy", "container", "flare")
         tval = self.Type.lower()
         for t in parented_types:
             if t in tval:
@@ -225,8 +300,13 @@ class ObjectRec:
 
     def can_be_parent(self) -> bool:
         """Check if an object is a member of types that could be parents."""
-        not_parent_types = ('Decoy', 'Misc', 'Weapon', 'Projectile',
-                            'Ground+Light+Human+Air+Parachutist')
+        not_parent_types = (
+            "Decoy",
+            "Misc",
+            "Weapon",
+            "Projectile",
+            "Ground+Light+Human+Air+Parachutist",
+        )
         tval = self.Type
         for t in not_parent_types:
             if t in tval:
@@ -250,26 +330,31 @@ def get_cartesian_coord(lat, lon, h) -> Sequence:
 
 def compute_dist(p_1: Sequence, p_2: Sequence) -> float:
     """Compute cartesian distance between points."""
-    return sqrt((p_2[0] - p_1[0])**2 + (p_2[1] - p_1[1])**2 +
-                (p_2[2] - p_1[2])**2)
+    return sqrt(
+        (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
+    )
 
 
-async def determine_contact(rec, ref: Ref, contact_type='parent'):
+async def determine_contact(rec, ref: Ref, contact_type="parent"):
     """Determine the parent of missiles, rockets, and bombs."""
     global CONTACT_TIME
     t1 = time.time()
 
-    LOG.debug(f"Determing {contact_type} for object id: %s -- %s-%s...", rec.id,
-              rec.Name, rec.Type)
+    LOG.debug(
+        f"Determing {contact_type} for object id: %s -- %s-%s...",
+        rec.id,
+        rec.Name,
+        rec.Type,
+    )
 
     if contact_type == "parent":
-        if rec.Color == 'Violet':
-            acpt_colors = ['Red', 'Blue']
+        if rec.Color == "Violet":
+            acpt_colors = ["Red", "Blue"]
         else:
             acpt_colors = [rec.Color]
 
-    elif contact_type == 'impacted':
-        acpt_colors = ['Red'] if rec.Color == 'Blue' else ['Blue']
+    elif contact_type == "impacted":
+        acpt_colors = ["Red"] if rec.Color == "Blue" else ["Blue"]
 
     else:
         raise NotImplementedError
@@ -279,31 +364,36 @@ async def determine_contact(rec, ref: Ref, contact_type='parent'):
     offset_time = rec.last_seen - 2.5
 
     for near in ref.obj_store.values():
-        if not near.can_be_parent or near.tac_id == rec.tac_id or \
-            near.Color not in acpt_colors:
+        if (
+            not near.can_be_parent
+            or near.tac_id == rec.tac_id
+            or near.Color not in acpt_colors
+        ):
             continue
-        if contact_type == 'impacted' and not near.Type.startswith('Air+'):
+        if contact_type == "impacted" and not near.Type.startswith("Air+"):
             continue
 
-        if (offset_time > near.last_seen and (
-            not ('Ground' in near.Type.lower() and near.alive == True))):
+        if offset_time > near.last_seen and (
+            not ("Ground" in near.Type.lower() and near.alive == True)
+        ):
             continue
 
         n_checked += 1
-        prox = compute_dist(rec.cart_coords, near.cart_coords) # type: ignore
+        prox = compute_dist(rec.cart_coords, near.cart_coords)  # type: ignore
         LOG.debug("Distance to rec %s-%s is %d...", near.Name, near.Type, prox)
         if not closest or (prox < closest[1]):
             closest = [near.id, prox, near.Name, near.Pilot, near.Type]
-    CONTACT_TIME += (time.time() - t1)
+    CONTACT_TIME += time.time() - t1
 
     if not closest:
         return None
 
-    if closest[1] > 200 and contact_type == 'parent':
+    if closest[1] > 200 and contact_type == "parent":
         LOG.warning(
             f"Rejecting closest {contact_type} for "
             f"{rec.id}-{rec.Name}-{rec.Type}: "
-            f"{closest[4]} {closest[1]}m...{n_checked} checked!")
+            f"{closest[4]} {closest[1]}m...{n_checked} checked!"
+        )
         return None
 
     return closest
@@ -316,21 +406,20 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
         LOG.debug("Raw line starts with 0...")
         return None
 
-    if raw_line[0:1] == b'-':
+    if raw_line[0:1] == b"-":
         rec = ref.obj_store[int(raw_line[1:], 16)]
         rec.alive = False
         rec.updates += 1
 
-        if 'Weapon' in rec.Type or 'Projectile' in rec.Type:
-            impacted = await determine_contact(rec, contact_type='impacted',
-                                               ref=ref)
+        if "Weapon" in rec.Type or "Projectile" in rec.Type:
+            impacted = await determine_contact(rec, contact_type="impacted", ref=ref)
             if impacted:
                 rec.impacted = impacted[0]
                 rec.impacted_dist = impacted[1]
                 await insert_impact(rec, ref.time_offset)
         return rec
 
-    comma = raw_line.find(b',')
+    comma = raw_line.find(b",")
     rec_id = int(raw_line[0:comma], 16)
     try:
         rec = ref.obj_store[rec_id]
@@ -339,17 +428,19 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
 
     except KeyError:
         # Object not yet seen...create new record...
-        rec = ObjectRec(tac_id=rec_id,
-                        session_id=ref.session_id,
-                        first_seen=ref.time_offset,
-                        last_seen=ref.time_offset)
+        rec = ObjectRec(
+            tac_id=rec_id,
+            session_id=ref.session_id,
+            first_seen=ref.time_offset,
+            last_seen=ref.time_offset,
+        )
         ref.obj_store[rec_id] = rec
 
     bytes_remaining = True
     try:
         while bytes_remaining:
             last_comma = comma + 1
-            comma = raw_line.find(b',', last_comma)
+            comma = raw_line.find(b",", last_comma)
             if comma == -1:
                 bytes_remaining = False
                 chunk = raw_line[last_comma:]
@@ -357,13 +448,13 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                 chunk = raw_line[last_comma:comma]
             eq_loc = chunk.find(b"=")
             key = chunk[0:eq_loc]
-            val = chunk[eq_loc + 1:]
+            val = chunk[eq_loc + 1 :]
 
             if key == b"T":
                 i = 0
                 pipe_pos_end = -1
                 pipes_remaining = True
-                npipe = val.count(b'|')
+                npipe = val.count(b"|")
                 if npipe == 8:
                     C_KEYS = COORD_KEYS
                     C_LEN = COORD_KEY_LEN
@@ -378,18 +469,22 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                     C_LEN = COORD_KEYS_X_SHORT_LEN
                 else:
                     LOG.error("Coord count error!")
-                    raise ValueError("COORD COUNT EITHER 8, 5, OR 4!", npipe, raw_line.decode('UTF-8'))
+                    raise ValueError(
+                        "COORD COUNT EITHER 8, 5, OR 4!",
+                        npipe,
+                        raw_line.decode("UTF-8"),
+                    )
 
                 while i < C_LEN and pipes_remaining:
                     pipe_pos_start = pipe_pos_end + 1
-                    pipe_pos_end = val.find(b'|', pipe_pos_start)
+                    pipe_pos_end = val.find(b"|", pipe_pos_start)
                     if pipe_pos_end == -1:
                         pipes_remaining = False
                         coord = val[pipe_pos_start:]
                     else:
                         coord = val[pipe_pos_start:pipe_pos_end]
 
-                    if coord != b'':
+                    if coord != b"":
                         c_key = C_KEYS[i]
                         if c_key == "lat":
                             rec.lat = float(coord) + ref.lat
@@ -400,15 +495,16 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                     i += 1
             else:
                 rec.update_val(
-                    key.decode('UTF-8') if key != b'Group' else 'grp', val.decode('UTF-8'))
+                    key.decode("UTF-8") if key != b"Group" else "grp",
+                    val.decode("UTF-8"),
+                )
     except Exception as err:
         raise err
 
     rec.compute_velocity()
 
     if rec.updates == 1 and rec.should_have_parent():
-        parent_info = await determine_contact(rec, contact_type='parent',
-                                              ref=ref)
+        parent_info = await determine_contact(rec, contact_type="parent", ref=ref)
         if parent_info:
             rec.parent = parent_info[0]
             rec.parent_dist = parent_info[1]
@@ -421,31 +517,52 @@ async def insert_impact(rec, impact_time):
                     weapon, time_offset, impact_dist)
                 VALUES($1, $2, $3, $4, $5, $6)
     """
-    vals = (rec.session_id, rec.parent, rec.impacted, rec.id,
-            impact_time, rec.impacted_dist)
+    vals = (
+        rec.session_id,
+        rec.parent,
+        rec.impacted,
+        rec.id,
+        impact_time,
+        rec.impacted_dist,
+    )
     async with ASYNC_CON.acquire() as con:
         await con.execute(sql, *vals)
 
 
 async def create_single(obj):
     """Insert a single newly create record to database."""
-    vals = (obj.tac_id,
-            obj.session_id,
-            obj.Name,
-            obj.Color,
-            obj.Country,
-            obj.grp,
-            obj.Pilot,
-            obj.Type,
-            obj.alive,
-            obj.Coalition,
-            obj.first_seen, obj.last_seen, obj.lat, obj.lon, obj.alt, obj.roll,
-            obj.pitch, obj.yaw, obj.u_coord, obj.v_coord, obj.heading,
-            obj.velocity_kts, obj.impacted, obj.impacted_dist,
-            obj.parent, obj.parent_dist, obj.updates,
-            obj.can_be_parent())
+    vals = (
+        obj.tac_id,
+        obj.session_id,
+        obj.Name,
+        obj.Color,
+        obj.Country,
+        obj.grp,
+        obj.Pilot,
+        obj.Type,
+        obj.alive,
+        obj.Coalition,
+        obj.first_seen,
+        obj.last_seen,
+        obj.lat,
+        obj.lon,
+        obj.alt,
+        obj.roll,
+        obj.pitch,
+        obj.yaw,
+        obj.u_coord,
+        obj.v_coord,
+        obj.heading,
+        obj.velocity_kts,
+        obj.impacted,
+        obj.impacted_dist,
+        obj.parent,
+        obj.parent_dist,
+        obj.updates,
+        obj.can_be_parent(),
+    )
 
-    sql =  """INSERT into object (
+    sql = """INSERT into object (
             tac_id, session_id, name, color, country, grp, pilot, type,
             alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
             pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
@@ -474,6 +591,7 @@ class AsyncStreamReader(Ref):
     reader: asyncio.StreamReader
     writer: asyncio.StreamWriter
     """Read from Tacview socket."""
+
     def __init__(self, host, port, debug=False):
         super().__init__()
         self.host: str = host
@@ -481,7 +599,7 @@ class AsyncStreamReader(Ref):
         self.sink = "log/raw_sink.txt"
         self.debug = debug
         if self.debug:
-            open(self.sink, 'w').close()
+            open(self.sink, "w").close()
 
     async def open_connection(self):
         """
@@ -490,16 +608,17 @@ class AsyncStreamReader(Ref):
         """
         while True:
             try:
-                LOG.info(f'Opening connection to {self.host}:{self.port}...')
+                LOG.info(f"Opening connection to {self.host}:{self.port}...")
                 self.reader, self.writer = await asyncio.open_connection(
-                    self.host, self.port)
-                LOG.info('Connection opened...sending handshake...')
+                    self.host, self.port
+                )
+                LOG.info("Connection opened...sending handshake...")
                 self.writer.write(HANDSHAKE)
                 await self.reader.readline()
-                LOG.info('Connection opened with successful handshake...')
+                LOG.info("Connection opened with successful handshake...")
                 break
             except ConnectionError:
-                LOG.error('Connection attempt failed....retrying in 3 sec...')
+                LOG.error("Connection attempt failed....retrying in 3 sec...")
                 await asyncio.sleep(3)
 
     async def read_stream(self):
@@ -514,21 +633,24 @@ class AsyncStreamReader(Ref):
         self.writer.close()
         await self.writer.wait_closed()
         LOG.info(f"Marking session status: {status}...")
-        await ASYNC_CON.execute("""UPDATE session SET status = $1
+        await ASYNC_CON.execute(
+            """UPDATE session SET status = $1
                                 WHERE session_id = $2""",
-                                status, self.session_id)
-        LOG.info(f'Session marked as {status}!')
+            status,
+            self.session_id,
+        )
+        LOG.info(f"Session marked as {status}!")
 
 
 class BinCopyWriter:
     """Manage efficient insertion of bulk data to postgres."""
+
     db_event_time: float = 0.0
     event_times: List = []
     insert: BytesIO
-    fmt_str: str = '>h ii ii if i? if if if if if if if if if if ii'
-    copy_header = struct.pack('>11sii', b'PGCOPY\n\377\r\n\0', 0, 0)
-    copy_trailer =  struct.pack('>h', -1)
-
+    fmt_str: str = ">h ii ii if i? if if if if if if if if if if ii"
+    copy_header = struct.pack(">11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
+    copy_trailer = struct.pack(">h", -1)
 
     # """
     # WITH src AS (
@@ -551,7 +673,7 @@ class BinCopyWriter:
         self.create_byte_buffer()
         self.insert_count = 0
         self.session_id = session_id
-        self.tbl_uuid = str(uuid1()).replace("-", '_')
+        self.tbl_uuid = str(uuid1()).replace("-", "_")
 
     def make_query(self):
         self.cmd = f"""
@@ -602,10 +724,10 @@ class BinCopyWriter:
 
     def build_fmt_string(self):
         {
-            "INTEGER": ('ii', 4),
-            "FLOAT": ('id', 8),
-            "DOUBLE": ('id', 8),
-            "NUMERIC": ('id', 8)
+            "INTEGER": ("ii", 4),
+            "FLOAT": ("id", 8),
+            "DOUBLE": ("id", 8),
+            "NUMERIC": ("id", 8),
         }
 
     def create_byte_buffer(self) -> None:
@@ -616,22 +738,39 @@ class BinCopyWriter:
     def add_data(self, obj: ObjectRec) -> None:
         """Take an ObjectRec, pack it to bytes, then write to byte buffer."""
         try:
-            data = (15,
-                    4, obj.id,
-                    4, obj.session_id,
-                    4, obj.last_seen,
-                    1, obj.alive,
-                    4, obj.lat,
-                    4, obj.lon,
-                    4, obj.alt,
-                    4, obj.roll,
-                    4, obj.pitch,
-                    4, obj.yaw,
-                    4, obj.u_coord,
-                    4, obj.v_coord,
-                    4, obj.heading,
-                    4, obj.velocity_kts,
-                    4, obj.updates)
+            data = (
+                15,
+                4,
+                obj.id,
+                4,
+                obj.session_id,
+                4,
+                obj.last_seen,
+                1,
+                obj.alive,
+                4,
+                obj.lat,
+                4,
+                obj.lon,
+                4,
+                obj.alt,
+                4,
+                obj.roll,
+                4,
+                obj.pitch,
+                4,
+                obj.yaw,
+                4,
+                obj.u_coord,
+                4,
+                obj.v_coord,
+                4,
+                obj.heading,
+                4,
+                obj.velocity_kts,
+                4,
+                obj.updates,
+            )
 
             packed = struct.pack(self.fmt_str, *data)
         except Exception as err:
@@ -643,7 +782,7 @@ class BinCopyWriter:
 
     async def cleanup(self) -> None:
         """Shut down and ensure all data is written."""
-        self.min_insert_size = -1 # ensure everything gets flushed
+        self.min_insert_size = -1  # ensure everything gets flushed
         await self.insert_data(force=True)
         self.db_event_time = sum(self.event_times)
 
@@ -652,23 +791,24 @@ class BinCopyWriter:
             LOG.debug("Not enough data for insert....")
             return
         self.make_query()
-        LOG.debug(f'Inserting {self.insert_count} records...')
+        LOG.debug(f"Inserting {self.insert_count} records...")
         self.insert.write(self.copy_trailer)
         self.insert.seek(0)
         async with ASYNC_CON.acquire() as con:
-            await con._copy_in(self.cmd , self.insert, 100)
+            await con._copy_in(self.cmd, self.insert, 100)
         self.insert.close()
         self.create_byte_buffer()
 
 
-async def consumer(host: str,
-                   port: int,
-                   max_iters: Optional[int],
-                   batch_size: int,
-                   dsn:str) -> None:
+async def consumer(
+    host: str, port: int, max_iters: Optional[int], batch_size: int, dsn: str
+) -> None:
     """Main method to consume stream."""
-    LOG.info("Starting tacview client with settings: "
-             "debug: %s -- batch-size: %s", DEBUG, batch_size)
+    LOG.info(
+        "Starting tacview client with settings: " "debug: %s -- batch-size: %s",
+        DEBUG,
+        batch_size,
+    )
     global ASYNC_CON
     ASYNC_CON = await asyncpg.create_pool(DB_URL)
     copy_writer = BinCopyWriter(dsn, batch_size)
@@ -700,20 +840,26 @@ async def consumer(host: str,
                 print_check = runtime - print_log
                 if log_check > 0.05:
                     ln_sec = lines_read / runtime
-                    sys.stdout.write("\rEvents processed: {:,} at {:,.2f} events/sec".format(
-                        lines_read, ln_sec))
+                    sys.stdout.write(
+                        "\rEvents processed: {:,} at {:,.2f} events/sec".format(
+                            lines_read, ln_sec
+                        )
+                    )
                     sys.stdout.flush()
                     last_log = runtime
 
                     if print_check > 10:
-                        LOG.info("Events processed: {:,} at {:,.2f} events/sec".format(
-                            lines_read, ln_sec))
+                        LOG.info(
+                            "Events processed: {:,} at {:,.2f} events/sec".format(
+                                lines_read, ln_sec
+                            )
+                        )
                         print_log = runtime
 
             else:
                 t1 = time.time()
                 obj = await line_to_obj(obj, sock)
-                line_proc_time += (time.time() - t1)
+                line_proc_time += time.time() - t1
                 if not obj:
                     continue
                 if not obj.written:
@@ -726,20 +872,24 @@ async def consumer(host: str,
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
 
-        except (MaxIterationsException, EndOfFileException,
-                asyncio.IncompleteReadError) as err:
-            LOG.info(f'Starting shutdown due to: {err.__class__.__name__}')
+        except (
+            MaxIterationsException,
+            EndOfFileException,
+            asyncio.IncompleteReadError,
+        ) as err:
+            LOG.info(f"Starting shutdown due to: {err.__class__.__name__}")
             await copy_writer.cleanup()
-            await sock.close(status='Success')
+            await sock.close(status="Success")
 
             total_time = time.time() - init_time
-            LOG.info('Total Lines Processed : %s', str(lines_read))
-            LOG.info('Total seconds running : %.2f', total_time)
-            LOG.info('Pct Event Write Time: %.2f',
-                     copy_writer.db_event_time / total_time)
-            LOG.info('Pct Get Contact Time: %.2f', CONTACT_TIME / total_time)
-            LOG.info('Pct Line Proc Time: %.2f', line_proc_time / total_time)
-            LOG.info('Lines/second: %.4f', lines_read / total_time)
+            LOG.info("Total Lines Processed : %s", str(lines_read))
+            LOG.info("Total seconds running : %.2f", total_time)
+            LOG.info(
+                "Pct Event Write Time: %.2f", copy_writer.db_event_time / total_time
+            )
+            LOG.info("Pct Get Contact Time: %.2f", CONTACT_TIME / total_time)
+            LOG.info("Pct Line Proc Time: %.2f", line_proc_time / total_time)
+            LOG.info("Lines/second: %.4f", lines_read / total_time)
             total = {}
             for obj in sock.obj_store.values():
                 if obj.should_have_parent() and not obj.parent:
@@ -750,20 +900,23 @@ async def consumer(host: str,
             for key, value in total.items():
                 LOG.info(f"total without parent but should {key}: {value}")
 
-            LOG.info('Exiting tacview-client!')
+            LOG.info("Exiting tacview-client!")
             return
 
         except asyncpg.UniqueViolationError as err:
-            LOG.error("The file you are trying to process is already in the database! "
-                        "To re-process it, delete all associated rows.")
-            await sock.close(status='Error')
+            LOG.error(
+                "The file you are trying to process is already in the database! "
+                "To re-process it, delete all associated rows."
+            )
+            await sock.close(status="Error")
             raise err
 
         except Exception as err:
-            await sock.close(status='Error')
+            await sock.close(status="Error")
 
-            LOG.error("Unhandled Exception!"
-                      "Writing remaining updates to db and exiting!")
+            LOG.error(
+                "Unhandled Exception!" "Writing remaining updates to db and exiting!"
+            )
             LOG.error(err)
             raise err
 
@@ -772,21 +925,24 @@ async def check_results():
     """Collect summary statistics on object and event records."""
     con = await asyncpg.connect(DB_URL)
     result = await con.fetchrow(
-                """SELECT COUNT(*) objects, COUNT(parent) parents,
+        """SELECT COUNT(*) objects, COUNT(parent) parents,
                 (SELECT COUNT(*) FROM impact) impacts,
                 MAX(updates) max_upate, SUM(updates) total_updates,
                 (SELECT COUNT(*) events FROM event) as total_events,
                 COUNT(CASE WHEN alive THEN 1 END) total_alive
-                FROM object""")
+                FROM object"""
+    )
 
-    print("Results:\nobjects: {} \nparents: {} \nimpacts: {}"
-            "\nmax_updates: {} \ntotal updates: {}"
-            "\ntotal events: {} \ntotal alive: {}".format(*list(result)))
+    print(
+        "Results:\nobjects: {} \nparents: {} \nimpacts: {}"
+        "\nmax_updates: {} \ntotal updates: {}"
+        "\ntotal events: {} \ntotal alive: {}".format(*list(result))
+    )
     await con.close()
+
 
 def main(host, port, max_iters, batch_size, dsn, debug=False):
     """Start event loop to consume stream."""
-    uvloop.install()
     if debug:
         LOG.setLevel(logging.DEBUG)
     asyncio.run(consumer(host, port, max_iters, batch_size, dsn))
@@ -797,16 +953,17 @@ def serve_and_read(filename, port):
     if not filename.exists():
         raise FileExistsError(filename)
     dsn = os.getenv("DATABASE_URL")
-    server_proc = Process(target=partial(
-        serve_file.main, filename=filename, port=port))
+    server_proc = Process(target=partial(serve_file.main, filename=filename, port=port))
     server_proc.start()
     try:
-        main(host='127.0.0.1',
-                    port=port,
-                    debug=False,
-                    max_iters=None,
-                    batch_size=100000,
-                    dsn=dsn)
+        main(
+            host="127.0.0.1",
+            port=port,
+            debug=False,
+            max_iters=None,
+            batch_size=100000,
+            dsn=dsn,
+        )
         server_proc.join()
     except Exception as err:
         LOG.error(err)
