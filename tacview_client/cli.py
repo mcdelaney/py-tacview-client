@@ -13,7 +13,7 @@ app = typer.Typer()
 
 pg_option = typer.Option(
     ...,
-    "--postges_dsn",
+    "--postgres_dsn",
     help="""DSN for connection to the postgres server. Format should be:\n
     postgresql://{ip}:{port}/{dbname}?user={username}&password={password}""",
 )
