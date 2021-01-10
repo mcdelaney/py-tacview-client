@@ -11,13 +11,6 @@ from tacview_client import client, serve_file, db, config
 LOG = config.get_logger()
 app = typer.Typer()
 
-# pg_option = typer.Option(
-#     ...,
-#     "--postgres_dsn",
-#     help="""DSN for connection to the postgres server. Format should be:\n
-#     postgresql://{ip}:{port}/{dbname}?user={username}&password={password}""",
-# )
-
 
 @app.command("run")
 def tacview(
@@ -32,14 +25,14 @@ def tacview(
         """,
     ),
     port: int = typer.Option(
-        ...,
+        42674,
         "--port",
         help="""Port where the existing tacview stream is available.
         Tacview sets this to 42674 by default.
         Unless the server to which you are connecting has manually edited the tacview port,
         you should not need to modify this parameter.""",
     ),
-    filename: str = typer.Option(
+    filename: Path = typer.Option(
         None,
         "--filename",
         help="""Path to valid tacview acmi file that should be read.

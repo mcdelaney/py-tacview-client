@@ -937,7 +937,7 @@ async def check_results():
                 FROM object"""
     )
 
-    print(
+    LOG.info(
         "Results:\nobjects: {} \nparents: {} \nimpacts: {}"
         "\nmax_updates: {} \ntotal updates: {}"
         "\ntotal events: {} \ntotal alive: {}".format(*list(result))

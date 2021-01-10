@@ -1,11 +1,11 @@
 """Model definitions for database."""
-import os
 import sys
 
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
-from tacview_client.config import DB_URL
+from tacview_client.config import DB_URL, get_logger
 
+LOG = get_logger()
 engine = sa.create_engine(DB_URL)
 metadata = sa.MetaData(engine)
 Base = declarative_base(engine, metadata)
@@ -36,6 +36,13 @@ class Impact(Base):  # type: ignore
     weapon = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
     time_offset = sa.Column(sa.REAL())
     impact_dist = sa.Column(sa.REAL(), index=True)
+
+
+class WeaponTypes(Base):
+    __tablename__ = "weapon_types"
+    name = sa.Column(sa.VARCHAR, primary_key=True)
+    category = sa.Column(sa.VARCHAR)
+    type = sa.Column(sa.VARCHAR)
 
 
 class Object(Base):  # type: ignore
@@ -99,13 +106,13 @@ Event = sa.Table(
 def connect():
     """Create sa connection to database."""
     try:
-        print("Connecting to db....")
+        LOG.info("Connecting to db....")
         con = engine.connect()
-        print("Connection established...")
+        LOG.info("Connection established...")
         return con
     except Exception as err:
-        print(err)
-        print(
+        LOG.info(err)
+        LOG.info(
             "Could not connect to datatbase!"
             " Make sure that the TACVIEW_DATABASE_URL environment variable is set!"
         )
@@ -115,9 +122,9 @@ def connect():
 def create_tables():
     """Initalize the database schema."""
     con = connect()
-    print("Creating tables...")
+    LOG.info("Creating tables...")
     metadata.create_all()
-    print("Creating views...")
+    LOG.info("Creating views...")
     con.execute(
         """
         CREATE OR REPLACE VIEW obj_events AS
@@ -193,14 +200,14 @@ def create_tables():
         )
     )
     con.close()
-    print("All tables and views created successfully!")
+    LOG.info("All tables and views created successfully!")
 
 
 def drop_tables():
     """Drop all existing tables."""
     con = connect()
-    print("Dropping all tables....")
+    LOG.info("Dropping all tables....")
     for table in ["Session", "Object", "Event", "Impact"]:
         con.execute(f"drop table if exists {table} CASCADE")
     con.close()
-    print("All tables dropped...")
+    LOG.info("All tables dropped...")
