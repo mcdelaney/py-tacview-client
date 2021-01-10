@@ -99,5 +99,6 @@ def dropdb(postgres_dsn: str = pg_option):
 
 @app.command("createdb")
 def createdb(postgres_dsn: str = pg_option):
+    """Create database tables."""
     LOG.info("Creating tables in specified database...")
     db.create_tables()
