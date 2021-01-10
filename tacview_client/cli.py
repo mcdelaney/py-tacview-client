@@ -45,6 +45,8 @@ def process_file(
         client.main(
             host="localhost",
             port=42674,
+            client_username="tacview-client",
+            client_password="0",
             debug=debug,
             max_iters=None,
             batch_size=batch_size,
@@ -80,6 +82,16 @@ def process_stream(
         Tacview sets this to 42674 by default.
         Unless the server to which you are connecting has manually edited the tacview port,
         you should not need to modify this parameter.""",
+    ),
+    client_name: str = typer.Option(
+        "tacview-client",
+        "--client_name",
+        help="""Client username that we should use to authenticate to the remote tacview server.""",
+    ),
+    client_password: str = typer.Option(
+        "0",
+        "--client_password",
+        help="""Client password that we should use to authenticate to the remote tacview server.""",
     ),
     debug: bool = typer.Option(False, "--debug", hidden=True),
 ):
