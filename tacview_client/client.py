@@ -902,7 +902,7 @@ async def consumer(
                     except KeyError:
                         total[obj.Type] = 1
             for key, value in total.items():
-                LOG.info(f"total without parent but should {key}: {value}")
+                LOG.info(f"Total events without parent but should {key}: {value}")
 
             LOG.info("Exiting tacview-client!")
             return
