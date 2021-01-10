@@ -10,6 +10,14 @@ connection DSN of a postgressql database where tacview output should be stored.
 The format for the DSN should match:
 ```postgresql://{ip}:{port}/{dbname}?user={username}&password={password}```
 
+After installation, you'll need to initialize that tables with:
+```tacview createdb```.
+To nuke everything and start from scratch, run
+```tacview dropdb```.
+
+To process a single acmi file, run:
+``` tacview run --host localhost --filename {Path to the File}```.
+
 ## Developing
 ### Style:
 The `py-tacview-client` codebase utilizes the `black` formatting standard.
