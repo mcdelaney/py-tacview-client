@@ -16,7 +16,7 @@ To nuke everything and start from scratch, run
 ```tacview dropdb```.
 
 To process a single acmi file, run:
-``` tacview run --host localhost --filename {Path to the File}```.
+``` tacview process_file --filename {Path to the File}```.
 
 ## Developing
 ### Style:

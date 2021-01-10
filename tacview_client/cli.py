@@ -12,9 +12,58 @@ LOG = config.get_logger()
 app = typer.Typer()
 
 
-@app.command("run")
-def tacview(
-    # postgres_dsn: str = pg_option,
+@app.command("process_file")
+def process_file(
+    filename: Path = typer.Option(
+        None,
+        "--filename",
+        help="""Path to valid tacview acmi file that should be read.
+    This is only used if host = 127.0.0.1 or localhost.
+    """,
+    ),
+    batch_size: int = typer.Option(
+        500000,
+        "--batch_size",
+        help="""Number of records to be combined in write batches.
+    Under normal usage, this variable should not be modified.
+    """,
+    ),
+    debug: bool = typer.Option(False, "--debug", hidden=True),
+):
+    """Interface to the tacview batch/single file processer."""
+    LOG.info(f"Starting client...")
+    if filename and not filename.exists():
+        LOG.info(f"File does not exist at location: {filename}")
+        sys.exit(1)
+
+    try:
+        LOG.info("Processing acmi file in batch mode...")
+        server_proc = Process(
+            target=partial(serve_file.main, filename=filename, port=42674)
+        )
+        server_proc.start()
+        client.main(
+            host="localhost",
+            port=42674,
+            debug=debug,
+            max_iters=None,
+            batch_size=batch_size,
+        )
+        server_proc.terminate()
+
+    except KeyboardInterrupt:
+        LOG.info("tacview-client shutting down...")
+    except Exception as err:
+        LOG.error(err)
+    finally:
+        try:
+            server_proc.terminate()  # type: ignore
+        except Exception:
+            pass
+
+
+@app.command("process_stream")
+def process_stream(
     host: str = typer.Option(
         ...,
         "--host",
@@ -32,54 +81,18 @@ def tacview(
         Unless the server to which you are connecting has manually edited the tacview port,
         you should not need to modify this parameter.""",
     ),
-    filename: Path = typer.Option(
-        None,
-        "--filename",
-        help="""Path to valid tacview acmi file that should be read.
-    This is only used if host = 127.0.0.1 or localhost.
-    """,
-    ),
-    batch_size: int = typer.Option(
-        500000,
-        "--batch_size",
-        help="""Number of records to be combined in write batches.
-    Under normal usage, this variable should not be modified.
-    """,
-    ),
     debug: bool = typer.Option(False, "--debug", hidden=True),
 ):
-    """Main interface to client reader."""
-    LOG.info(f"Starting client...")
-    if filename and not filename.exists():
-        LOG.info(f"File does not exist at location: {filename}")
-        sys.exit(1)
-
+    """Interface to the tacview stream processer."""
+    LOG.info(f"Starting client in stream mode...")
     try:
-        if host in ["localhost", "127.0.0.1", "0.0.0.0"] and filename:
-            LOG.info(
-                "Localhost and filename configured...will start server to host file..."
-            )
-            server_proc = Process(
-                target=partial(serve_file.main, filename=filename, port=port)
-            )
-            server_proc.start()
-            client.main(
-                host=host,
-                port=port,
-                debug=debug,
-                max_iters=None,
-                batch_size=batch_size,
-            )
-            server_proc.terminate()
-        else:
-            LOG.info("Connecting to tacview stream...")
-            client.main(
-                host=host,
-                port=port,
-                debug=debug,
-                max_iters=None,
-                batch_size=500,
-            )
+        client.main(
+            host=host,
+            port=port,
+            debug=debug,
+            max_iters=None,
+            batch_size=500,
+        )
     except KeyboardInterrupt:
         LOG.info("tacview-client shutting down...")
     except Exception as err:
