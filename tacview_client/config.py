@@ -9,6 +9,7 @@ DB_URL = os.getenv(
 
 
 def get_logger(logger_name="taview_client") -> logging.Logger:
+    """Create a package logger for tacview-client."""
     log = logging.getLogger(logger_name)
     log.setLevel(logging.INFO)
     logFormatter = logging.Formatter(
