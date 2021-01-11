@@ -1,5 +1,6 @@
 # py-tacview-client
 A python tacview consumer.
+Install from pypy with `pip install tacview-client`.
 
 ## Overview
 `py-tacview-client` processes either a realtime tacview steam, or a an existing tacview acmi
