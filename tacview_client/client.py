@@ -784,7 +784,6 @@ class BinCopyWriter:
                 4,
                 obj.updates,
             )
-
             packed = struct.pack(self.fmt_str, *data)
         except Exception as err:
             LOG.error([obj.tac_id, obj.last_seen])
@@ -799,6 +798,7 @@ class BinCopyWriter:
         self.min_insert_size = -1  # ensure everything gets flushed
         await self.insert_data(force=True)
         self.db_event_time = sum(self.event_times)
+        self.ser_time = sum(self.ser_time)
 
     async def insert_data(self, force=False) -> None:
         if not force and self.batch_size > self.insert_count:
@@ -846,7 +846,6 @@ async def consumer(
     last_log = float(0.0)
     print_log = float(0.0)
     line_proc_time = float(0.0)
-    # submissions = []
     while True:
         try:
             obj = await sock.read_stream()
