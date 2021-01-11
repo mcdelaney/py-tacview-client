@@ -9,7 +9,7 @@ alembic.ini
 __pycache__/
 *.py[cod]
 *$py.class
-
+scratch.py
 # C extensions
 *.so
 *prof

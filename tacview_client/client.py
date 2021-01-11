@@ -221,6 +221,7 @@ class ObjectRec:
         "secs_since_last_seen",
         "written",
         "cart_coords",
+        "Importance",
     )
 
     def __init__(
