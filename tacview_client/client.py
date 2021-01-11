@@ -32,16 +32,11 @@ from tacview_client.config import DB_URL, get_logger
 from tacview_client import serve_file
 from tacview_client import __version__
 
-CLIENT = "tacview-client"
-PASSWORD = "0"
+# CLIENT = "tacview-client"
+# PASSWORD = "0"
 STREAM_PROTOCOL = "XtraLib.Stream.0"
 TACVIEW_PROTOCOL = "Tacview.RealTimeTelemetry.0"
 HANDSHAKE_TERMINATOR = "\0"
-
-HANDSHAKE = (
-    "\n".join([STREAM_PROTOCOL, TACVIEW_PROTOCOL, CLIENT, PASSWORD])
-    + HANDSHAKE_TERMINATOR
-).encode("utf-8")
 
 COORD_KEYS = (
     "lon",
@@ -349,7 +344,7 @@ async def determine_contact(rec, ref: Ref, contact_type="parent"):
 
     if contact_type == "parent":
         if rec.Color == "Violet":
-            acpt_colors = ["Red", "Blue"]
+            acpt_colors = ["Red", "Blue", "Grey"]
         else:
             acpt_colors = [rec.Color]
 
@@ -592,11 +587,20 @@ class AsyncStreamReader(Ref):
     writer: asyncio.StreamWriter
     """Read from Tacview socket."""
 
-    def __init__(self, host, port, debug=False):
+    def __init__(
+        self,
+        host,
+        port,
+        client: str = "tacview-client",
+        password: str = "0",
+        debug: bool = False,
+    ):
         super().__init__()
         self.host: str = host
         self.port: int = port
         self.sink = "log/raw_sink.txt"
+        self.client: str = client
+        self.password: str = password
         self.debug = debug
         if self.debug:
             open(self.sink, "w").close()
@@ -613,6 +617,13 @@ class AsyncStreamReader(Ref):
                     self.host, self.port
                 )
                 LOG.info("Connection opened...sending handshake...")
+                HANDSHAKE = (
+                    "\n".join(
+                        [STREAM_PROTOCOL, TACVIEW_PROTOCOL, self.client, self.password]
+                    )
+                    + HANDSHAKE_TERMINATOR
+                ).encode("utf-8")
+
                 self.writer.write(HANDSHAKE)
                 await self.reader.readline()
                 LOG.info("Connection opened with successful handshake...")
@@ -803,6 +814,8 @@ class BinCopyWriter:
 async def consumer(
     host: str,
     port: int,
+    client_username: str,
+    client_password: str,
     max_iters: Optional[int],
     batch_size: int,
 ) -> None:
@@ -816,7 +829,12 @@ async def consumer(
     global ASYNC_CON
     ASYNC_CON = await asyncpg.create_pool(DB_URL)
     copy_writer = BinCopyWriter(dsn, batch_size)
-    sock = AsyncStreamReader(host, port)
+    sock = AsyncStreamReader(
+        host,
+        port,
+        client_username,
+        client_password,
+    )
     await sock.open_connection()
     init_time = time.time()
     lines_read = 0
@@ -945,11 +963,15 @@ async def check_results():
     await con.close()
 
 
-def main(host, port, max_iters, batch_size, debug=False):
+def main(
+    host, port, max_iters, client_username, client_password, batch_size, debug=False
+):
     """Start event loop to consume stream."""
     if debug:
         LOG.setLevel(logging.DEBUG)
-    asyncio.run(consumer(host, port, max_iters, batch_size))
+    asyncio.run(
+        consumer(host, port, client_username, client_password, max_iters, batch_size)
+    )
 
 
 def serve_and_read(filename, port):
