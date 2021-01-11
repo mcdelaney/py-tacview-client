@@ -101,6 +101,8 @@ def process_stream(
         client.main(
             host=host,
             port=port,
+            client_username=client_name,
+            client_password=client_password,
             debug=debug,
             max_iters=None,
             batch_size=500,
