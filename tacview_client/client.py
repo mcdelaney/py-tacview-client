@@ -386,7 +386,7 @@ async def determine_contact(rec, ref: Ref, contact_type="parent"):
         return None
 
     if closest[1] > 200 and contact_type == "parent":
-        LOG.warning(
+        LOG.debug(
             f"Rejecting closest {contact_type} for "
             f"{rec.id}-{rec.Name}-{rec.Type}: "
             f"{closest[4]} {closest[1]}m...{n_checked} checked!"
@@ -795,6 +795,7 @@ class BinCopyWriter:
 
     async def cleanup(self) -> None:
         """Shut down and ensure all data is written."""
+        LOG.info("Shutting down copywriter....")
         self.min_insert_size = -1  # ensure everything gets flushed
         await self.insert_data(force=True)
         self.db_event_time = sum(self.event_times)
@@ -803,14 +804,16 @@ class BinCopyWriter:
         if not force and self.batch_size > self.insert_count:
             LOG.debug("Not enough data for insert....")
             return
+        t1 = datetime.now()
+        LOG.info(f"Inserting {self.insert_count} records...")
         self.make_query()
-        LOG.debug(f"Inserting {self.insert_count} records...")
         self.insert.write(self.copy_trailer)
         self.insert.seek(0)
         async with ASYNC_CON.acquire() as con:
             await con._copy_in(self.cmd, self.insert, 100)
         self.insert.close()
         self.create_byte_buffer()
+        self.event_times.append((datetime.now()-t1).total_seconds())
 
 
 async def consumer(
@@ -843,6 +846,7 @@ async def consumer(
     last_log = float(0.0)
     print_log = float(0.0)
     line_proc_time = float(0.0)
+    # submissions = []
     while True:
         try:
             obj = await sock.read_stream()
@@ -908,6 +912,7 @@ async def consumer(
             total_time = time.time() - init_time
             LOG.info("Total Lines Processed : %s", str(lines_read))
             LOG.info("Total seconds running : %.2f", total_time)
+            LOG.info(f"Total db write time: {copy_writer.db_event_time}")
             LOG.info(
                 "Pct Event Write Time: %.2f", copy_writer.db_event_time / total_time
             )
