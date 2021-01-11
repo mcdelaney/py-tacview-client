@@ -344,7 +344,7 @@ async def determine_contact(rec, ref: Ref, contact_type="parent"):
 
     if contact_type == "parent":
         if rec.Color == "Violet":
-            acpt_colors = ["Red", "Blue"]
+            acpt_colors = ["Red", "Blue", "Grey"]
         else:
             acpt_colors = [rec.Color]
 

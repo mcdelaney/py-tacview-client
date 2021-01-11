@@ -58,7 +58,7 @@ class Object(Base):  # type: ignore
     type = sa.Column(sa.String(), index=True)
     alive = sa.Column(sa.Boolean())
     coalition = sa.Column(
-        sa.Enum("Enemies", "Allies", "Neutral", name="coalition_enum")
+        sa.Enum("Enemies", "Allies", "Neutral", "Neutrals", name="coalition_enum")
     )
     first_seen = sa.Column(sa.REAL())
     last_seen = sa.Column(sa.REAL())
@@ -208,6 +208,6 @@ def drop_tables():
     con = connect()
     LOG.info("Dropping all tables....")
     for table in ["Session", "Object", "Event", "Impact"]:
-        con.execute(f"drop table if exists {table} CASCADE")
+        con.execute(f"drop table if exists {table} CASCADE;")
     con.close()
     LOG.info("All tables dropped...")
