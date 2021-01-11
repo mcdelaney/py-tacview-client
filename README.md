@@ -25,7 +25,7 @@ tacview process_stream
     --port {default:42674}
     --client_name {auth username}
     --client_password {auth-password}
-```.
+```
 
 ## Developing
 ### Style:
