@@ -14,7 +14,7 @@ metadata = sa.MetaData(engine)
 Base = declarative_base(engine, metadata)
 
 
-class Session(Base):  # type: ignore
+class Session(Base):
     __tablename__ = "session"
     session_id = sa.Column(sa.Integer, primary_key=True)
     start_time = sa.Column(sa.TIMESTAMP(timezone=True), unique=True)
@@ -28,7 +28,7 @@ class Session(Base):  # type: ignore
     status = sa.Column(sa.String())
 
 
-class Impact(Base):  # type: ignore
+class Impact(Base):
     __tablename__ = "impact"
     id = sa.Column(sa.Integer, primary_key=True)
     session_id = sa.Column(
@@ -48,7 +48,7 @@ class WeaponTypes(Base):
     type = sa.Column(sa.VARCHAR)
 
 
-class Object(Base):  # type: ignore
+class Object(Base):
     __tablename__ = "object"
     id = sa.Column(sa.INTEGER, primary_key=True)
     tac_id = sa.Column(sa.INTEGER)
