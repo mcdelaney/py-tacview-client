@@ -1,6 +1,4 @@
 """Model definitions for database."""
-import sys
-
 import sqlalchemy as sa
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
