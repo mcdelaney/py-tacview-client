@@ -18,6 +18,15 @@ To nuke everything and start from scratch, run
 To process a single acmi file, run:
 ``` tacview process_file --filename {Path to the File}```.
 
+To process a real-time event stream from a running tacview server, run:
+```
+tacview process_stream
+    --host {ip-of-tacview-server}
+    --port {default:42674}
+    --client_name {auth username}
+    --client_password {auth-password}
+```.
+
 ## Developing
 ### Style:
 The `py-tacview-client` codebase utilizes the `black` formatting standard.
