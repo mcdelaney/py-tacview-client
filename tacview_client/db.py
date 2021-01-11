@@ -51,7 +51,7 @@ class Object(Base):  # type: ignore
     tac_id = sa.Column(sa.INTEGER)
     session_id = sa.Column(sa.Integer, sa.ForeignKey("session.session_id"), index=True)
     name = sa.Column(sa.String(), index=True)
-    color = sa.Column(sa.Enum("Red", "Blue", "Violet", name="color_enum"))
+    color = sa.Column(sa.Enum("Red", "Blue", "Violet", "Grey", name="color_enum"))
     country = sa.Column(sa.String())
     grp = sa.Column(sa.String())
     pilot = sa.Column(sa.String())
