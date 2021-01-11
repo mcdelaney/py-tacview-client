@@ -1,19 +1,18 @@
 [tool.poetry]
 name = "tacview-client"
-version = "0.1.70"
+version = "0.1.71"
 description = ""
 authors = ["mcdelaney <mcdelaney@gmail.com>"]
 repository = "https://github.com/mcdelaney/py-tacview-client.git"
 
 
 [tool.poetry.dependencies]
-python = "^3.7"
-sqlalchemy = "^1.3.15"
+python = ">=3.7,<3.9"
 asyncpg = "^0.20.1"
 click = "^7.1.2"
 pytz = "^2020.5"
 typer = "^0.3.2"
-psycopg2-binary = "^2.8.6"
+SQLAlchemy = "1.4.0b1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

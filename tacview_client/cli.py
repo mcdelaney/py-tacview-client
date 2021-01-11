@@ -1,4 +1,4 @@
-import argparse
+import asyncio
 from functools import partial
 from multiprocessing import Process
 from pathlib import Path
@@ -122,11 +122,15 @@ def process_stream(
 def dropdb():
     """Drop database tables."""
     LOG.info("Dropping tables from specified database...")
-    db.drop_tables()
+    async def drop_and_recreate():
+        await db.drop_tables()
+        await db.create_tables()
+    asyncio.run(drop_and_recreate())
+    LOG.info("Recreating tables in specified database...")
 
 
 @app.command("createdb")
 def createdb():
     """Create database tables."""
     LOG.info("Creating tables in specified database...")
-    db.create_tables()
+    asyncio.run(db.create_tables())
