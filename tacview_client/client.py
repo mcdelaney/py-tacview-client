@@ -798,7 +798,6 @@ class BinCopyWriter:
         self.min_insert_size = -1  # ensure everything gets flushed
         await self.insert_data(force=True)
         self.db_event_time = sum(self.event_times)
-        self.ser_time = sum(self.ser_time)
 
     async def insert_data(self, force=False) -> None:
         if not force and self.batch_size > self.insert_count:
