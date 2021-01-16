@@ -28,6 +28,13 @@ def process_file(
     Under normal usage, this variable should not be modified.
     """,
     ),
+    overwrite: bool = typer.Option(
+        False,
+        "--overwrite",
+        help="""If true, and the file specified has been processed previously,
+                all results will be dropped and the file will be re-processed.
+    """,
+    ),
     debug: bool = typer.Option(False, "--debug", hidden=True),
 ):
     """Interface to the tacview batch/single file processer."""
@@ -50,6 +57,7 @@ def process_file(
             debug=debug,
             max_iters=None,
             batch_size=batch_size,
+            overwrite=overwrite,
         )
         server_proc.terminate()
 

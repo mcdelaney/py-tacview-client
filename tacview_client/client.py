@@ -32,6 +32,7 @@ from tacview_client.copy_writer import BinCopyWriter
 from tacview_client.copy_writer import create_single
 from tacview_client.copy_writer import insert_impact
 from tacview_client import cython_funs as cyfuns
+
 from tacview_client import serve_file
 from tacview_client import __version__
 
@@ -82,7 +83,7 @@ class Ref:
         self.time_offset: float = 0.0
         self.all_refs: bool = False
         self.time_since_last: float = 0.0
-        self.obj_store: Dict[int, ObjectRec] = {}
+        self.obj_store: Dict[int, cyfuns.ObjectRec] = {}
         self.client_version: str = __version__
         self.status: str = "In Progress"
 
@@ -92,7 +93,7 @@ class Ref:
         self.time_since_last = offset - self.time_offset
         self.time_offset = offset
 
-    async def parse_ref_obj(self, line):
+    async def parse_ref_obj(self, line, overwrite=False):
         """
         Attempt to extract ReferenceLatitude, ReferenceLongitude or
         ReferenceTime from a line object.
@@ -134,6 +135,14 @@ class Ref:
 
             self.all_refs = bool(self.lat and self.lon and self.start_time)
             if self.all_refs and not self.session_id:
+
+                if overwrite:
+                    async with ASYNC_CON.acquire() as con:
+                        await con.execute(
+                            f"""DELETE FROM session
+                            WHERE start_time = '{self.start_time}'
+                            """)
+
                 LOG.info("All Refs found...writing session data to db...")
                 sql = """INSERT into session (lat, lon, title,
                                 datasource, author, file_version, start_time,
@@ -166,112 +175,112 @@ class Ref:
             pass
 
 
-@dataclass
-class ObjectRec:
-    __slots__ = (
-        "id",
-        "tac_id",
-        "first_seen",
-        "last_seen",
-        "session_id",
-        "alive",
-        "Name",
-        "Color",
-        "Country",
-        "grp",
-        "Pilot",
-        "Type",
-        "Coalition",
-        "lat",
-        "lon",
-        "alt",
-        "roll",
-        "pitch",
-        "yaw",
-        "u_coord",
-        "v_coord",
-        "heading",
-        "impacted",
-        "impacted_dist",
-        "parent",
-        "parent_dist",
-        "updates",
-        "velocity_kts",
-        "secs_since_last_seen",
-        "can_be_parent",
-        "should_have_parent",
-        "written",
-        "cart_coords",
-        "Importance",
-    )
+# @dataclass
+# class ObjectRec:
+#     __slots__ = (
+#         "id",
+#         "tac_id",
+#         "first_seen",
+#         "last_seen",
+#         "session_id",
+#         "alive",
+#         "Name",
+#         "Color",
+#         "Country",
+#         "grp",
+#         "Pilot",
+#         "Type",
+#         "Coalition",
+#         "lat",
+#         "lon",
+#         "alt",
+#         "roll",
+#         "pitch",
+#         "yaw",
+#         "u_coord",
+#         "v_coord",
+#         "heading",
+#         "impacted",
+#         "impacted_dist",
+#         "parent",
+#         "parent_dist",
+#         "updates",
+#         "velocity_kts",
+#         "secs_since_last_seen",
+#         "can_be_parent",
+#         "should_have_parent",
+#         "written",
+#         "cart_coords",
+#         "Importance",
+#     )
 
-    def __init__(
-        self,
-        tac_id: int = None,
-        first_seen: Optional[float] = None,
-        last_seen: Optional[float] = None,
-        session_id: Optional[int] = None,
-    ):
-        self.id = None
-        self.tac_id = tac_id
-        self.first_seen = first_seen
-        self.last_seen = last_seen
-        self.session_id = session_id
+#     def __init__(
+#         self,
+#         tac_id: int = None,
+#         first_seen: Optional[float] = None,
+#         last_seen: Optional[float] = None,
+#         session_id: Optional[int] = None,
+#     ):
+#         self.id = None
+#         self.tac_id = tac_id
+#         self.first_seen = first_seen
+#         self.last_seen = last_seen
+#         self.session_id = session_id
 
-        self.alive: bool = True
-        self.Name: Optional[str] = None
-        self.Color: Optional[str] = None
-        self.Country: Optional[str] = None
-        self.grp: Optional[str] = None
-        self.Pilot: Optional[str] = None
-        self.Type: Optional[str] = None
-        self.Coalition: Optional[str] = None
-        self.lat: Optional[float] = None
-        self.lon: Optional[float] = None
-        self.alt: Optional[float] = 1  # Ships will have null alt
-        self.roll: Optional[float] = 0.0
-        self.pitch: Optional[float] = 0.0
-        self.yaw: Optional[float] = 0.0
-        self.u_coord: Optional[float] = 0.0
-        self.v_coord: Optional[float] = 0.0
-        self.heading: Optional[float] = 0.0
-        self.impacted: Optional[int] = None
-        self.impacted_dist: Optional[float] = None
-        self.parent: Optional[int] = None
-        self.parent_dist: Optional[float] = None
-        self.updates: int = 1
-        self.velocity_kts: float = 0.0
-        self.can_be_parent: bool = False
-        self.should_have_parent: bool = False
-        self.secs_since_last_seen: Optional[float] = 0
-        self.written: bool = False
-        self.cart_coords: Optional[Sequence] = []
-
-
-def can_be_parent(rec_type: str) -> bool:
-        """Check if an object is a member of types that could be parents."""
-        not_parent_types = (
-            "Decoy",
-            "Misc",
-            "Weapon",
-            "Projectile",
-            "Ground+Light+Human+Air+Parachutist",
-        )
-
-        for t in not_parent_types:
-            if t in rec_type:
-                return False
-        else:
-            return True
+#         self.alive: bool = True
+#         self.Name: Optional[str] = None
+#         self.Color: Optional[str] = None
+#         self.Country: Optional[str] = None
+#         self.grp: Optional[str] = None
+#         self.Pilot: Optional[str] = None
+#         self.Type: Optional[str] = None
+#         self.Coalition: Optional[str] = None
+#         self.lat: Optional[float] = None
+#         self.lon: Optional[float] = None
+#         self.alt: Optional[float] = 1  # Ships will have null alt
+#         self.roll: Optional[float] = 0.0
+#         self.pitch: Optional[float] = 0.0
+#         self.yaw: Optional[float] = 0.0
+#         self.u_coord: Optional[float] = 0.0
+#         self.v_coord: Optional[float] = 0.0
+#         self.heading: Optional[float] = 0.0
+#         self.impacted: Optional[int] = None
+#         self.impacted_dist: Optional[float] = None
+#         self.parent: Optional[int] = None
+#         self.parent_dist: Optional[float] = None
+#         self.updates: int = 1
+#         self.velocity_kts: float = 0.0
+#         self.can_be_parent: bool = False
+#         self.should_have_parent: bool = False
+#         self.secs_since_last_seen: Optional[float] = 0
+#         self.written: bool = False
+#         self.cart_coords: Optional[Sequence] = []
 
 
-def should_have_parent(rec_type: str) -> bool:
-    """Check if an object should have a parent record."""
-    parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
-    for t in parented_types:
-        if t in rec_type:
-            return True
-    return False
+# def can_be_parent(rec_type: str) -> bool:
+#         """Check if an object is a member of types that could be parents."""
+#         not_parent_types = (
+#             "Decoy",
+#             "Misc",
+#             "Weapon",
+#             "Projectile",
+#             "Ground+Light+Human+Air+Parachutist",
+#         )
+
+#         for t in not_parent_types:
+#             if t in rec_type:
+#                 return False
+#         else:
+#             return True
+
+
+# def should_have_parent(rec_type: str) -> bool:
+#     """Check if an object should have a parent record."""
+#     parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+#     for t in parented_types:
+#         if t in rec_type:
+#             return True
+#     return False
 
 # def compute_velocity(lat, lon, alt, cart_coords, secs_since_last_seen) -> None:
 #         """Calculate velocity given the distance from the last point."""
@@ -370,30 +379,8 @@ def determine_contact(rec, ref: Ref, contact_type="parent"):
     return closest
 
 
-async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
-    """Parse a textline from tacview into an ObjectRec."""
-    COORD_KEYS = (
-        "lon",
-        "lat",
-        "alt",
-        "roll",
-        "pitch",
-        "yaw",
-        "u_coord",
-        "v_coord",
-        "heading",
-    )
-    COORD_KEY_LEN = 9  # len(COORD_KEYS)
-
-    COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
-    COORD_KEY_SHORT_LEN = 5  # len(COORD_KEYS_SHORT)
-
-    COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
-    COORD_KEYS_MED_LEN = 5  # len(COORD_KEYS_MED)
-
-    COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
-    COORD_KEYS_X_SHORT_LEN = 3  # len(COORD_KEYS_X_SHORT)
-
+async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[cyfuns.ObjectRec]:
+    """Parse a textline from tacview into an cyfuns.ObjectRec."""
     # secondary_update = None
     if raw_line[0:1] == b"0":
         LOG.debug("Raw line starts with 0...")
@@ -424,7 +411,7 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
 
     except KeyError:
         # Object not yet seen...create new record...
-        rec = ObjectRec(
+        rec = cyfuns.ObjectRec(
             tac_id=rec_id,
             session_id=ref.session_id,
             first_seen=ref.time_offset,
@@ -432,78 +419,7 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
         )
         ref.obj_store[rec_id] = rec
 
-    try:
-        bytes_remaining = True
-        while bytes_remaining:
-            last_comma = comma + 1
-            comma = raw_line.find(b",", last_comma)
-            if comma == -1:
-                bytes_remaining = False
-                chunk = raw_line[last_comma:]
-            else:
-                chunk = raw_line[last_comma:comma]
-            eq_loc = chunk.find(b"=")
-            key = chunk[0:eq_loc]
-            val = chunk[eq_loc + 1 :]
-
-            if key == b"T":
-                i = 0
-                pipe_pos_end = -1
-                pipes_remaining = True
-                npipe = val.count(b"|")
-                if npipe == 8:
-                    C_KEYS = COORD_KEYS
-                    C_LEN = COORD_KEY_LEN
-                elif npipe == 5:
-                    C_KEYS = COORD_KEYS_MED
-                    C_LEN = COORD_KEYS_MED_LEN
-                elif npipe == 4:
-                    C_KEYS = COORD_KEYS_SHORT
-                    C_LEN = COORD_KEY_SHORT_LEN
-                elif npipe == 2:
-                    C_KEYS = COORD_KEYS_X_SHORT
-                    C_LEN = COORD_KEYS_X_SHORT_LEN
-                else:
-                    raise ValueError(
-                        "COORD COUNT EITHER 8, 5, OR 4!",
-                        npipe,
-                        raw_line.decode("UTF-8"),
-                    )
-
-                while i < C_LEN and pipes_remaining:
-                    pipe_pos_start = pipe_pos_end + 1
-                    pipe_pos_end = val.find(b"|", pipe_pos_start)
-                    if pipe_pos_end == -1:
-                        pipes_remaining = False
-                        coord = val[pipe_pos_start:]
-                    else:
-                        coord = val[pipe_pos_start:pipe_pos_end]
-
-                    if coord != b"":
-                        c_key = C_KEYS[i]
-                        if c_key == "lat":
-                            rec.lat = float(coord) + ref.lat
-                        elif c_key == "lon":
-                            rec.lon = float(coord) + ref.lon
-                        else:
-                            setattr(rec, c_key, float(coord))
-                    i += 1
-            else:
-                setattr(rec,
-                        key.decode("UTF-8") if key != b"Group" else "grp",
-                        val.decode("UTF-8"))
-
-    except Exception as err:
-        raise err
-
-    if rec.updates == 1:
-        rec.can_be_parent = can_be_parent(rec.Type)
-        rec.should_have_parent = should_have_parent(rec.Type)
-
-    new_coords, velocity_kts = cyfuns.compute_velocity(rec.lat, rec.lon, rec.alt, rec.cart_coords, rec.secs_since_last_seen)
-    rec.cart_coords = new_coords
-    if velocity_kts:
-        rec.velocity_kts = velocity_kts
+    rec = cyfuns.proc_line(rec, raw_line, ref.lat, ref.lon, comma)
 
     if rec.updates == 1 and rec.should_have_parent:
         parent_info = determine_contact(rec, contact_type="parent", ref=ref)
@@ -599,6 +515,7 @@ async def consumer(
     client_username: str,
     client_password: str,
     max_iters: Optional[int],
+    overwrite: bool,
     batch_size: int,
 ) -> None:
     """Main method to consume stream."""
@@ -630,7 +547,7 @@ async def consumer(
             lines_read += 1
 
             if not sock.all_refs:
-                await sock.parse_ref_obj(obj)
+                await sock.parse_ref_obj(obj, overwrite)
                 continue
 
             if obj[0:1] == b"#":
@@ -694,6 +611,8 @@ async def consumer(
             )
             LOG.info("Pct Get Contact Time: %.2f", CONTACT_TIME / total_time)
             LOG.info("Pct Line Proc Time: %.2f", line_proc_time / total_time)
+            LOG.info("Total Line Proc Secs: %.2f", line_proc_time)
+            LOG.info("Lines Proc/Sec: %.2f", lines_read/line_proc_time)
             LOG.info("Lines/second: %.4f", lines_read / total_time)
             total = {}
             for obj in sock.obj_store.values():
@@ -704,7 +623,7 @@ async def consumer(
                         total[obj.Type] = 1
             for key, value in total.items():
                 LOG.info(f"Total events without parent but should {key}: {value}")
-
+            await check_results()
             LOG.info("Exiting tacview-client!")
             return
 
@@ -747,13 +666,13 @@ async def check_results():
 
 
 def main(
-    host, port, max_iters, client_username, client_password, batch_size, debug=False
+    host, port, max_iters, client_username, client_password, batch_size, overwrite=False, debug=False
 ):
     """Start event loop to consume stream."""
     if debug:
         LOG.setLevel(logging.DEBUG)
     asyncio.run(
-        consumer(host, port, client_username, client_password, max_iters, batch_size)
+        consumer(host, port, client_username, client_password, max_iters, overwrite, batch_size)
     )
 
 

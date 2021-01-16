@@ -828,9 +828,56 @@ static const char *__pyx_filename;
 
 static const char *__pyx_f[] = {
   "tacview_client\\cython_funs.pyx",
+  "stringsource",
 };
 
 /*--- Type declarations ---*/
+struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec;
+
+/* "tacview_client/cython_funs.pyx":8
+ * 
+ * 
+ * cdef class ObjectRec:             # <<<<<<<<<<<<<<
+ *     """Dataclass for objects."""
+ *     cdef public object impacted, parent, Color, Coalition, cart_coords, Type, Name, Country, grp, Pilot
+ */
+struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec {
+  PyObject_HEAD
+  PyObject *impacted;
+  PyObject *parent;
+  PyObject *Color;
+  PyObject *Coalition;
+  PyObject *cart_coords;
+  PyObject *Type;
+  PyObject *Name;
+  PyObject *Country;
+  PyObject *grp;
+  PyObject *Pilot;
+  int id;
+  int tac_id;
+  int session_id;
+  int updates;
+  float first_seen;
+  float last_seen;
+  float lat;
+  float lon;
+  float alt;
+  float roll;
+  float pitch;
+  float yaw;
+  float u_coord;
+  float v_coord;
+  float heading;
+  float impacted_dist;
+  float parent_dist;
+  float velocity_kts;
+  float secs_since_last_seen;
+  int alive;
+  int written;
+  int can_be_parent;
+  int should_have_parent;
+};
+
 
 /* --- Runtime support code (head) --- */
 /* Refnanny.proto */
@@ -895,6 +942,28 @@ static const char *__pyx_f[] = {
     } while (0)
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
+
+/* PyObjectGetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
+#else
+#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#endif
+
+/* GetBuiltinName.proto */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name);
+
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
+/* RaiseDoubleKeywords.proto */
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+/* ParseKeywords.proto */
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
+    const char* function_name);
 
 /* PyThreadStateGet.proto */
 #if CYTHON_FAST_THREAD_STATE
@@ -1134,17 +1203,66 @@ static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject 
   #define __Pyx_TraceLine(lineno, nogil, goto_error)   if ((1)); else goto_error;
 #endif
 
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+/* PyErrExceptionMatches.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyErr_ExceptionMatches(err) __Pyx_PyErr_ExceptionMatchesInState(__pyx_tstate, err)
+static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err);
+#else
+#define __Pyx_PyErr_ExceptionMatches(err)  PyErr_ExceptionMatches(err)
+#endif
 
-/* RaiseDoubleKeywords.proto */
-static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+/* GetAttr.proto */
+static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *, PyObject *);
 
-/* ParseKeywords.proto */
-static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
-    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
-    const char* function_name);
+/* GetAttr3.proto */
+static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *);
+
+/* PyDictVersioning.proto */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
+#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
+    (version_var) = __PYX_GET_DICT_VERSION(dict);\
+    (cache_var) = (value);
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
+        (VAR) = __pyx_dict_cached_value;\
+    } else {\
+        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
+        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
+    }\
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
+#else
+#define __PYX_GET_DICT_VERSION(dict)  (0)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
+#endif
+
+/* GetModuleGlobalName.proto */
+#if CYTHON_USE_DICT_VERSIONS
+#define __Pyx_GetModuleGlobalName(var, name)  {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
+        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
+        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  {\
+    PY_UINT64_T __pyx_dict_version;\
+    PyObject *__pyx_dict_cached_value;\
+    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
+#else
+#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
+#endif
 
 /* GetItemInt.proto */
 #define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
@@ -1179,38 +1297,186 @@ static void __Pyx_WriteUnraisable(const char *name, int clineno,
         __Pyx__ArgTypeTest(obj, type, name, exact))
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
 
-/* PyDictVersioning.proto */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
-#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
-    (version_var) = __PYX_GET_DICT_VERSION(dict);\
-    (cache_var) = (value);
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
-    static PY_UINT64_T __pyx_dict_version = 0;\
-    static PyObject *__pyx_dict_cached_value = NULL;\
-    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
-        (VAR) = __pyx_dict_cached_value;\
-    } else {\
-        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
-        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
-    }\
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
+/* PyObjectCall.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
 #else
-#define __PYX_GET_DICT_VERSION(dict)  (0)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
+#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
 #endif
 
-/* PyObjectGetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
+/* UnpackUnboundCMethod.proto */
+typedef struct {
+    PyObject *type;
+    PyObject **method_name;
+    PyCFunction func;
+    PyObject *method;
+    int flag;
+} __Pyx_CachedCFunction;
+
+/* CallUnboundCMethod2.proto */
+static PyObject* __Pyx__CallUnboundCMethod2(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg1, PyObject* arg2);
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030600B1
+static CYTHON_INLINE PyObject *__Pyx_CallUnboundCMethod2(__Pyx_CachedCFunction *cfunc, PyObject *self, PyObject *arg1, PyObject *arg2);
 #else
-#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#define __Pyx_CallUnboundCMethod2(cfunc, self, arg1, arg2)  __Pyx__CallUnboundCMethod2(cfunc, self, arg1, arg2)
 #endif
+
+/* CallUnboundCMethod1.proto */
+static PyObject* __Pyx__CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg);
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg);
+#else
+#define __Pyx_CallUnboundCMethod1(cfunc, self, arg)  __Pyx__CallUnboundCMethod1(cfunc, self, arg)
+#endif
+
+/* PyIntBinop.proto */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
+#else
+#define __Pyx_PyInt_AddObjC(op1, op2, intval, inplace, zerodivision_check)\
+    (inplace ? PyNumber_InPlaceAdd(op1, op2) : PyNumber_Add(op1, op2))
+#endif
+
+/* IncludeStringH.proto */
+#include <string.h>
+
+/* BytesEquals.proto */
+static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* PyIntCompare.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_EqObjC(PyObject *op1, PyObject *op2, long intval, long inplace);
+
+/* decode_c_string_utf16.proto */
+static CYTHON_INLINE PyObject *__Pyx_PyUnicode_DecodeUTF16(const char *s, Py_ssize_t size, const char *errors) {
+    int byteorder = 0;
+    return PyUnicode_DecodeUTF16(s, size, errors, &byteorder);
+}
+static CYTHON_INLINE PyObject *__Pyx_PyUnicode_DecodeUTF16LE(const char *s, Py_ssize_t size, const char *errors) {
+    int byteorder = -1;
+    return PyUnicode_DecodeUTF16(s, size, errors, &byteorder);
+}
+static CYTHON_INLINE PyObject *__Pyx_PyUnicode_DecodeUTF16BE(const char *s, Py_ssize_t size, const char *errors) {
+    int byteorder = 1;
+    return PyUnicode_DecodeUTF16(s, size, errors, &byteorder);
+}
+
+/* decode_c_bytes.proto */
+static CYTHON_INLINE PyObject* __Pyx_decode_c_bytes(
+         const char* cstring, Py_ssize_t length, Py_ssize_t start, Py_ssize_t stop,
+         const char* encoding, const char* errors,
+         PyObject* (*decode_func)(const char *s, Py_ssize_t size, const char *errors));
+
+/* decode_bytearray.proto */
+static CYTHON_INLINE PyObject* __Pyx_decode_bytearray(
+         PyObject* string, Py_ssize_t start, Py_ssize_t stop,
+         const char* encoding, const char* errors,
+         PyObject* (*decode_func)(const char *s, Py_ssize_t size, const char *errors)) {
+    return __Pyx_decode_c_bytes(
+        PyByteArray_AS_STRING(string), PyByteArray_GET_SIZE(string),
+        start, stop, encoding, errors, decode_func);
+}
+
+/* RaiseException.proto */
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
+
+/* ObjectGetItem.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key);
+#else
+#define __Pyx_PyObject_GetItem(obj, key)  PyObject_GetItem(obj, key)
+#endif
+
+/* UnicodeEquals.proto */
+static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* pyobject_as_double.proto */
+static double __Pyx__PyObject_AsDouble(PyObject* obj);
+#if CYTHON_COMPILING_IN_PYPY
+#define __Pyx_PyObject_AsDouble(obj)\
+(likely(PyFloat_CheckExact(obj)) ? PyFloat_AS_DOUBLE(obj) :\
+ likely(PyInt_CheckExact(obj)) ?\
+ PyFloat_AsDouble(obj) : __Pyx__PyObject_AsDouble(obj))
+#else
+#define __Pyx_PyObject_AsDouble(obj)\
+((likely(PyFloat_CheckExact(obj))) ?\
+ PyFloat_AS_DOUBLE(obj) : __Pyx__PyObject_AsDouble(obj))
+#endif
+
+/* PyUnicodeContains.proto */
+static CYTHON_INLINE int __Pyx_PyUnicode_ContainsTF(PyObject* substring, PyObject* text, int eq) {
+    int result = PyUnicode_Contains(text, substring);
+    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
+}
+
+/* Import.proto */
+static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
+
+/* ImportFrom.proto */
+static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
+
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
+
+/* PyFunctionFastCall.proto */
+#if CYTHON_FAST_PYCALL
+#define __Pyx_PyFunction_FastCall(func, args, nargs)\
+    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
+#else
+#define __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs) _PyFunction_FastCallDict(func, args, nargs, kwargs)
+#endif
+#define __Pyx_BUILD_ASSERT_EXPR(cond)\
+    (sizeof(char [1 - 2*!(cond)]) - 1)
+#ifndef Py_MEMBER_SIZE
+#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#endif
+  static size_t __pyx_pyframe_localsplus_offset = 0;
+  #include "frameobject.h"
+  #define __Pxy_PyFrame_Initialize_Offsets()\
+    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
+     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
+  #define __Pyx_PyFrame_GetLocalsplus(frame)\
+    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
+#endif
+
+/* PyObjectCall2Args.proto */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
+
+/* HasAttr.proto */
+static CYTHON_INLINE int __Pyx_HasAttr(PyObject *, PyObject *);
+
+/* PyObject_GenericGetAttrNoDict.proto */
+#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GenericGetAttrNoDict(PyObject* obj, PyObject* attr_name);
+#else
+#define __Pyx_PyObject_GenericGetAttrNoDict PyObject_GenericGetAttr
+#endif
+
+/* PyObject_GenericGetAttr.proto */
+#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
+static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_name);
+#else
+#define __Pyx_PyObject_GenericGetAttr PyObject_GenericGetAttr
+#endif
+
+/* PyObjectGetAttrStrNoError.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStrNoError(PyObject* obj, PyObject* attr_name);
+
+/* SetupReduce.proto */
+static int __Pyx_setup_reduce(PyObject* type_obj);
 
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
@@ -1239,13 +1505,16 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CIntFromPy.proto */
-static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
+static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
 /* CIntFromPy.proto */
-static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
 
 /* FastTypeChecks.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -1269,47 +1538,4378 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* Module declarations from 'libc.math' */
 
+/* Module declarations from 'libcpp' */
+
 /* Module declarations from 'tacview_client.cython_funs' */
+static PyTypeObject *__pyx_ptype_14tacview_client_11cython_funs_ObjectRec = 0;
 static PyObject *__pyx_f_14tacview_client_11cython_funs_get_cartesian_coord(double, double, double, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_14tacview_client_11cython_funs_compute_dist(PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_14tacview_client_11cython_funs_compute_velocity(double, double, double, PyObject *, double, int __pyx_skip_dispatch); /*proto*/
+static struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_f_14tacview_client_11cython_funs_compute_velocity(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *, int __pyx_skip_dispatch); /*proto*/
+static struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_f_14tacview_client_11cython_funs_proc_line(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *, PyObject *, double, double, int, int __pyx_skip_dispatch); /*proto*/
+static int __pyx_f_14tacview_client_11cython_funs_can_be_parent(PyObject *); /*proto*/
+static int __pyx_f_14tacview_client_11cython_funs_should_have_parent(PyObject *); /*proto*/
+static PyObject *__pyx_f_14tacview_client_11cython_funs___pyx_unpickle_ObjectRec__set_state(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *, PyObject *); /*proto*/
 #define __Pyx_MODULE_NAME "tacview_client.cython_funs"
 extern int __pyx_module_is_main_tacview_client__cython_funs;
 int __pyx_module_is_main_tacview_client__cython_funs = 0;
 
 /* Implementation of 'tacview_client.cython_funs' */
+static PyObject *__pyx_builtin_ValueError;
+static const char __pyx_k_T[] = "T";
 static const char __pyx_k_h[] = "h";
+static const char __pyx_k__5[] = ",";
+static const char __pyx_k__6[] = "=";
+static const char __pyx_k__7[] = "|";
+static const char __pyx_k__8[] = "";
 static const char __pyx_k_alt[] = "alt";
+static const char __pyx_k_grp[] = "grp";
 static const char __pyx_k_lat[] = "lat";
 static const char __pyx_k_lon[] = "lon";
+static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_p_1[] = "p_1";
 static const char __pyx_k_p_2[] = "p_2";
+static const char __pyx_k_rec[] = "rec";
+static const char __pyx_k_yaw[] = "yaw";
+static const char __pyx_k_Misc[] = "Misc";
+static const char __pyx_k_dict[] = "__dict__";
+static const char __pyx_k_find[] = "find";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
+static const char __pyx_k_roll[] = "roll";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_cart_coords[] = "cart_coords";
+static const char __pyx_k_Decoy[] = "Decoy";
+static const char __pyx_k_Flare[] = "Flare";
+static const char __pyx_k_Group[] = "Group";
+static const char __pyx_k_comma[] = "comma";
+static const char __pyx_k_count[] = "count";
+static const char __pyx_k_pitch[] = "pitch";
+static const char __pyx_k_Weapon[] = "Weapon";
+static const char __pyx_k_import[] = "__import__";
+static const char __pyx_k_pickle[] = "pickle";
+static const char __pyx_k_reduce[] = "__reduce__";
+static const char __pyx_k_tac_id[] = "tac_id";
+static const char __pyx_k_update[] = "update";
+static const char __pyx_k_heading[] = "heading";
+static const char __pyx_k_ref_lat[] = "ref_lat";
+static const char __pyx_k_ref_lon[] = "ref_lon";
+static const char __pyx_k_u_coord[] = "u_coord";
+static const char __pyx_k_v_coord[] = "v_coord";
+static const char __pyx_k_getstate[] = "__getstate__";
+static const char __pyx_k_pyx_type[] = "__pyx_type";
+static const char __pyx_k_raw_line[] = "raw_line";
+static const char __pyx_k_setstate[] = "__setstate__";
+static const char __pyx_k_Container[] = "Container";
+static const char __pyx_k_ObjectRec[] = "ObjectRec";
+static const char __pyx_k_last_seen[] = "last_seen";
+static const char __pyx_k_pyx_state[] = "__pyx_state";
+static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
+static const char __pyx_k_Projectile[] = "Projectile";
+static const char __pyx_k_ValueError[] = "ValueError";
+static const char __pyx_k_first_seen[] = "first_seen";
+static const char __pyx_k_pyx_result[] = "__pyx_result";
+static const char __pyx_k_session_id[] = "session_id";
+static const char __pyx_k_PickleError[] = "PickleError";
+static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
+static const char __pyx_k_stringsource[] = "stringsource";
+static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
+static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
+static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_secs_since_last_seen[] = "secs_since_last_seen";
-static PyObject *__pyx_n_s_alt;
-static PyObject *__pyx_n_s_cart_coords;
+static const char __pyx_k_pyx_unpickle_ObjectRec[] = "__pyx_unpickle_ObjectRec";
+static const char __pyx_k_tacview_client_cython_funs[] = "tacview_client.cython_funs";
+static const char __pyx_k_COORD_COUNT_EITHER_8_5_OR_4[] = "COORD COUNT EITHER 8, 5, OR 4!";
+static const char __pyx_k_Ground_Light_Human_Air_Parachuti[] = "Ground+Light+Human+Air+Parachutist";
+static const char __pyx_k_Incompatible_checksums_s_vs_0x4f[] = "Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))";
+static PyObject *__pyx_kp_u_COORD_COUNT_EITHER_8_5_OR_4;
+static PyObject *__pyx_n_u_Container;
+static PyObject *__pyx_n_u_Decoy;
+static PyObject *__pyx_n_u_Flare;
+static PyObject *__pyx_kp_u_Ground_Light_Human_Air_Parachuti;
+static PyObject *__pyx_n_b_Group;
+static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0x4f;
+static PyObject *__pyx_n_u_Misc;
+static PyObject *__pyx_n_s_ObjectRec;
+static PyObject *__pyx_n_s_PickleError;
+static PyObject *__pyx_n_u_Projectile;
+static PyObject *__pyx_n_b_T;
+static PyObject *__pyx_n_s_ValueError;
+static PyObject *__pyx_n_u_Weapon;
+static PyObject *__pyx_kp_b__5;
+static PyObject *__pyx_kp_b__6;
+static PyObject *__pyx_kp_b__7;
+static PyObject *__pyx_kp_b__8;
+static PyObject *__pyx_n_u_alt;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_comma;
+static PyObject *__pyx_n_s_count;
+static PyObject *__pyx_n_s_dict;
+static PyObject *__pyx_n_s_find;
+static PyObject *__pyx_n_s_first_seen;
+static PyObject *__pyx_n_s_getstate;
+static PyObject *__pyx_n_u_grp;
 static PyObject *__pyx_n_s_h;
+static PyObject *__pyx_n_u_heading;
+static PyObject *__pyx_n_s_import;
+static PyObject *__pyx_n_s_last_seen;
 static PyObject *__pyx_n_s_lat;
+static PyObject *__pyx_n_u_lat;
 static PyObject *__pyx_n_s_lon;
+static PyObject *__pyx_n_u_lon;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
+static PyObject *__pyx_n_s_new;
 static PyObject *__pyx_n_s_p_1;
 static PyObject *__pyx_n_s_p_2;
-static PyObject *__pyx_n_s_secs_since_last_seen;
+static PyObject *__pyx_n_s_pickle;
+static PyObject *__pyx_n_u_pitch;
+static PyObject *__pyx_n_s_pyx_PickleError;
+static PyObject *__pyx_n_s_pyx_checksum;
+static PyObject *__pyx_n_s_pyx_result;
+static PyObject *__pyx_n_s_pyx_state;
+static PyObject *__pyx_n_s_pyx_type;
+static PyObject *__pyx_n_s_pyx_unpickle_ObjectRec;
+static PyObject *__pyx_n_s_raw_line;
+static PyObject *__pyx_n_s_rec;
+static PyObject *__pyx_n_s_reduce;
+static PyObject *__pyx_n_s_reduce_cython;
+static PyObject *__pyx_n_s_reduce_ex;
+static PyObject *__pyx_n_s_ref_lat;
+static PyObject *__pyx_n_s_ref_lon;
+static PyObject *__pyx_n_u_roll;
+static PyObject *__pyx_n_s_session_id;
+static PyObject *__pyx_n_s_setstate;
+static PyObject *__pyx_n_s_setstate_cython;
+static PyObject *__pyx_kp_s_stringsource;
+static PyObject *__pyx_n_s_tac_id;
+static PyObject *__pyx_n_s_tacview_client_cython_funs;
 static PyObject *__pyx_n_s_test;
+static PyObject *__pyx_n_u_u_coord;
+static PyObject *__pyx_n_s_update;
+static PyObject *__pyx_n_u_v_coord;
+static PyObject *__pyx_n_u_yaw;
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec___init__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_tac_id, PyObject *__pyx_v_first_seen, PyObject *__pyx_v_last_seen, PyObject *__pyx_v_session_id); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2id___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2id_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6tac_id___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6tac_id_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10session_id___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10session_id_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7updates___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7updates_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10first_seen___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10first_seen_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9last_seen___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9last_seen_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lat___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lat_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lon___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lon_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3alt___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3alt_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4roll___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4roll_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5pitch___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5pitch_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3yaw___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3yaw_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7u_coord___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7u_coord_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7v_coord___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7v_coord_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7heading___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7heading_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11parent_dist___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5alive___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5alive_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7written___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7written_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2__reduce_cython__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4__setstate_cython__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_14tacview_client_11cython_funs_get_cartesian_coord(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_lat, double __pyx_v_lon, double __pyx_v_h); /* proto */
 static PyObject *__pyx_pf_14tacview_client_11cython_funs_2compute_dist(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_p_1, PyObject *__pyx_v_p_2); /* proto */
-static PyObject *__pyx_pf_14tacview_client_11cython_funs_4compute_velocity(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_lat, double __pyx_v_lon, double __pyx_v_alt, PyObject *__pyx_v_cart_coords, double __pyx_v_secs_since_last_seen); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_4compute_velocity(CYTHON_UNUSED PyObject *__pyx_self, struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_rec); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_6proc_line(CYTHON_UNUSED PyObject *__pyx_self, struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_rec, PyObject *__pyx_v_raw_line, double __pyx_v_ref_lat, double __pyx_v_ref_lon, int __pyx_v_comma); /* proto */
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_8__pyx_unpickle_ObjectRec(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_14tacview_client_11cython_funs_ObjectRec(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static __Pyx_CachedCFunction __pyx_umethod_PyByteArray_Type_count = {0, &__pyx_n_s_count, 0, 0, 0};
+static __Pyx_CachedCFunction __pyx_umethod_PyByteArray_Type_find = {0, &__pyx_n_s_find, 0, 0, 0};
+static PyObject *__pyx_int_0;
+static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
+static PyObject *__pyx_int_4;
+static PyObject *__pyx_int_5;
+static PyObject *__pyx_int_8;
+static PyObject *__pyx_int_83764643;
+static PyObject *__pyx_int_neg_1;
+static PyObject *__pyx_tuple_;
+static PyObject *__pyx_tuple__2;
+static PyObject *__pyx_tuple__3;
+static PyObject *__pyx_tuple__4;
+static PyObject *__pyx_tuple__9;
+static PyObject *__pyx_tuple__10;
+static PyObject *__pyx_tuple__12;
+static PyObject *__pyx_codeobj__11;
 /* Late includes */
 
-/* "tacview_client/cython_funs.pyx":6
- * from libc.math cimport M_PI
+/* "tacview_client/cython_funs.pyx":16
+ *     # cdef public list cart_coords
+ * 
+ *     def __init__(             # <<<<<<<<<<<<<<
+ *         self,
+ *         tac_id,
+ */
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_tac_id = 0;
+  PyObject *__pyx_v_first_seen = 0;
+  PyObject *__pyx_v_last_seen = 0;
+  PyObject *__pyx_v_session_id = 0;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_tac_id,&__pyx_n_s_first_seen,&__pyx_n_s_last_seen,&__pyx_n_s_session_id,0};
+    PyObject* values[4] = {0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_tac_id)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_first_seen)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, 1); __PYX_ERR(0, 16, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_last_seen)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, 2); __PYX_ERR(0, 16, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_session_id)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, 3); __PYX_ERR(0, 16, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 16, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+    }
+    __pyx_v_tac_id = values[0];
+    __pyx_v_first_seen = values[1];
+    __pyx_v_last_seen = values[2];
+    __pyx_v_session_id = values[3];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 16, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec___init__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), __pyx_v_tac_id, __pyx_v_first_seen, __pyx_v_last_seen, __pyx_v_session_id);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec___init__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_tac_id, PyObject *__pyx_v_first_seen, PyObject *__pyx_v_last_seen, PyObject *__pyx_v_session_id) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  float __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__init__", 0);
+  __Pyx_TraceCall("__init__", __pyx_f[0], 16, 0, __PYX_ERR(0, 16, __pyx_L1_error));
+
+  /* "tacview_client/cython_funs.pyx":23
+ *         session_id,
+ *     ):
+ *         self.id = 0             # <<<<<<<<<<<<<<
+ *         self.tac_id = tac_id
+ *         self.first_seen = first_seen
+ */
+  __Pyx_TraceLine(23,0,__PYX_ERR(0, 23, __pyx_L1_error))
+  __pyx_v_self->id = 0;
+
+  /* "tacview_client/cython_funs.pyx":24
+ *     ):
+ *         self.id = 0
+ *         self.tac_id = tac_id             # <<<<<<<<<<<<<<
+ *         self.first_seen = first_seen
+ *         self.last_seen = last_seen
+ */
+  __Pyx_TraceLine(24,0,__PYX_ERR(0, 24, __pyx_L1_error))
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_tac_id); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_v_self->tac_id = __pyx_t_1;
+
+  /* "tacview_client/cython_funs.pyx":25
+ *         self.id = 0
+ *         self.tac_id = tac_id
+ *         self.first_seen = first_seen             # <<<<<<<<<<<<<<
+ *         self.last_seen = last_seen
+ *         self.session_id = session_id
+ */
+  __Pyx_TraceLine(25,0,__PYX_ERR(0, 25, __pyx_L1_error))
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_v_first_seen); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_v_self->first_seen = __pyx_t_2;
+
+  /* "tacview_client/cython_funs.pyx":26
+ *         self.tac_id = tac_id
+ *         self.first_seen = first_seen
+ *         self.last_seen = last_seen             # <<<<<<<<<<<<<<
+ *         self.session_id = session_id
+ * 
+ */
+  __Pyx_TraceLine(26,0,__PYX_ERR(0, 26, __pyx_L1_error))
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_v_last_seen); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L1_error)
+  __pyx_v_self->last_seen = __pyx_t_2;
+
+  /* "tacview_client/cython_funs.pyx":27
+ *         self.first_seen = first_seen
+ *         self.last_seen = last_seen
+ *         self.session_id = session_id             # <<<<<<<<<<<<<<
+ * 
+ *         self.alive = True
+ */
+  __Pyx_TraceLine(27,0,__PYX_ERR(0, 27, __pyx_L1_error))
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_session_id); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_v_self->session_id = __pyx_t_1;
+
+  /* "tacview_client/cython_funs.pyx":29
+ *         self.session_id = session_id
+ * 
+ *         self.alive = True             # <<<<<<<<<<<<<<
+ *         self.Name = None
+ *         self.Color = None
+ */
+  __Pyx_TraceLine(29,0,__PYX_ERR(0, 29, __pyx_L1_error))
+  __pyx_v_self->alive = 1;
+
+  /* "tacview_client/cython_funs.pyx":30
+ * 
+ *         self.alive = True
+ *         self.Name = None             # <<<<<<<<<<<<<<
+ *         self.Color = None
+ *         self.Country = None
+ */
+  __Pyx_TraceLine(30,0,__PYX_ERR(0, 30, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Name);
+  __Pyx_DECREF(__pyx_v_self->Name);
+  __pyx_v_self->Name = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":31
+ *         self.alive = True
+ *         self.Name = None
+ *         self.Color = None             # <<<<<<<<<<<<<<
+ *         self.Country = None
+ *         self.grp = None
+ */
+  __Pyx_TraceLine(31,0,__PYX_ERR(0, 31, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Color);
+  __Pyx_DECREF(__pyx_v_self->Color);
+  __pyx_v_self->Color = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":32
+ *         self.Name = None
+ *         self.Color = None
+ *         self.Country = None             # <<<<<<<<<<<<<<
+ *         self.grp = None
+ *         self.Pilot = None
+ */
+  __Pyx_TraceLine(32,0,__PYX_ERR(0, 32, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Country);
+  __Pyx_DECREF(__pyx_v_self->Country);
+  __pyx_v_self->Country = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":33
+ *         self.Color = None
+ *         self.Country = None
+ *         self.grp = None             # <<<<<<<<<<<<<<
+ *         self.Pilot = None
+ *         self.Type = None
+ */
+  __Pyx_TraceLine(33,0,__PYX_ERR(0, 33, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->grp);
+  __Pyx_DECREF(__pyx_v_self->grp);
+  __pyx_v_self->grp = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":34
+ *         self.Country = None
+ *         self.grp = None
+ *         self.Pilot = None             # <<<<<<<<<<<<<<
+ *         self.Type = None
+ *         self.Coalition = None
+ */
+  __Pyx_TraceLine(34,0,__PYX_ERR(0, 34, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Pilot);
+  __Pyx_DECREF(__pyx_v_self->Pilot);
+  __pyx_v_self->Pilot = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":35
+ *         self.grp = None
+ *         self.Pilot = None
+ *         self.Type = None             # <<<<<<<<<<<<<<
+ *         self.Coalition = None
+ *         self.lat = 0.0
+ */
+  __Pyx_TraceLine(35,0,__PYX_ERR(0, 35, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Type);
+  __Pyx_DECREF(__pyx_v_self->Type);
+  __pyx_v_self->Type = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":36
+ *         self.Pilot = None
+ *         self.Type = None
+ *         self.Coalition = None             # <<<<<<<<<<<<<<
+ *         self.lat = 0.0
+ *         self.lon = 0.0
+ */
+  __Pyx_TraceLine(36,0,__PYX_ERR(0, 36, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Coalition);
+  __Pyx_DECREF(__pyx_v_self->Coalition);
+  __pyx_v_self->Coalition = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":37
+ *         self.Type = None
+ *         self.Coalition = None
+ *         self.lat = 0.0             # <<<<<<<<<<<<<<
+ *         self.lon = 0.0
+ *         self.alt = 1.0  # Ships will have null alt
+ */
+  __Pyx_TraceLine(37,0,__PYX_ERR(0, 37, __pyx_L1_error))
+  __pyx_v_self->lat = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":38
+ *         self.Coalition = None
+ *         self.lat = 0.0
+ *         self.lon = 0.0             # <<<<<<<<<<<<<<
+ *         self.alt = 1.0  # Ships will have null alt
+ *         self.roll = 0.0
+ */
+  __Pyx_TraceLine(38,0,__PYX_ERR(0, 38, __pyx_L1_error))
+  __pyx_v_self->lon = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":39
+ *         self.lat = 0.0
+ *         self.lon = 0.0
+ *         self.alt = 1.0  # Ships will have null alt             # <<<<<<<<<<<<<<
+ *         self.roll = 0.0
+ *         self.pitch = 0.0
+ */
+  __Pyx_TraceLine(39,0,__PYX_ERR(0, 39, __pyx_L1_error))
+  __pyx_v_self->alt = 1.0;
+
+  /* "tacview_client/cython_funs.pyx":40
+ *         self.lon = 0.0
+ *         self.alt = 1.0  # Ships will have null alt
+ *         self.roll = 0.0             # <<<<<<<<<<<<<<
+ *         self.pitch = 0.0
+ *         self.yaw = 0.0
+ */
+  __Pyx_TraceLine(40,0,__PYX_ERR(0, 40, __pyx_L1_error))
+  __pyx_v_self->roll = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":41
+ *         self.alt = 1.0  # Ships will have null alt
+ *         self.roll = 0.0
+ *         self.pitch = 0.0             # <<<<<<<<<<<<<<
+ *         self.yaw = 0.0
+ *         self.u_coord = 0.0
+ */
+  __Pyx_TraceLine(41,0,__PYX_ERR(0, 41, __pyx_L1_error))
+  __pyx_v_self->pitch = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":42
+ *         self.roll = 0.0
+ *         self.pitch = 0.0
+ *         self.yaw = 0.0             # <<<<<<<<<<<<<<
+ *         self.u_coord = 0.0
+ *         self.v_coord = 0.0
+ */
+  __Pyx_TraceLine(42,0,__PYX_ERR(0, 42, __pyx_L1_error))
+  __pyx_v_self->yaw = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":43
+ *         self.pitch = 0.0
+ *         self.yaw = 0.0
+ *         self.u_coord = 0.0             # <<<<<<<<<<<<<<
+ *         self.v_coord = 0.0
+ *         self.heading = 0.0
+ */
+  __Pyx_TraceLine(43,0,__PYX_ERR(0, 43, __pyx_L1_error))
+  __pyx_v_self->u_coord = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":44
+ *         self.yaw = 0.0
+ *         self.u_coord = 0.0
+ *         self.v_coord = 0.0             # <<<<<<<<<<<<<<
+ *         self.heading = 0.0
+ *         self.impacted = None
+ */
+  __Pyx_TraceLine(44,0,__PYX_ERR(0, 44, __pyx_L1_error))
+  __pyx_v_self->v_coord = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":45
+ *         self.u_coord = 0.0
+ *         self.v_coord = 0.0
+ *         self.heading = 0.0             # <<<<<<<<<<<<<<
+ *         self.impacted = None
+ *         self.impacted_dist = -1.0
+ */
+  __Pyx_TraceLine(45,0,__PYX_ERR(0, 45, __pyx_L1_error))
+  __pyx_v_self->heading = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":46
+ *         self.v_coord = 0.0
+ *         self.heading = 0.0
+ *         self.impacted = None             # <<<<<<<<<<<<<<
+ *         self.impacted_dist = -1.0
+ *         self.parent = None
+ */
+  __Pyx_TraceLine(46,0,__PYX_ERR(0, 46, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->impacted);
+  __Pyx_DECREF(__pyx_v_self->impacted);
+  __pyx_v_self->impacted = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":47
+ *         self.heading = 0.0
+ *         self.impacted = None
+ *         self.impacted_dist = -1.0             # <<<<<<<<<<<<<<
+ *         self.parent = None
+ *         self.parent_dist = -1.0
+ */
+  __Pyx_TraceLine(47,0,__PYX_ERR(0, 47, __pyx_L1_error))
+  __pyx_v_self->impacted_dist = -1.0;
+
+  /* "tacview_client/cython_funs.pyx":48
+ *         self.impacted = None
+ *         self.impacted_dist = -1.0
+ *         self.parent = None             # <<<<<<<<<<<<<<
+ *         self.parent_dist = -1.0
+ *         self.updates = 1
+ */
+  __Pyx_TraceLine(48,0,__PYX_ERR(0, 48, __pyx_L1_error))
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->parent);
+  __Pyx_DECREF(__pyx_v_self->parent);
+  __pyx_v_self->parent = Py_None;
+
+  /* "tacview_client/cython_funs.pyx":49
+ *         self.impacted_dist = -1.0
+ *         self.parent = None
+ *         self.parent_dist = -1.0             # <<<<<<<<<<<<<<
+ *         self.updates = 1
+ *         self.velocity_kts = 0.0
+ */
+  __Pyx_TraceLine(49,0,__PYX_ERR(0, 49, __pyx_L1_error))
+  __pyx_v_self->parent_dist = -1.0;
+
+  /* "tacview_client/cython_funs.pyx":50
+ *         self.parent = None
+ *         self.parent_dist = -1.0
+ *         self.updates = 1             # <<<<<<<<<<<<<<
+ *         self.velocity_kts = 0.0
+ *         self.can_be_parent = False
+ */
+  __Pyx_TraceLine(50,0,__PYX_ERR(0, 50, __pyx_L1_error))
+  __pyx_v_self->updates = 1;
+
+  /* "tacview_client/cython_funs.pyx":51
+ *         self.parent_dist = -1.0
+ *         self.updates = 1
+ *         self.velocity_kts = 0.0             # <<<<<<<<<<<<<<
+ *         self.can_be_parent = False
+ *         self.should_have_parent = False
+ */
+  __Pyx_TraceLine(51,0,__PYX_ERR(0, 51, __pyx_L1_error))
+  __pyx_v_self->velocity_kts = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":52
+ *         self.updates = 1
+ *         self.velocity_kts = 0.0
+ *         self.can_be_parent = False             # <<<<<<<<<<<<<<
+ *         self.should_have_parent = False
+ *         self.secs_since_last_seen = 0
+ */
+  __Pyx_TraceLine(52,0,__PYX_ERR(0, 52, __pyx_L1_error))
+  __pyx_v_self->can_be_parent = 0;
+
+  /* "tacview_client/cython_funs.pyx":53
+ *         self.velocity_kts = 0.0
+ *         self.can_be_parent = False
+ *         self.should_have_parent = False             # <<<<<<<<<<<<<<
+ *         self.secs_since_last_seen = 0
+ *         self.written = False
+ */
+  __Pyx_TraceLine(53,0,__PYX_ERR(0, 53, __pyx_L1_error))
+  __pyx_v_self->should_have_parent = 0;
+
+  /* "tacview_client/cython_funs.pyx":54
+ *         self.can_be_parent = False
+ *         self.should_have_parent = False
+ *         self.secs_since_last_seen = 0             # <<<<<<<<<<<<<<
+ *         self.written = False
+ *         self.cart_coords = []
+ */
+  __Pyx_TraceLine(54,0,__PYX_ERR(0, 54, __pyx_L1_error))
+  __pyx_v_self->secs_since_last_seen = 0.0;
+
+  /* "tacview_client/cython_funs.pyx":55
+ *         self.should_have_parent = False
+ *         self.secs_since_last_seen = 0
+ *         self.written = False             # <<<<<<<<<<<<<<
+ *         self.cart_coords = []
+ * 
+ */
+  __Pyx_TraceLine(55,0,__PYX_ERR(0, 55, __pyx_L1_error))
+  __pyx_v_self->written = 0;
+
+  /* "tacview_client/cython_funs.pyx":56
+ *         self.secs_since_last_seen = 0
+ *         self.written = False
+ *         self.cart_coords = []             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __Pyx_TraceLine(56,0,__PYX_ERR(0, 56, __pyx_L1_error))
+  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __Pyx_GOTREF(__pyx_v_self->cart_coords);
+  __Pyx_DECREF(__pyx_v_self->cart_coords);
+  __pyx_v_self->cart_coords = __pyx_t_3;
+  __pyx_t_3 = 0;
+
+  /* "tacview_client/cython_funs.pyx":16
+ *     # cdef public list cart_coords
+ * 
+ *     def __init__(             # <<<<<<<<<<<<<<
+ *         self,
+ *         tac_id,
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "tacview_client/cython_funs.pyx":10
+ * cdef class ObjectRec:
+ *     """Dataclass for objects."""
+ *     cdef public object impacted, parent, Color, Coalition, cart_coords, Type, Name, Country, grp, Pilot             # <<<<<<<<<<<<<<
+ *     cdef public int id, tac_id, session_id, updates
+ *     cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist, velocity_kts, secs_since_last_seen
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->impacted);
+  __pyx_r = __pyx_v_self->impacted;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.impacted.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->impacted);
+  __Pyx_DECREF(__pyx_v_self->impacted);
+  __pyx_v_self->impacted = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.impacted.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_8impacted_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->impacted);
+  __Pyx_DECREF(__pyx_v_self->impacted);
+  __pyx_v_self->impacted = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.impacted.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->parent);
+  __pyx_r = __pyx_v_self->parent;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.parent.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->parent);
+  __Pyx_DECREF(__pyx_v_self->parent);
+  __pyx_v_self->parent = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.parent.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6parent_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->parent);
+  __Pyx_DECREF(__pyx_v_self->parent);
+  __pyx_v_self->parent = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.parent.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->Color);
+  __pyx_r = __pyx_v_self->Color;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Color.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->Color);
+  __Pyx_DECREF(__pyx_v_self->Color);
+  __pyx_v_self->Color = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Color.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Color_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Color);
+  __Pyx_DECREF(__pyx_v_self->Color);
+  __pyx_v_self->Color = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Color.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->Coalition);
+  __pyx_r = __pyx_v_self->Coalition;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Coalition.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->Coalition);
+  __Pyx_DECREF(__pyx_v_self->Coalition);
+  __pyx_v_self->Coalition = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Coalition.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9Coalition_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Coalition);
+  __Pyx_DECREF(__pyx_v_self->Coalition);
+  __pyx_v_self->Coalition = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Coalition.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->cart_coords);
+  __pyx_r = __pyx_v_self->cart_coords;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.cart_coords.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->cart_coords);
+  __Pyx_DECREF(__pyx_v_self->cart_coords);
+  __pyx_v_self->cart_coords = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.cart_coords.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->cart_coords);
+  __Pyx_DECREF(__pyx_v_self->cart_coords);
+  __pyx_v_self->cart_coords = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.cart_coords.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->Type);
+  __pyx_r = __pyx_v_self->Type;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Type.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->Type);
+  __Pyx_DECREF(__pyx_v_self->Type);
+  __pyx_v_self->Type = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Type.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Type_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Type);
+  __Pyx_DECREF(__pyx_v_self->Type);
+  __pyx_v_self->Type = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Type.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->Name);
+  __pyx_r = __pyx_v_self->Name;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Name.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->Name);
+  __Pyx_DECREF(__pyx_v_self->Name);
+  __pyx_v_self->Name = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Name.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4Name_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Name);
+  __Pyx_DECREF(__pyx_v_self->Name);
+  __pyx_v_self->Name = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Name.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->Country);
+  __pyx_r = __pyx_v_self->Country;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Country.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->Country);
+  __Pyx_DECREF(__pyx_v_self->Country);
+  __pyx_v_self->Country = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Country.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7Country_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Country);
+  __Pyx_DECREF(__pyx_v_self->Country);
+  __pyx_v_self->Country = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Country.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->grp);
+  __pyx_r = __pyx_v_self->grp;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.grp.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->grp);
+  __Pyx_DECREF(__pyx_v_self->grp);
+  __pyx_v_self->grp = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.grp.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3grp_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->grp);
+  __Pyx_DECREF(__pyx_v_self->grp);
+  __pyx_v_self->grp = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.grp.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->Pilot);
+  __pyx_r = __pyx_v_self->Pilot;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Pilot.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(__pyx_v_value);
+  __Pyx_GIVEREF(__pyx_v_value);
+  __Pyx_GOTREF(__pyx_v_self->Pilot);
+  __Pyx_DECREF(__pyx_v_self->Pilot);
+  __pyx_v_self->Pilot = __pyx_v_value;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Pilot.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot_4__del__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5Pilot_4__del__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[0], 10, 0, __PYX_ERR(0, 10, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->Pilot);
+  __Pyx_DECREF(__pyx_v_self->Pilot);
+  __pyx_v_self->Pilot = Py_None;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.Pilot.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "tacview_client/cython_funs.pyx":11
+ *     """Dataclass for objects."""
+ *     cdef public object impacted, parent, Color, Coalition, cart_coords, Type, Name, Country, grp, Pilot
+ *     cdef public int id, tac_id, session_id, updates             # <<<<<<<<<<<<<<
+ *     cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist, velocity_kts, secs_since_last_seen
+ *     cdef public bint alive, written, can_be_parent, should_have_parent
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_2id_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_2id_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2id___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2id___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.id.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_2id_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_2id_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2id_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2id_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_v_self->id = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.id.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6tac_id_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6tac_id_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6tac_id___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6tac_id___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->tac_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.tac_id.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6tac_id_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6tac_id_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6tac_id_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_6tac_id_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_v_self->tac_id = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.tac_id.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10session_id_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10session_id_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10session_id___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10session_id___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->session_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.session_id.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10session_id_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10session_id_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10session_id_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10session_id_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_v_self->session_id = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.session_id.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7updates_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7updates_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7updates___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7updates___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->updates); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.updates.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7updates_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7updates_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7updates_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7updates_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 11, 0, __PYX_ERR(0, 11, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_v_self->updates = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.updates.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "tacview_client/cython_funs.pyx":12
+ *     cdef public object impacted, parent, Color, Coalition, cart_coords, Type, Name, Country, grp, Pilot
+ *     cdef public int id, tac_id, session_id, updates
+ *     cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist, velocity_kts, secs_since_last_seen             # <<<<<<<<<<<<<<
+ *     cdef public bint alive, written, can_be_parent, should_have_parent
+ *     # cdef public list cart_coords
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10first_seen_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10first_seen_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10first_seen___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10first_seen___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->first_seen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.first_seen.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10first_seen_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10first_seen_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10first_seen_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_10first_seen_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->first_seen = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.first_seen.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9last_seen_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9last_seen_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9last_seen___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9last_seen___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->last_seen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.last_seen.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9last_seen_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9last_seen_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9last_seen_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_9last_seen_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->last_seen = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.last_seen.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lat_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lat_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lat___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lat___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->lat); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.lat.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lat_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lat_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lat_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lat_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->lat = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.lat.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lon_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lon_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lon___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lon___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->lon); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.lon.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lon_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lon_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lon_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3lon_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->lon = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.lon.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3alt_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3alt_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3alt___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3alt___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->alt); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.alt.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3alt_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3alt_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3alt_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3alt_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->alt = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.alt.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4roll_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4roll_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4roll___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4roll___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->roll); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.roll.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4roll_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4roll_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4roll_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4roll_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->roll = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.roll.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5pitch_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5pitch_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5pitch___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5pitch___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->pitch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.pitch.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5pitch_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5pitch_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5pitch_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5pitch_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->pitch = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.pitch.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3yaw_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3yaw_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3yaw___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3yaw___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->yaw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.yaw.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3yaw_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3yaw_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3yaw_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_3yaw_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->yaw = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.yaw.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7u_coord_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7u_coord_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7u_coord___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7u_coord___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->u_coord); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.u_coord.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7u_coord_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7u_coord_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7u_coord_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7u_coord_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->u_coord = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.u_coord.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7v_coord_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7v_coord_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7v_coord___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7v_coord___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->v_coord); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.v_coord.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7v_coord_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7v_coord_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7v_coord_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7v_coord_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->v_coord = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.v_coord.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7heading_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7heading_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7heading___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7heading___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->heading); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.heading.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7heading_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7heading_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7heading_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7heading_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->heading = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.heading.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->impacted_dist); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.impacted_dist.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->impacted_dist = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.impacted_dist.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11parent_dist___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11parent_dist___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->parent_dist); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.parent_dist.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->parent_dist = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.parent_dist.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->velocity_kts); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.velocity_kts.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->velocity_kts = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.velocity_kts.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->secs_since_last_seen); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.secs_since_last_seen.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 12, 0, __PYX_ERR(0, 12, __pyx_L1_error));
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_value); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_v_self->secs_since_last_seen = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.secs_since_last_seen.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "tacview_client/cython_funs.pyx":13
+ *     cdef public int id, tac_id, session_id, updates
+ *     cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist, velocity_kts, secs_since_last_seen
+ *     cdef public bint alive, written, can_be_parent, should_have_parent             # <<<<<<<<<<<<<<
+ *     # cdef public list cart_coords
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5alive_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5alive_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5alive___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5alive___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_v_self->alive); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.alive.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5alive_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5alive_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5alive_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_5alive_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_v_self->alive = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.alive.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7written_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7written_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7written___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7written___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_v_self->written); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.written.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7written_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7written_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7written_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_7written_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_v_self->written = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.written.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_v_self->can_be_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.can_be_parent.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_v_self->can_be_parent = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.can_be_parent.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent___get__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent___get__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_v_self->should_have_parent); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.should_have_parent.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_2__set__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_2__set__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[0], 13, 0, __PYX_ERR(0, 13, __pyx_L1_error));
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_v_self->should_have_parent = __pyx_t_1;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.should_have_parent.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     cdef tuple state
+ *     cdef object _dict
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2__reduce_cython__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_2__reduce_cython__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self) {
+  PyObject *__pyx_v_state = 0;
+  PyObject *__pyx_v__dict = 0;
+  int __pyx_v_use_setstate;
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  PyObject *__pyx_t_16 = NULL;
+  PyObject *__pyx_t_17 = NULL;
+  PyObject *__pyx_t_18 = NULL;
+  PyObject *__pyx_t_19 = NULL;
+  PyObject *__pyx_t_20 = NULL;
+  PyObject *__pyx_t_21 = NULL;
+  PyObject *__pyx_t_22 = NULL;
+  PyObject *__pyx_t_23 = NULL;
+  PyObject *__pyx_t_24 = NULL;
+  int __pyx_t_25;
+  int __pyx_t_26;
+  int __pyx_t_27;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
+  __Pyx_TraceCall("__reduce_cython__", __pyx_f[1], 1, 0, __PYX_ERR(1, 1, __pyx_L1_error));
+
+  /* "(tree fragment)":5
+ *     cdef object _dict
+ *     cdef bint use_setstate
+ *     state = (self.Coalition, self.Color, self.Country, self.Name, self.Pilot, self.Type, self.alive, self.alt, self.can_be_parent, self.cart_coords, self.first_seen, self.grp, self.heading, self.id, self.impacted, self.impacted_dist, self.last_seen, self.lat, self.lon, self.parent, self.parent_dist, self.pitch, self.roll, self.secs_since_last_seen, self.session_id, self.should_have_parent, self.tac_id, self.u_coord, self.updates, self.v_coord, self.velocity_kts, self.written, self.yaw)             # <<<<<<<<<<<<<<
+ *     _dict = getattr(self, '__dict__', None)
+ *     if _dict is not None:
+ */
+  __Pyx_TraceLine(5,0,__PYX_ERR(1, 5, __pyx_L1_error))
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_v_self->alive); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->alt); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_v_self->can_be_parent); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_self->first_seen); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->heading); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_self->id); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_self->impacted_dist); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_self->last_seen); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_self->lat); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_self->lon); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = PyFloat_FromDouble(__pyx_v_self->parent_dist); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __pyx_t_12 = PyFloat_FromDouble(__pyx_v_self->pitch); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_13 = PyFloat_FromDouble(__pyx_v_self->roll); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_self->secs_since_last_seen); if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_15 = __Pyx_PyInt_From_int(__pyx_v_self->session_id); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_16 = __Pyx_PyBool_FromLong(__pyx_v_self->should_have_parent); if (unlikely(!__pyx_t_16)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_17 = __Pyx_PyInt_From_int(__pyx_v_self->tac_id); if (unlikely(!__pyx_t_17)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_17);
+  __pyx_t_18 = PyFloat_FromDouble(__pyx_v_self->u_coord); if (unlikely(!__pyx_t_18)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_18);
+  __pyx_t_19 = __Pyx_PyInt_From_int(__pyx_v_self->updates); if (unlikely(!__pyx_t_19)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __pyx_t_20 = PyFloat_FromDouble(__pyx_v_self->v_coord); if (unlikely(!__pyx_t_20)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_20);
+  __pyx_t_21 = PyFloat_FromDouble(__pyx_v_self->velocity_kts); if (unlikely(!__pyx_t_21)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_21);
+  __pyx_t_22 = __Pyx_PyBool_FromLong(__pyx_v_self->written); if (unlikely(!__pyx_t_22)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_22);
+  __pyx_t_23 = PyFloat_FromDouble(__pyx_v_self->yaw); if (unlikely(!__pyx_t_23)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_23);
+  __pyx_t_24 = PyTuple_New(33); if (unlikely(!__pyx_t_24)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_24);
+  __Pyx_INCREF(__pyx_v_self->Coalition);
+  __Pyx_GIVEREF(__pyx_v_self->Coalition);
+  PyTuple_SET_ITEM(__pyx_t_24, 0, __pyx_v_self->Coalition);
+  __Pyx_INCREF(__pyx_v_self->Color);
+  __Pyx_GIVEREF(__pyx_v_self->Color);
+  PyTuple_SET_ITEM(__pyx_t_24, 1, __pyx_v_self->Color);
+  __Pyx_INCREF(__pyx_v_self->Country);
+  __Pyx_GIVEREF(__pyx_v_self->Country);
+  PyTuple_SET_ITEM(__pyx_t_24, 2, __pyx_v_self->Country);
+  __Pyx_INCREF(__pyx_v_self->Name);
+  __Pyx_GIVEREF(__pyx_v_self->Name);
+  PyTuple_SET_ITEM(__pyx_t_24, 3, __pyx_v_self->Name);
+  __Pyx_INCREF(__pyx_v_self->Pilot);
+  __Pyx_GIVEREF(__pyx_v_self->Pilot);
+  PyTuple_SET_ITEM(__pyx_t_24, 4, __pyx_v_self->Pilot);
+  __Pyx_INCREF(__pyx_v_self->Type);
+  __Pyx_GIVEREF(__pyx_v_self->Type);
+  PyTuple_SET_ITEM(__pyx_t_24, 5, __pyx_v_self->Type);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_24, 6, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_24, 7, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_24, 8, __pyx_t_3);
+  __Pyx_INCREF(__pyx_v_self->cart_coords);
+  __Pyx_GIVEREF(__pyx_v_self->cart_coords);
+  PyTuple_SET_ITEM(__pyx_t_24, 9, __pyx_v_self->cart_coords);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_24, 10, __pyx_t_4);
+  __Pyx_INCREF(__pyx_v_self->grp);
+  __Pyx_GIVEREF(__pyx_v_self->grp);
+  PyTuple_SET_ITEM(__pyx_t_24, 11, __pyx_v_self->grp);
+  __Pyx_GIVEREF(__pyx_t_5);
+  PyTuple_SET_ITEM(__pyx_t_24, 12, __pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_6);
+  PyTuple_SET_ITEM(__pyx_t_24, 13, __pyx_t_6);
+  __Pyx_INCREF(__pyx_v_self->impacted);
+  __Pyx_GIVEREF(__pyx_v_self->impacted);
+  PyTuple_SET_ITEM(__pyx_t_24, 14, __pyx_v_self->impacted);
+  __Pyx_GIVEREF(__pyx_t_7);
+  PyTuple_SET_ITEM(__pyx_t_24, 15, __pyx_t_7);
+  __Pyx_GIVEREF(__pyx_t_8);
+  PyTuple_SET_ITEM(__pyx_t_24, 16, __pyx_t_8);
+  __Pyx_GIVEREF(__pyx_t_9);
+  PyTuple_SET_ITEM(__pyx_t_24, 17, __pyx_t_9);
+  __Pyx_GIVEREF(__pyx_t_10);
+  PyTuple_SET_ITEM(__pyx_t_24, 18, __pyx_t_10);
+  __Pyx_INCREF(__pyx_v_self->parent);
+  __Pyx_GIVEREF(__pyx_v_self->parent);
+  PyTuple_SET_ITEM(__pyx_t_24, 19, __pyx_v_self->parent);
+  __Pyx_GIVEREF(__pyx_t_11);
+  PyTuple_SET_ITEM(__pyx_t_24, 20, __pyx_t_11);
+  __Pyx_GIVEREF(__pyx_t_12);
+  PyTuple_SET_ITEM(__pyx_t_24, 21, __pyx_t_12);
+  __Pyx_GIVEREF(__pyx_t_13);
+  PyTuple_SET_ITEM(__pyx_t_24, 22, __pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_14);
+  PyTuple_SET_ITEM(__pyx_t_24, 23, __pyx_t_14);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_24, 24, __pyx_t_15);
+  __Pyx_GIVEREF(__pyx_t_16);
+  PyTuple_SET_ITEM(__pyx_t_24, 25, __pyx_t_16);
+  __Pyx_GIVEREF(__pyx_t_17);
+  PyTuple_SET_ITEM(__pyx_t_24, 26, __pyx_t_17);
+  __Pyx_GIVEREF(__pyx_t_18);
+  PyTuple_SET_ITEM(__pyx_t_24, 27, __pyx_t_18);
+  __Pyx_GIVEREF(__pyx_t_19);
+  PyTuple_SET_ITEM(__pyx_t_24, 28, __pyx_t_19);
+  __Pyx_GIVEREF(__pyx_t_20);
+  PyTuple_SET_ITEM(__pyx_t_24, 29, __pyx_t_20);
+  __Pyx_GIVEREF(__pyx_t_21);
+  PyTuple_SET_ITEM(__pyx_t_24, 30, __pyx_t_21);
+  __Pyx_GIVEREF(__pyx_t_22);
+  PyTuple_SET_ITEM(__pyx_t_24, 31, __pyx_t_22);
+  __Pyx_GIVEREF(__pyx_t_23);
+  PyTuple_SET_ITEM(__pyx_t_24, 32, __pyx_t_23);
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_3 = 0;
+  __pyx_t_4 = 0;
+  __pyx_t_5 = 0;
+  __pyx_t_6 = 0;
+  __pyx_t_7 = 0;
+  __pyx_t_8 = 0;
+  __pyx_t_9 = 0;
+  __pyx_t_10 = 0;
+  __pyx_t_11 = 0;
+  __pyx_t_12 = 0;
+  __pyx_t_13 = 0;
+  __pyx_t_14 = 0;
+  __pyx_t_15 = 0;
+  __pyx_t_16 = 0;
+  __pyx_t_17 = 0;
+  __pyx_t_18 = 0;
+  __pyx_t_19 = 0;
+  __pyx_t_20 = 0;
+  __pyx_t_21 = 0;
+  __pyx_t_22 = 0;
+  __pyx_t_23 = 0;
+  __pyx_v_state = ((PyObject*)__pyx_t_24);
+  __pyx_t_24 = 0;
+
+  /* "(tree fragment)":6
+ *     cdef bint use_setstate
+ *     state = (self.Coalition, self.Color, self.Country, self.Name, self.Pilot, self.Type, self.alive, self.alt, self.can_be_parent, self.cart_coords, self.first_seen, self.grp, self.heading, self.id, self.impacted, self.impacted_dist, self.last_seen, self.lat, self.lon, self.parent, self.parent_dist, self.pitch, self.roll, self.secs_since_last_seen, self.session_id, self.should_have_parent, self.tac_id, self.u_coord, self.updates, self.v_coord, self.velocity_kts, self.written, self.yaw)
+ *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
+ *     if _dict is not None:
+ *         state += (_dict,)
+ */
+  __Pyx_TraceLine(6,0,__PYX_ERR(1, 6, __pyx_L1_error))
+  __pyx_t_24 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_24)) __PYX_ERR(1, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_24);
+  __pyx_v__dict = __pyx_t_24;
+  __pyx_t_24 = 0;
+
+  /* "(tree fragment)":7
+ *     state = (self.Coalition, self.Color, self.Country, self.Name, self.Pilot, self.Type, self.alive, self.alt, self.can_be_parent, self.cart_coords, self.first_seen, self.grp, self.heading, self.id, self.impacted, self.impacted_dist, self.last_seen, self.lat, self.lon, self.parent, self.parent_dist, self.pitch, self.roll, self.secs_since_last_seen, self.session_id, self.should_have_parent, self.tac_id, self.u_coord, self.updates, self.v_coord, self.velocity_kts, self.written, self.yaw)
+ *     _dict = getattr(self, '__dict__', None)
+ *     if _dict is not None:             # <<<<<<<<<<<<<<
+ *         state += (_dict,)
+ *         use_setstate = True
+ */
+  __Pyx_TraceLine(7,0,__PYX_ERR(1, 7, __pyx_L1_error))
+  __pyx_t_25 = (__pyx_v__dict != Py_None);
+  __pyx_t_26 = (__pyx_t_25 != 0);
+  if (__pyx_t_26) {
+
+    /* "(tree fragment)":8
+ *     _dict = getattr(self, '__dict__', None)
+ *     if _dict is not None:
+ *         state += (_dict,)             # <<<<<<<<<<<<<<
+ *         use_setstate = True
+ *     else:
+ */
+    __Pyx_TraceLine(8,0,__PYX_ERR(1, 8, __pyx_L1_error))
+    __pyx_t_24 = PyTuple_New(1); if (unlikely(!__pyx_t_24)) __PYX_ERR(1, 8, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_24);
+    __Pyx_INCREF(__pyx_v__dict);
+    __Pyx_GIVEREF(__pyx_v__dict);
+    PyTuple_SET_ITEM(__pyx_t_24, 0, __pyx_v__dict);
+    __pyx_t_23 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_24); if (unlikely(!__pyx_t_23)) __PYX_ERR(1, 8, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_23);
+    __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_23));
+    __pyx_t_23 = 0;
+
+    /* "(tree fragment)":9
+ *     if _dict is not None:
+ *         state += (_dict,)
+ *         use_setstate = True             # <<<<<<<<<<<<<<
+ *     else:
+ *         use_setstate = self.Coalition is not None or self.Color is not None or self.Country is not None or self.Name is not None or self.Pilot is not None or self.Type is not None or self.cart_coords is not None or self.grp is not None or self.impacted is not None or self.parent is not None
+ */
+    __Pyx_TraceLine(9,0,__PYX_ERR(1, 9, __pyx_L1_error))
+    __pyx_v_use_setstate = 1;
+
+    /* "(tree fragment)":7
+ *     state = (self.Coalition, self.Color, self.Country, self.Name, self.Pilot, self.Type, self.alive, self.alt, self.can_be_parent, self.cart_coords, self.first_seen, self.grp, self.heading, self.id, self.impacted, self.impacted_dist, self.last_seen, self.lat, self.lon, self.parent, self.parent_dist, self.pitch, self.roll, self.secs_since_last_seen, self.session_id, self.should_have_parent, self.tac_id, self.u_coord, self.updates, self.v_coord, self.velocity_kts, self.written, self.yaw)
+ *     _dict = getattr(self, '__dict__', None)
+ *     if _dict is not None:             # <<<<<<<<<<<<<<
+ *         state += (_dict,)
+ *         use_setstate = True
+ */
+    goto __pyx_L3;
+  }
+
+  /* "(tree fragment)":11
+ *         use_setstate = True
+ *     else:
+ *         use_setstate = self.Coalition is not None or self.Color is not None or self.Country is not None or self.Name is not None or self.Pilot is not None or self.Type is not None or self.cart_coords is not None or self.grp is not None or self.impacted is not None or self.parent is not None             # <<<<<<<<<<<<<<
+ *     if use_setstate:
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, None), state
+ */
+  __Pyx_TraceLine(11,0,__PYX_ERR(1, 11, __pyx_L1_error))
+  /*else*/ {
+    __pyx_t_25 = (__pyx_v_self->Coalition != Py_None);
+    __pyx_t_27 = (__pyx_t_25 != 0);
+    if (!__pyx_t_27) {
+    } else {
+      __pyx_t_26 = __pyx_t_27;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_27 = (__pyx_v_self->Color != Py_None);
+    __pyx_t_25 = (__pyx_t_27 != 0);
+    if (!__pyx_t_25) {
+    } else {
+      __pyx_t_26 = __pyx_t_25;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_25 = (__pyx_v_self->Country != Py_None);
+    __pyx_t_27 = (__pyx_t_25 != 0);
+    if (!__pyx_t_27) {
+    } else {
+      __pyx_t_26 = __pyx_t_27;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_27 = (__pyx_v_self->Name != Py_None);
+    __pyx_t_25 = (__pyx_t_27 != 0);
+    if (!__pyx_t_25) {
+    } else {
+      __pyx_t_26 = __pyx_t_25;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_25 = (__pyx_v_self->Pilot != Py_None);
+    __pyx_t_27 = (__pyx_t_25 != 0);
+    if (!__pyx_t_27) {
+    } else {
+      __pyx_t_26 = __pyx_t_27;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_27 = (__pyx_v_self->Type != Py_None);
+    __pyx_t_25 = (__pyx_t_27 != 0);
+    if (!__pyx_t_25) {
+    } else {
+      __pyx_t_26 = __pyx_t_25;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_25 = (__pyx_v_self->cart_coords != Py_None);
+    __pyx_t_27 = (__pyx_t_25 != 0);
+    if (!__pyx_t_27) {
+    } else {
+      __pyx_t_26 = __pyx_t_27;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_27 = (__pyx_v_self->grp != Py_None);
+    __pyx_t_25 = (__pyx_t_27 != 0);
+    if (!__pyx_t_25) {
+    } else {
+      __pyx_t_26 = __pyx_t_25;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_25 = (__pyx_v_self->impacted != Py_None);
+    __pyx_t_27 = (__pyx_t_25 != 0);
+    if (!__pyx_t_27) {
+    } else {
+      __pyx_t_26 = __pyx_t_27;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_27 = (__pyx_v_self->parent != Py_None);
+    __pyx_t_25 = (__pyx_t_27 != 0);
+    __pyx_t_26 = __pyx_t_25;
+    __pyx_L4_bool_binop_done:;
+    __pyx_v_use_setstate = __pyx_t_26;
+  }
+  __pyx_L3:;
+
+  /* "(tree fragment)":12
+ *     else:
+ *         use_setstate = self.Coalition is not None or self.Color is not None or self.Country is not None or self.Name is not None or self.Pilot is not None or self.Type is not None or self.cart_coords is not None or self.grp is not None or self.impacted is not None or self.parent is not None
+ *     if use_setstate:             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, None), state
+ *     else:
+ */
+  __Pyx_TraceLine(12,0,__PYX_ERR(1, 12, __pyx_L1_error))
+  __pyx_t_26 = (__pyx_v_use_setstate != 0);
+  if (__pyx_t_26) {
+
+    /* "(tree fragment)":13
+ *         use_setstate = self.Coalition is not None or self.Color is not None or self.Country is not None or self.Name is not None or self.Pilot is not None or self.Type is not None or self.cart_coords is not None or self.grp is not None or self.impacted is not None or self.parent is not None
+ *     if use_setstate:
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, None), state             # <<<<<<<<<<<<<<
+ *     else:
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, state)
+ */
+    __Pyx_TraceLine(13,0,__PYX_ERR(1, 13, __pyx_L1_error))
+    __Pyx_XDECREF(__pyx_r);
+    __Pyx_GetModuleGlobalName(__pyx_t_23, __pyx_n_s_pyx_unpickle_ObjectRec); if (unlikely(!__pyx_t_23)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_23);
+    __pyx_t_24 = PyTuple_New(3); if (unlikely(!__pyx_t_24)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_24);
+    __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    PyTuple_SET_ITEM(__pyx_t_24, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_83764643);
+    __Pyx_GIVEREF(__pyx_int_83764643);
+    PyTuple_SET_ITEM(__pyx_t_24, 1, __pyx_int_83764643);
+    __Pyx_INCREF(Py_None);
+    __Pyx_GIVEREF(Py_None);
+    PyTuple_SET_ITEM(__pyx_t_24, 2, Py_None);
+    __pyx_t_22 = PyTuple_New(3); if (unlikely(!__pyx_t_22)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_22);
+    __Pyx_GIVEREF(__pyx_t_23);
+    PyTuple_SET_ITEM(__pyx_t_22, 0, __pyx_t_23);
+    __Pyx_GIVEREF(__pyx_t_24);
+    PyTuple_SET_ITEM(__pyx_t_22, 1, __pyx_t_24);
+    __Pyx_INCREF(__pyx_v_state);
+    __Pyx_GIVEREF(__pyx_v_state);
+    PyTuple_SET_ITEM(__pyx_t_22, 2, __pyx_v_state);
+    __pyx_t_23 = 0;
+    __pyx_t_24 = 0;
+    __pyx_r = __pyx_t_22;
+    __pyx_t_22 = 0;
+    goto __pyx_L0;
+
+    /* "(tree fragment)":12
+ *     else:
+ *         use_setstate = self.Coalition is not None or self.Color is not None or self.Country is not None or self.Name is not None or self.Pilot is not None or self.Type is not None or self.cart_coords is not None or self.grp is not None or self.impacted is not None or self.parent is not None
+ *     if use_setstate:             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, None), state
+ *     else:
+ */
+  }
+
+  /* "(tree fragment)":15
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, None), state
+ *     else:
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, state)             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     __pyx_unpickle_ObjectRec__set_state(self, __pyx_state)
+ */
+  __Pyx_TraceLine(15,0,__PYX_ERR(1, 15, __pyx_L1_error))
+  /*else*/ {
+    __Pyx_XDECREF(__pyx_r);
+    __Pyx_GetModuleGlobalName(__pyx_t_22, __pyx_n_s_pyx_unpickle_ObjectRec); if (unlikely(!__pyx_t_22)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_22);
+    __pyx_t_24 = PyTuple_New(3); if (unlikely(!__pyx_t_24)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_24);
+    __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    PyTuple_SET_ITEM(__pyx_t_24, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
+    __Pyx_INCREF(__pyx_int_83764643);
+    __Pyx_GIVEREF(__pyx_int_83764643);
+    PyTuple_SET_ITEM(__pyx_t_24, 1, __pyx_int_83764643);
+    __Pyx_INCREF(__pyx_v_state);
+    __Pyx_GIVEREF(__pyx_v_state);
+    PyTuple_SET_ITEM(__pyx_t_24, 2, __pyx_v_state);
+    __pyx_t_23 = PyTuple_New(2); if (unlikely(!__pyx_t_23)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_23);
+    __Pyx_GIVEREF(__pyx_t_22);
+    PyTuple_SET_ITEM(__pyx_t_23, 0, __pyx_t_22);
+    __Pyx_GIVEREF(__pyx_t_24);
+    PyTuple_SET_ITEM(__pyx_t_23, 1, __pyx_t_24);
+    __pyx_t_22 = 0;
+    __pyx_t_24 = 0;
+    __pyx_r = __pyx_t_23;
+    __pyx_t_23 = 0;
+    goto __pyx_L0;
+  }
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     cdef tuple state
+ *     cdef object _dict
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_XDECREF(__pyx_t_16);
+  __Pyx_XDECREF(__pyx_t_17);
+  __Pyx_XDECREF(__pyx_t_18);
+  __Pyx_XDECREF(__pyx_t_19);
+  __Pyx_XDECREF(__pyx_t_20);
+  __Pyx_XDECREF(__pyx_t_21);
+  __Pyx_XDECREF(__pyx_t_22);
+  __Pyx_XDECREF(__pyx_t_23);
+  __Pyx_XDECREF(__pyx_t_24);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_state);
+  __Pyx_XDECREF(__pyx_v__dict);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":16
+ *     else:
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, state)
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_unpickle_ObjectRec__set_state(self, __pyx_state)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4__setstate_cython__(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_9ObjectRec_4__setstate_cython__(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
+  __Pyx_TraceCall("__setstate_cython__", __pyx_f[1], 16, 0, __PYX_ERR(1, 16, __pyx_L1_error));
+
+  /* "(tree fragment)":17
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, state)
+ * def __setstate_cython__(self, __pyx_state):
+ *     __pyx_unpickle_ObjectRec__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
+ */
+  __Pyx_TraceLine(17,0,__PYX_ERR(1, 17, __pyx_L1_error))
+  if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 17, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_14tacview_client_11cython_funs___pyx_unpickle_ObjectRec__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 17, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "(tree fragment)":16
+ *     else:
+ *         return __pyx_unpickle_ObjectRec, (type(self), 0x4fe25a3, state)
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_unpickle_ObjectRec__set_state(self, __pyx_state)
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.ObjectRec.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "tacview_client/cython_funs.pyx":59
+ * 
  * 
  * cpdef list get_cartesian_coord(double lat, double lon, double h):             # <<<<<<<<<<<<<<
  *     """Convert coords from geodesic to cartesian."""
@@ -1338,117 +5938,117 @@ static PyObject *__pyx_f_14tacview_client_11cython_funs_get_cartesian_coord(doub
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_cartesian_coord", 0);
-  __Pyx_TraceCall("get_cartesian_coord", __pyx_f[0], 6, 0, __PYX_ERR(0, 6, __pyx_L1_error));
+  __Pyx_TraceCall("get_cartesian_coord", __pyx_f[0], 59, 0, __PYX_ERR(0, 59, __pyx_L1_error));
 
-  /* "tacview_client/cython_funs.pyx":8
+  /* "tacview_client/cython_funs.pyx":61
  * cpdef list get_cartesian_coord(double lat, double lon, double h):
  *     """Convert coords from geodesic to cartesian."""
  *     cdef double a = 6378137.0             # <<<<<<<<<<<<<<
  *     cdef double rf = 298.257223563
  * 
  */
-  __Pyx_TraceLine(8,0,__PYX_ERR(0, 8, __pyx_L1_error))
+  __Pyx_TraceLine(61,0,__PYX_ERR(0, 61, __pyx_L1_error))
   __pyx_v_a = 6378137.0;
 
-  /* "tacview_client/cython_funs.pyx":9
+  /* "tacview_client/cython_funs.pyx":62
  *     """Convert coords from geodesic to cartesian."""
  *     cdef double a = 6378137.0
  *     cdef double rf = 298.257223563             # <<<<<<<<<<<<<<
  * 
  *     cdef double lat_rad = lat * M_PI/180
  */
-  __Pyx_TraceLine(9,0,__PYX_ERR(0, 9, __pyx_L1_error))
+  __Pyx_TraceLine(62,0,__PYX_ERR(0, 62, __pyx_L1_error))
   __pyx_v_rf = 298.257223563;
 
-  /* "tacview_client/cython_funs.pyx":11
+  /* "tacview_client/cython_funs.pyx":64
  *     cdef double rf = 298.257223563
  * 
  *     cdef double lat_rad = lat * M_PI/180             # <<<<<<<<<<<<<<
  *     cdef double lon_rad = lon * M_PI/180
  *     cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
  */
-  __Pyx_TraceLine(11,0,__PYX_ERR(0, 11, __pyx_L1_error))
+  __Pyx_TraceLine(64,0,__PYX_ERR(0, 64, __pyx_L1_error))
   __pyx_v_lat_rad = ((__pyx_v_lat * M_PI) / 180.0);
 
-  /* "tacview_client/cython_funs.pyx":12
+  /* "tacview_client/cython_funs.pyx":65
  * 
  *     cdef double lat_rad = lat * M_PI/180
  *     cdef double lon_rad = lon * M_PI/180             # <<<<<<<<<<<<<<
  *     cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
  *     cdef double X = (N + h) * cos(lat_rad) * cos(lon_rad)
  */
-  __Pyx_TraceLine(12,0,__PYX_ERR(0, 12, __pyx_L1_error))
+  __Pyx_TraceLine(65,0,__PYX_ERR(0, 65, __pyx_L1_error))
   __pyx_v_lon_rad = ((__pyx_v_lon * M_PI) / 180.0);
 
-  /* "tacview_client/cython_funs.pyx":13
+  /* "tacview_client/cython_funs.pyx":66
  *     cdef double lat_rad = lat * M_PI/180
  *     cdef double lon_rad = lon * M_PI/180
  *     cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))             # <<<<<<<<<<<<<<
  *     cdef double X = (N + h) * cos(lat_rad) * cos(lon_rad)
  *     cdef double Y = (N + h) * cos(lat_rad) * sin(lon_rad)
  */
-  __Pyx_TraceLine(13,0,__PYX_ERR(0, 13, __pyx_L1_error))
+  __Pyx_TraceLine(66,0,__PYX_ERR(0, 66, __pyx_L1_error))
   if (unlikely(__pyx_v_rf == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 13, __pyx_L1_error)
+    __PYX_ERR(0, 66, __pyx_L1_error)
   }
   __pyx_t_1 = (1.0 - ((1.0 - pow((1.0 - (1.0 / __pyx_v_rf)), 2.0)) * pow(sin(__pyx_v_lat_rad), 2.0)));
   if (unlikely(__pyx_t_1 == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 13, __pyx_L1_error)
+    __PYX_ERR(0, 66, __pyx_L1_error)
   }
   __pyx_v_N = sqrt((__pyx_v_a / __pyx_t_1));
 
-  /* "tacview_client/cython_funs.pyx":14
+  /* "tacview_client/cython_funs.pyx":67
  *     cdef double lon_rad = lon * M_PI/180
  *     cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
  *     cdef double X = (N + h) * cos(lat_rad) * cos(lon_rad)             # <<<<<<<<<<<<<<
  *     cdef double Y = (N + h) * cos(lat_rad) * sin(lon_rad)
  *     cdef double Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)
  */
-  __Pyx_TraceLine(14,0,__PYX_ERR(0, 14, __pyx_L1_error))
+  __Pyx_TraceLine(67,0,__PYX_ERR(0, 67, __pyx_L1_error))
   __pyx_v_X = (((__pyx_v_N + __pyx_v_h) * cos(__pyx_v_lat_rad)) * cos(__pyx_v_lon_rad));
 
-  /* "tacview_client/cython_funs.pyx":15
+  /* "tacview_client/cython_funs.pyx":68
  *     cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
  *     cdef double X = (N + h) * cos(lat_rad) * cos(lon_rad)
  *     cdef double Y = (N + h) * cos(lat_rad) * sin(lon_rad)             # <<<<<<<<<<<<<<
  *     cdef double Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)
  *     return [X, Y, Z]
  */
-  __Pyx_TraceLine(15,0,__PYX_ERR(0, 15, __pyx_L1_error))
+  __Pyx_TraceLine(68,0,__PYX_ERR(0, 68, __pyx_L1_error))
   __pyx_v_Y = (((__pyx_v_N + __pyx_v_h) * cos(__pyx_v_lat_rad)) * sin(__pyx_v_lon_rad));
 
-  /* "tacview_client/cython_funs.pyx":16
+  /* "tacview_client/cython_funs.pyx":69
  *     cdef double X = (N + h) * cos(lat_rad) * cos(lon_rad)
  *     cdef double Y = (N + h) * cos(lat_rad) * sin(lon_rad)
  *     cdef double Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)             # <<<<<<<<<<<<<<
  *     return [X, Y, Z]
  * 
  */
-  __Pyx_TraceLine(16,0,__PYX_ERR(0, 16, __pyx_L1_error))
+  __Pyx_TraceLine(69,0,__PYX_ERR(0, 69, __pyx_L1_error))
   if (unlikely(__pyx_v_rf == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 16, __pyx_L1_error)
+    __PYX_ERR(0, 69, __pyx_L1_error)
   }
   __pyx_v_Z = (((pow((1.0 - (1.0 / __pyx_v_rf)), 2.0) * __pyx_v_N) + __pyx_v_h) * sin(__pyx_v_lat_rad));
 
-  /* "tacview_client/cython_funs.pyx":17
+  /* "tacview_client/cython_funs.pyx":70
  *     cdef double Y = (N + h) * cos(lat_rad) * sin(lon_rad)
  *     cdef double Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)
  *     return [X, Y, Z]             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __Pyx_TraceLine(17,0,__PYX_ERR(0, 17, __pyx_L1_error))
+  __Pyx_TraceLine(70,0,__PYX_ERR(0, 70, __pyx_L1_error))
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_X); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_X); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_Y); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_Y); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Z); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Z); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyList_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_5 = PyList_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
   PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
@@ -1463,8 +6063,8 @@ static PyObject *__pyx_f_14tacview_client_11cython_funs_get_cartesian_coord(doub
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "tacview_client/cython_funs.pyx":6
- * from libc.math cimport M_PI
+  /* "tacview_client/cython_funs.pyx":59
+ * 
  * 
  * cpdef list get_cartesian_coord(double lat, double lon, double h):             # <<<<<<<<<<<<<<
  *     """Convert coords from geodesic to cartesian."""
@@ -1524,17 +6124,17 @@ static PyObject *__pyx_pw_14tacview_client_11cython_funs_1get_cartesian_coord(Py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lon)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_cartesian_coord", 1, 3, 3, 1); __PYX_ERR(0, 6, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_cartesian_coord", 1, 3, 3, 1); __PYX_ERR(0, 59, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_h)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_cartesian_coord", 1, 3, 3, 2); __PYX_ERR(0, 6, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_cartesian_coord", 1, 3, 3, 2); __PYX_ERR(0, 59, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_cartesian_coord") < 0)) __PYX_ERR(0, 6, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_cartesian_coord") < 0)) __PYX_ERR(0, 59, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -1543,13 +6143,13 @@ static PyObject *__pyx_pw_14tacview_client_11cython_funs_1get_cartesian_coord(Py
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v_lat = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_lat == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
-    __pyx_v_lon = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_lon == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
-    __pyx_v_h = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_h == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
+    __pyx_v_lat = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_lat == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L3_error)
+    __pyx_v_lon = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_lon == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L3_error)
+    __pyx_v_h = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_h == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_cartesian_coord", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 6, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_cartesian_coord", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 59, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("tacview_client.cython_funs.get_cartesian_coord", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1571,9 +6171,9 @@ static PyObject *__pyx_pf_14tacview_client_11cython_funs_get_cartesian_coord(CYT
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_cartesian_coord", 0);
-  __Pyx_TraceCall("get_cartesian_coord (wrapper)", __pyx_f[0], 6, 0, __PYX_ERR(0, 6, __pyx_L1_error));
+  __Pyx_TraceCall("get_cartesian_coord (wrapper)", __pyx_f[0], 59, 0, __PYX_ERR(0, 59, __pyx_L1_error));
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_14tacview_client_11cython_funs_get_cartesian_coord(__pyx_v_lat, __pyx_v_lon, __pyx_v_h, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_14tacview_client_11cython_funs_get_cartesian_coord(__pyx_v_lat, __pyx_v_lon, __pyx_v_h, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1591,7 +6191,7 @@ static PyObject *__pyx_pf_14tacview_client_11cython_funs_get_cartesian_coord(CYT
   return __pyx_r;
 }
 
-/* "tacview_client/cython_funs.pyx":20
+/* "tacview_client/cython_funs.pyx":73
  * 
  * 
  * cpdef double compute_dist(list p_1, list p_2):             # <<<<<<<<<<<<<<
@@ -1614,106 +6214,106 @@ static double __pyx_f_14tacview_client_11cython_funs_compute_dist(PyObject *__py
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute_dist", 0);
-  __Pyx_TraceCall("compute_dist", __pyx_f[0], 20, 0, __PYX_ERR(0, 20, __pyx_L1_error));
+  __Pyx_TraceCall("compute_dist", __pyx_f[0], 73, 0, __PYX_ERR(0, 73, __pyx_L1_error));
 
-  /* "tacview_client/cython_funs.pyx":23
+  /* "tacview_client/cython_funs.pyx":76
  *     """Compute cartesian distance between points."""
  *     cdef double result = sqrt(
  *         (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2             # <<<<<<<<<<<<<<
  *     )
  *     return result
  */
-  __Pyx_TraceLine(23,0,__PYX_ERR(0, 23, __pyx_L1_error))
+  __Pyx_TraceLine(76,0,__PYX_ERR(0, 76, __pyx_L1_error))
   if (unlikely(__pyx_v_p_2 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 23, __pyx_L1_error)
+    __PYX_ERR(0, 76, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_p_2, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_p_2, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (unlikely(__pyx_v_p_1 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 23, __pyx_L1_error)
+    __PYX_ERR(0, 76, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_v_p_1, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_v_p_1, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Power(__pyx_t_3, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Power(__pyx_t_3, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (unlikely(__pyx_v_p_2 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 23, __pyx_L1_error)
+    __PYX_ERR(0, 76, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_p_2, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_p_2, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   if (unlikely(__pyx_v_p_1 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 23, __pyx_L1_error)
+    __PYX_ERR(0, 76, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_p_1, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_p_1, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Power(__pyx_t_4, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Power(__pyx_t_4, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(__pyx_v_p_2 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 23, __pyx_L1_error)
+    __PYX_ERR(0, 76, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_p_2, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_p_2, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (unlikely(__pyx_v_p_1 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 23, __pyx_L1_error)
+    __PYX_ERR(0, 76, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_v_p_1, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_v_p_1, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Power(__pyx_t_3, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Power(__pyx_t_3, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Add(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Add(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "tacview_client/cython_funs.pyx":22
+  /* "tacview_client/cython_funs.pyx":75
  * cpdef double compute_dist(list p_1, list p_2):
  *     """Compute cartesian distance between points."""
  *     cdef double result = sqrt(             # <<<<<<<<<<<<<<
  *         (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
  *     )
  */
-  __Pyx_TraceLine(22,0,__PYX_ERR(0, 22, __pyx_L1_error))
+  __Pyx_TraceLine(75,0,__PYX_ERR(0, 75, __pyx_L1_error))
   __pyx_v_result = sqrt(__pyx_t_5);
 
-  /* "tacview_client/cython_funs.pyx":25
+  /* "tacview_client/cython_funs.pyx":78
  *         (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
  *     )
  *     return result             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __Pyx_TraceLine(25,0,__PYX_ERR(0, 25, __pyx_L1_error))
+  __Pyx_TraceLine(78,0,__PYX_ERR(0, 78, __pyx_L1_error))
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "tacview_client/cython_funs.pyx":20
+  /* "tacview_client/cython_funs.pyx":73
  * 
  * 
  * cpdef double compute_dist(list p_1, list p_2):             # <<<<<<<<<<<<<<
@@ -1770,11 +6370,11 @@ static PyObject *__pyx_pw_14tacview_client_11cython_funs_3compute_dist(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_p_2)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_dist", 1, 2, 2, 1); __PYX_ERR(0, 20, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("compute_dist", 1, 2, 2, 1); __PYX_ERR(0, 73, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "compute_dist") < 0)) __PYX_ERR(0, 20, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "compute_dist") < 0)) __PYX_ERR(0, 73, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -1787,14 +6387,14 @@ static PyObject *__pyx_pw_14tacview_client_11cython_funs_3compute_dist(PyObject 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("compute_dist", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 20, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("compute_dist", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 73, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("tacview_client.cython_funs.compute_dist", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p_1), (&PyList_Type), 1, "p_1", 1))) __PYX_ERR(0, 20, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p_2), (&PyList_Type), 1, "p_2", 1))) __PYX_ERR(0, 20, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p_1), (&PyList_Type), 1, "p_1", 1))) __PYX_ERR(0, 73, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p_2), (&PyList_Type), 1, "p_2", 1))) __PYX_ERR(0, 73, __pyx_L1_error)
   __pyx_r = __pyx_pf_14tacview_client_11cython_funs_2compute_dist(__pyx_self, __pyx_v_p_1, __pyx_v_p_2);
 
   /* function exit code */
@@ -1815,9 +6415,9 @@ static PyObject *__pyx_pf_14tacview_client_11cython_funs_2compute_dist(CYTHON_UN
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute_dist", 0);
-  __Pyx_TraceCall("compute_dist (wrapper)", __pyx_f[0], 20, 0, __PYX_ERR(0, 20, __pyx_L1_error));
+  __Pyx_TraceCall("compute_dist (wrapper)", __pyx_f[0], 73, 0, __PYX_ERR(0, 73, __pyx_L1_error));
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_14tacview_client_11cython_funs_compute_dist(__pyx_v_p_1, __pyx_v_p_2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_14tacview_client_11cython_funs_compute_dist(__pyx_v_p_1, __pyx_v_p_2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1835,192 +6435,1354 @@ static PyObject *__pyx_pf_14tacview_client_11cython_funs_2compute_dist(CYTHON_UN
   return __pyx_r;
 }
 
-/* "tacview_client/cython_funs.pyx":28
+/* "tacview_client/cython_funs.pyx":81
  * 
  * 
- * cpdef list compute_velocity(double lat, double lon, double alt, list cart_coords, double secs_since_last_seen):             # <<<<<<<<<<<<<<
- *         """Calculate velocity given the distance from the last point."""
- *         cdef list new_cart_coords = get_cartesian_coord(lat, lon, alt)
+ * cpdef ObjectRec compute_velocity(ObjectRec rec):             # <<<<<<<<<<<<<<
+ *     """Calculate velocity given the distance from the last point."""
+ *     cdef list new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
  */
 
-static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_14tacview_client_11cython_funs_compute_velocity(double __pyx_v_lat, double __pyx_v_lon, double __pyx_v_alt, PyObject *__pyx_v_cart_coords, double __pyx_v_secs_since_last_seen, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObject *__pyx_self, PyObject *__pyx_v_rec); /*proto*/
+static struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_f_14tacview_client_11cython_funs_compute_velocity(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_rec, CYTHON_UNUSED int __pyx_skip_dispatch) {
   PyObject *__pyx_v_new_cart_coords = 0;
   double __pyx_v_velocity_kts;
   double __pyx_v_t_dist;
-  PyObject *__pyx_r = NULL;
+  struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   int __pyx_t_2;
   int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute_velocity", 0);
-  __Pyx_TraceCall("compute_velocity", __pyx_f[0], 28, 0, __PYX_ERR(0, 28, __pyx_L1_error));
+  __Pyx_TraceCall("compute_velocity", __pyx_f[0], 81, 0, __PYX_ERR(0, 81, __pyx_L1_error));
 
-  /* "tacview_client/cython_funs.pyx":30
- * cpdef list compute_velocity(double lat, double lon, double alt, list cart_coords, double secs_since_last_seen):
- *         """Calculate velocity given the distance from the last point."""
- *         cdef list new_cart_coords = get_cartesian_coord(lat, lon, alt)             # <<<<<<<<<<<<<<
- *         cdef double velocity_kts
- *         cdef double t_dist
+  /* "tacview_client/cython_funs.pyx":83
+ * cpdef ObjectRec compute_velocity(ObjectRec rec):
+ *     """Calculate velocity given the distance from the last point."""
+ *     cdef list new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)             # <<<<<<<<<<<<<<
+ *     cdef double velocity_kts
+ *     cdef double t_dist
  */
-  __Pyx_TraceLine(30,0,__PYX_ERR(0, 30, __pyx_L1_error))
-  __pyx_t_1 = __pyx_f_14tacview_client_11cython_funs_get_cartesian_coord(__pyx_v_lat, __pyx_v_lon, __pyx_v_alt, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_TraceLine(83,0,__PYX_ERR(0, 83, __pyx_L1_error))
+  __pyx_t_1 = __pyx_f_14tacview_client_11cython_funs_get_cartesian_coord(__pyx_v_rec->lat, __pyx_v_rec->lon, __pyx_v_rec->alt, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_new_cart_coords = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "tacview_client/cython_funs.pyx":34
- *         cdef double t_dist
- *         if (
- *             cart_coords             # <<<<<<<<<<<<<<
- *             and secs_since_last_seen
- *             and secs_since_last_seen > 0.0
+  /* "tacview_client/cython_funs.pyx":87
+ *     cdef double t_dist
+ *     if (
+ *         rec.cart_coords             # <<<<<<<<<<<<<<
+ *         and rec.secs_since_last_seen
+ *         and rec.secs_since_last_seen > 0.0
  */
-  __Pyx_TraceLine(34,0,__PYX_ERR(0, 34, __pyx_L1_error))
-  __pyx_t_3 = (__pyx_v_cart_coords != Py_None)&&(PyList_GET_SIZE(__pyx_v_cart_coords) != 0);
+  __Pyx_TraceLine(87,0,__PYX_ERR(0, 87, __pyx_L1_error))
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_rec->cart_coords); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 87, __pyx_L1_error)
   if (__pyx_t_3) {
   } else {
     __pyx_t_2 = __pyx_t_3;
     goto __pyx_L4_bool_binop_done;
   }
 
-  /* "tacview_client/cython_funs.pyx":35
- *         if (
- *             cart_coords
- *             and secs_since_last_seen             # <<<<<<<<<<<<<<
- *             and secs_since_last_seen > 0.0
- *         ):
+  /* "tacview_client/cython_funs.pyx":88
+ *     if (
+ *         rec.cart_coords
+ *         and rec.secs_since_last_seen             # <<<<<<<<<<<<<<
+ *         and rec.secs_since_last_seen > 0.0
+ *     ):
  */
-  __Pyx_TraceLine(35,0,__PYX_ERR(0, 35, __pyx_L1_error))
-  __pyx_t_3 = (__pyx_v_secs_since_last_seen != 0);
+  __Pyx_TraceLine(88,0,__PYX_ERR(0, 88, __pyx_L1_error))
+  __pyx_t_3 = (__pyx_v_rec->secs_since_last_seen != 0);
   if (__pyx_t_3) {
   } else {
     __pyx_t_2 = __pyx_t_3;
     goto __pyx_L4_bool_binop_done;
   }
 
-  /* "tacview_client/cython_funs.pyx":36
- *             cart_coords
- *             and secs_since_last_seen
- *             and secs_since_last_seen > 0.0             # <<<<<<<<<<<<<<
- *         ):
- *             t_dist = compute_dist(new_cart_coords, cart_coords)
+  /* "tacview_client/cython_funs.pyx":89
+ *         rec.cart_coords
+ *         and rec.secs_since_last_seen
+ *         and rec.secs_since_last_seen > 0.0             # <<<<<<<<<<<<<<
+ *     ):
+ *         t_dist = compute_dist(new_cart_coords, rec.cart_coords)
  */
-  __Pyx_TraceLine(36,0,__PYX_ERR(0, 36, __pyx_L1_error))
-  __pyx_t_3 = ((__pyx_v_secs_since_last_seen > 0.0) != 0);
+  __Pyx_TraceLine(89,0,__PYX_ERR(0, 89, __pyx_L1_error))
+  __pyx_t_3 = ((__pyx_v_rec->secs_since_last_seen > 0.0) != 0);
   __pyx_t_2 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
 
-  /* "tacview_client/cython_funs.pyx":33
- *         cdef double velocity_kts
- *         cdef double t_dist
- *         if (             # <<<<<<<<<<<<<<
- *             cart_coords
- *             and secs_since_last_seen
+  /* "tacview_client/cython_funs.pyx":86
+ *     cdef double velocity_kts
+ *     cdef double t_dist
+ *     if (             # <<<<<<<<<<<<<<
+ *         rec.cart_coords
+ *         and rec.secs_since_last_seen
  */
-  __Pyx_TraceLine(33,0,__PYX_ERR(0, 33, __pyx_L1_error))
+  __Pyx_TraceLine(86,0,__PYX_ERR(0, 86, __pyx_L1_error))
   if (__pyx_t_2) {
 
-    /* "tacview_client/cython_funs.pyx":38
- *             and secs_since_last_seen > 0.0
- *         ):
- *             t_dist = compute_dist(new_cart_coords, cart_coords)             # <<<<<<<<<<<<<<
- *             velocity_kts = (t_dist / secs_since_last_seen) / 1.94384
- *         return [new_cart_coords, velocity_kts]
- */
-    __Pyx_TraceLine(38,0,__PYX_ERR(0, 38, __pyx_L1_error))
-    __pyx_v_t_dist = __pyx_f_14tacview_client_11cython_funs_compute_dist(__pyx_v_new_cart_coords, __pyx_v_cart_coords, 0);
-
-    /* "tacview_client/cython_funs.pyx":39
- *         ):
- *             t_dist = compute_dist(new_cart_coords, cart_coords)
- *             velocity_kts = (t_dist / secs_since_last_seen) / 1.94384             # <<<<<<<<<<<<<<
- *         return [new_cart_coords, velocity_kts]
+    /* "tacview_client/cython_funs.pyx":91
+ *         and rec.secs_since_last_seen > 0.0
+ *     ):
+ *         t_dist = compute_dist(new_cart_coords, rec.cart_coords)             # <<<<<<<<<<<<<<
+ *         velocity_kts = (t_dist / rec.secs_since_last_seen) / 1.94384
  * 
  */
-    __Pyx_TraceLine(39,0,__PYX_ERR(0, 39, __pyx_L1_error))
-    if (unlikely(__pyx_v_secs_since_last_seen == 0)) {
-      PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 39, __pyx_L1_error)
-    }
-    __pyx_v_velocity_kts = ((__pyx_v_t_dist / __pyx_v_secs_since_last_seen) / 1.94384);
+    __Pyx_TraceLine(91,0,__PYX_ERR(0, 91, __pyx_L1_error))
+    if (!(likely(PyList_CheckExact(__pyx_v_rec->cart_coords))||((__pyx_v_rec->cart_coords) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_v_rec->cart_coords)->tp_name), 0))) __PYX_ERR(0, 91, __pyx_L1_error)
+    __pyx_t_1 = __pyx_v_rec->cart_coords;
+    __Pyx_INCREF(__pyx_t_1);
+    __pyx_v_t_dist = __pyx_f_14tacview_client_11cython_funs_compute_dist(__pyx_v_new_cart_coords, ((PyObject*)__pyx_t_1), 0);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "tacview_client/cython_funs.pyx":33
- *         cdef double velocity_kts
- *         cdef double t_dist
- *         if (             # <<<<<<<<<<<<<<
- *             cart_coords
- *             and secs_since_last_seen
+    /* "tacview_client/cython_funs.pyx":92
+ *     ):
+ *         t_dist = compute_dist(new_cart_coords, rec.cart_coords)
+ *         velocity_kts = (t_dist / rec.secs_since_last_seen) / 1.94384             # <<<<<<<<<<<<<<
+ * 
+ *     rec.cart_coords = new_cart_coords
+ */
+    __Pyx_TraceLine(92,0,__PYX_ERR(0, 92, __pyx_L1_error))
+    if (unlikely(__pyx_v_rec->secs_since_last_seen == 0)) {
+      PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+      __PYX_ERR(0, 92, __pyx_L1_error)
+    }
+    __pyx_v_velocity_kts = ((__pyx_v_t_dist / ((double)__pyx_v_rec->secs_since_last_seen)) / 1.94384);
+
+    /* "tacview_client/cython_funs.pyx":86
+ *     cdef double velocity_kts
+ *     cdef double t_dist
+ *     if (             # <<<<<<<<<<<<<<
+ *         rec.cart_coords
+ *         and rec.secs_since_last_seen
  */
   }
 
-  /* "tacview_client/cython_funs.pyx":40
- *             t_dist = compute_dist(new_cart_coords, cart_coords)
- *             velocity_kts = (t_dist / secs_since_last_seen) / 1.94384
- *         return [new_cart_coords, velocity_kts]             # <<<<<<<<<<<<<<
+  /* "tacview_client/cython_funs.pyx":94
+ *         velocity_kts = (t_dist / rec.secs_since_last_seen) / 1.94384
+ * 
+ *     rec.cart_coords = new_cart_coords             # <<<<<<<<<<<<<<
+ *     if velocity_kts:
+ *         rec.velocity_kts = velocity_kts
+ */
+  __Pyx_TraceLine(94,0,__PYX_ERR(0, 94, __pyx_L1_error))
+  __Pyx_INCREF(__pyx_v_new_cart_coords);
+  __Pyx_GIVEREF(__pyx_v_new_cart_coords);
+  __Pyx_GOTREF(__pyx_v_rec->cart_coords);
+  __Pyx_DECREF(__pyx_v_rec->cart_coords);
+  __pyx_v_rec->cart_coords = __pyx_v_new_cart_coords;
+
+  /* "tacview_client/cython_funs.pyx":95
+ * 
+ *     rec.cart_coords = new_cart_coords
+ *     if velocity_kts:             # <<<<<<<<<<<<<<
+ *         rec.velocity_kts = velocity_kts
+ * 
+ */
+  __Pyx_TraceLine(95,0,__PYX_ERR(0, 95, __pyx_L1_error))
+  __pyx_t_2 = (__pyx_v_velocity_kts != 0);
+  if (__pyx_t_2) {
+
+    /* "tacview_client/cython_funs.pyx":96
+ *     rec.cart_coords = new_cart_coords
+ *     if velocity_kts:
+ *         rec.velocity_kts = velocity_kts             # <<<<<<<<<<<<<<
+ * 
+ *     return rec
+ */
+    __Pyx_TraceLine(96,0,__PYX_ERR(0, 96, __pyx_L1_error))
+    __pyx_v_rec->velocity_kts = __pyx_v_velocity_kts;
+
+    /* "tacview_client/cython_funs.pyx":95
+ * 
+ *     rec.cart_coords = new_cart_coords
+ *     if velocity_kts:             # <<<<<<<<<<<<<<
+ *         rec.velocity_kts = velocity_kts
+ * 
+ */
+  }
+
+  /* "tacview_client/cython_funs.pyx":98
+ *         rec.velocity_kts = velocity_kts
+ * 
+ *     return rec             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __Pyx_TraceLine(40,0,__PYX_ERR(0, 40, __pyx_L1_error))
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_velocity_kts); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_new_cart_coords);
-  __Pyx_GIVEREF(__pyx_v_new_cart_coords);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_new_cart_coords);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyList_SET_ITEM(__pyx_t_4, 1, __pyx_t_1);
-  __pyx_t_1 = 0;
-  __pyx_r = ((PyObject*)__pyx_t_4);
-  __pyx_t_4 = 0;
+  __Pyx_TraceLine(98,0,__PYX_ERR(0, 98, __pyx_L1_error))
+  __Pyx_XDECREF(((PyObject *)__pyx_r));
+  __Pyx_INCREF(((PyObject *)__pyx_v_rec));
+  __pyx_r = __pyx_v_rec;
   goto __pyx_L0;
 
-  /* "tacview_client/cython_funs.pyx":28
+  /* "tacview_client/cython_funs.pyx":81
  * 
  * 
- * cpdef list compute_velocity(double lat, double lon, double alt, list cart_coords, double secs_since_last_seen):             # <<<<<<<<<<<<<<
- *         """Calculate velocity given the distance from the last point."""
- *         cdef list new_cart_coords = get_cartesian_coord(lat, lon, alt)
+ * cpdef ObjectRec compute_velocity(ObjectRec rec):             # <<<<<<<<<<<<<<
+ *     """Calculate velocity given the distance from the last point."""
+ *     cdef list new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
   __Pyx_AddTraceback("tacview_client.cython_funs.compute_velocity", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_new_cart_coords);
-  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_XGIVEREF((PyObject *)__pyx_r);
   __Pyx_TraceReturn(__pyx_r, 0);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObject *__pyx_self, PyObject *__pyx_v_rec); /*proto*/
 static char __pyx_doc_14tacview_client_11cython_funs_4compute_velocity[] = "Calculate velocity given the distance from the last point.";
-static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  double __pyx_v_lat;
-  double __pyx_v_lon;
-  double __pyx_v_alt;
-  PyObject *__pyx_v_cart_coords = 0;
-  double __pyx_v_secs_since_last_seen;
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObject *__pyx_self, PyObject *__pyx_v_rec) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("compute_velocity (wrapper)", 0);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_rec), __pyx_ptype_14tacview_client_11cython_funs_ObjectRec, 1, "rec", 0))) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_4compute_velocity(__pyx_self, ((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v_rec));
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_4compute_velocity(CYTHON_UNUSED PyObject *__pyx_self, struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_rec) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("compute_velocity", 0);
+  __Pyx_TraceCall("compute_velocity (wrapper)", __pyx_f[0], 81, 0, __PYX_ERR(0, 81, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = ((PyObject *)__pyx_f_14tacview_client_11cython_funs_compute_velocity(__pyx_v_rec, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("tacview_client.cython_funs.compute_velocity", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "tacview_client/cython_funs.pyx":101
+ * 
+ * 
+ * cpdef ObjectRec proc_line(ObjectRec rec, bytearray raw_line, double ref_lat,             # <<<<<<<<<<<<<<
+ *                           double ref_lon, int comma):
+ *     """Parse a textline from tacview into an ObjectRec."""
+ */
+
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_7proc_line(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_f_14tacview_client_11cython_funs_proc_line(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_rec, PyObject *__pyx_v_raw_line, double __pyx_v_ref_lat, double __pyx_v_ref_lon, int __pyx_v_comma, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  PyObject *__pyx_v_COORD_KEYS = 0;
+  int __pyx_v_COORD_KEY_LEN;
+  PyObject *__pyx_v_COORD_KEYS_SHORT = 0;
+  int __pyx_v_COORD_KEY_SHORT_LEN;
+  PyObject *__pyx_v_COORD_KEYS_MED = 0;
+  int __pyx_v_COORD_KEYS_MED_LEN;
+  PyObject *__pyx_v_COORD_KEYS_X_SHORT = 0;
+  int __pyx_v_COORD_KEYS_X_SHORT_LEN;
+  int __pyx_v_bytes_remaining;
+  long __pyx_v_last_comma;
+  PyObject *__pyx_v_chunk = NULL;
+  PyObject *__pyx_v_eq_loc = NULL;
+  PyObject *__pyx_v_key = NULL;
+  PyObject *__pyx_v_val = NULL;
+  PyObject *__pyx_v_i = NULL;
+  PyObject *__pyx_v_pipe_pos_end = NULL;
+  int __pyx_v_pipes_remaining;
+  PyObject *__pyx_v_npipe = NULL;
+  PyObject *__pyx_v_C_KEYS = NULL;
+  int __pyx_v_C_LEN;
+  PyObject *__pyx_v_pipe_pos_start = NULL;
+  PyObject *__pyx_v_coord = NULL;
+  PyObject *__pyx_v_c_key = NULL;
+  struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  int __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  double __pyx_t_9;
+  int __pyx_t_10;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("proc_line", 0);
+  __Pyx_TraceCall("proc_line", __pyx_f[0], 101, 0, __PYX_ERR(0, 101, __pyx_L1_error));
+  __Pyx_INCREF((PyObject *)__pyx_v_rec);
+
+  /* "tacview_client/cython_funs.pyx":105
+ *     """Parse a textline from tacview into an ObjectRec."""
+ *     cdef tuple COORD_KEYS = (
+ *         "lon",             # <<<<<<<<<<<<<<
+ *         "lat",
+ *         "alt",
+ */
+  __Pyx_TraceLine(105,0,__PYX_ERR(0, 105, __pyx_L1_error))
+  __Pyx_INCREF(__pyx_tuple_);
+  __pyx_v_COORD_KEYS = __pyx_tuple_;
+
+  /* "tacview_client/cython_funs.pyx":115
+ *         "heading",
+ *     )
+ *     cdef int COORD_KEY_LEN = 9             # <<<<<<<<<<<<<<
+ * 
+ *     cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
+ */
+  __Pyx_TraceLine(115,0,__PYX_ERR(0, 115, __pyx_L1_error))
+  __pyx_v_COORD_KEY_LEN = 9;
+
+  /* "tacview_client/cython_funs.pyx":117
+ *     cdef int COORD_KEY_LEN = 9
+ * 
+ *     cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")             # <<<<<<<<<<<<<<
+ *     cdef int COORD_KEY_SHORT_LEN = 5
+ * 
+ */
+  __Pyx_TraceLine(117,0,__PYX_ERR(0, 117, __pyx_L1_error))
+  __Pyx_INCREF(__pyx_tuple__2);
+  __pyx_v_COORD_KEYS_SHORT = __pyx_tuple__2;
+
+  /* "tacview_client/cython_funs.pyx":118
+ * 
+ *     cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
+ *     cdef int COORD_KEY_SHORT_LEN = 5             # <<<<<<<<<<<<<<
+ * 
+ *     cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
+ */
+  __Pyx_TraceLine(118,0,__PYX_ERR(0, 118, __pyx_L1_error))
+  __pyx_v_COORD_KEY_SHORT_LEN = 5;
+
+  /* "tacview_client/cython_funs.pyx":120
+ *     cdef int COORD_KEY_SHORT_LEN = 5
+ * 
+ *     cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")             # <<<<<<<<<<<<<<
+ *     cdef int COORD_KEYS_MED_LEN = 5
+ * 
+ */
+  __Pyx_TraceLine(120,0,__PYX_ERR(0, 120, __pyx_L1_error))
+  __Pyx_INCREF(__pyx_tuple__3);
+  __pyx_v_COORD_KEYS_MED = __pyx_tuple__3;
+
+  /* "tacview_client/cython_funs.pyx":121
+ * 
+ *     cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
+ *     cdef int COORD_KEYS_MED_LEN = 5             # <<<<<<<<<<<<<<
+ * 
+ *     cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
+ */
+  __Pyx_TraceLine(121,0,__PYX_ERR(0, 121, __pyx_L1_error))
+  __pyx_v_COORD_KEYS_MED_LEN = 5;
+
+  /* "tacview_client/cython_funs.pyx":123
+ *     cdef int COORD_KEYS_MED_LEN = 5
+ * 
+ *     cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")             # <<<<<<<<<<<<<<
+ *     cdef int COORD_KEYS_X_SHORT_LEN = 3
+ * 
+ */
+  __Pyx_TraceLine(123,0,__PYX_ERR(0, 123, __pyx_L1_error))
+  __Pyx_INCREF(__pyx_tuple__4);
+  __pyx_v_COORD_KEYS_X_SHORT = __pyx_tuple__4;
+
+  /* "tacview_client/cython_funs.pyx":124
+ * 
+ *     cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
+ *     cdef int COORD_KEYS_X_SHORT_LEN = 3             # <<<<<<<<<<<<<<
+ * 
+ *     cdef bint bytes_remaining = True
+ */
+  __Pyx_TraceLine(124,0,__PYX_ERR(0, 124, __pyx_L1_error))
+  __pyx_v_COORD_KEYS_X_SHORT_LEN = 3;
+
+  /* "tacview_client/cython_funs.pyx":126
+ *     cdef int COORD_KEYS_X_SHORT_LEN = 3
+ * 
+ *     cdef bint bytes_remaining = True             # <<<<<<<<<<<<<<
+ * 
+ *     while bytes_remaining:
+ */
+  __Pyx_TraceLine(126,0,__PYX_ERR(0, 126, __pyx_L1_error))
+  __pyx_v_bytes_remaining = 1;
+
+  /* "tacview_client/cython_funs.pyx":128
+ *     cdef bint bytes_remaining = True
+ * 
+ *     while bytes_remaining:             # <<<<<<<<<<<<<<
+ *         last_comma = comma + 1
+ *         comma = raw_line.find(b",", last_comma)
+ */
+  __Pyx_TraceLine(128,0,__PYX_ERR(0, 128, __pyx_L1_error))
+  while (1) {
+    __pyx_t_1 = (__pyx_v_bytes_remaining != 0);
+    if (!__pyx_t_1) break;
+
+    /* "tacview_client/cython_funs.pyx":129
+ * 
+ *     while bytes_remaining:
+ *         last_comma = comma + 1             # <<<<<<<<<<<<<<
+ *         comma = raw_line.find(b",", last_comma)
+ *         if comma == -1:
+ */
+    __Pyx_TraceLine(129,0,__PYX_ERR(0, 129, __pyx_L1_error))
+    __pyx_v_last_comma = (__pyx_v_comma + 1);
+
+    /* "tacview_client/cython_funs.pyx":130
+ *     while bytes_remaining:
+ *         last_comma = comma + 1
+ *         comma = raw_line.find(b",", last_comma)             # <<<<<<<<<<<<<<
+ *         if comma == -1:
+ *             bytes_remaining = False
+ */
+    __Pyx_TraceLine(130,0,__PYX_ERR(0, 130, __pyx_L1_error))
+    __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v_last_comma); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_3 = __Pyx_CallUnboundCMethod2(&__pyx_umethod_PyByteArray_Type_find, __pyx_v_raw_line, __pyx_kp_b__5, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_v_comma = __pyx_t_4;
+
+    /* "tacview_client/cython_funs.pyx":131
+ *         last_comma = comma + 1
+ *         comma = raw_line.find(b",", last_comma)
+ *         if comma == -1:             # <<<<<<<<<<<<<<
+ *             bytes_remaining = False
+ *             chunk = raw_line[last_comma:]
+ */
+    __Pyx_TraceLine(131,0,__PYX_ERR(0, 131, __pyx_L1_error))
+    __pyx_t_1 = ((__pyx_v_comma == -1L) != 0);
+    if (__pyx_t_1) {
+
+      /* "tacview_client/cython_funs.pyx":132
+ *         comma = raw_line.find(b",", last_comma)
+ *         if comma == -1:
+ *             bytes_remaining = False             # <<<<<<<<<<<<<<
+ *             chunk = raw_line[last_comma:]
+ *         else:
+ */
+      __Pyx_TraceLine(132,0,__PYX_ERR(0, 132, __pyx_L1_error))
+      __pyx_v_bytes_remaining = 0;
+
+      /* "tacview_client/cython_funs.pyx":133
+ *         if comma == -1:
+ *             bytes_remaining = False
+ *             chunk = raw_line[last_comma:]             # <<<<<<<<<<<<<<
+ *         else:
+ *             chunk = raw_line[last_comma:comma]
+ */
+      __Pyx_TraceLine(133,0,__PYX_ERR(0, 133, __pyx_L1_error))
+      if (unlikely(__pyx_v_raw_line == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 133, __pyx_L1_error)
+      }
+      __pyx_t_3 = PySequence_GetSlice(__pyx_v_raw_line, __pyx_v_last_comma, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_XDECREF_SET(__pyx_v_chunk, ((PyObject*)__pyx_t_3));
+      __pyx_t_3 = 0;
+
+      /* "tacview_client/cython_funs.pyx":131
+ *         last_comma = comma + 1
+ *         comma = raw_line.find(b",", last_comma)
+ *         if comma == -1:             # <<<<<<<<<<<<<<
+ *             bytes_remaining = False
+ *             chunk = raw_line[last_comma:]
+ */
+      goto __pyx_L5;
+    }
+
+    /* "tacview_client/cython_funs.pyx":135
+ *             chunk = raw_line[last_comma:]
+ *         else:
+ *             chunk = raw_line[last_comma:comma]             # <<<<<<<<<<<<<<
+ *         eq_loc = chunk.find(b"=")
+ *         key = chunk[0:eq_loc]
+ */
+    __Pyx_TraceLine(135,0,__PYX_ERR(0, 135, __pyx_L1_error))
+    /*else*/ {
+      if (unlikely(__pyx_v_raw_line == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 135, __pyx_L1_error)
+      }
+      __pyx_t_3 = PySequence_GetSlice(__pyx_v_raw_line, __pyx_v_last_comma, __pyx_v_comma); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_XDECREF_SET(__pyx_v_chunk, ((PyObject*)__pyx_t_3));
+      __pyx_t_3 = 0;
+    }
+    __pyx_L5:;
+
+    /* "tacview_client/cython_funs.pyx":136
+ *         else:
+ *             chunk = raw_line[last_comma:comma]
+ *         eq_loc = chunk.find(b"=")             # <<<<<<<<<<<<<<
+ *         key = chunk[0:eq_loc]
+ *         val = chunk[eq_loc + 1 :]
+ */
+    __Pyx_TraceLine(136,0,__PYX_ERR(0, 136, __pyx_L1_error))
+    __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyByteArray_Type_find, __pyx_v_chunk, __pyx_kp_b__6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 136, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_XDECREF_SET(__pyx_v_eq_loc, __pyx_t_3);
+    __pyx_t_3 = 0;
+
+    /* "tacview_client/cython_funs.pyx":137
+ *             chunk = raw_line[last_comma:comma]
+ *         eq_loc = chunk.find(b"=")
+ *         key = chunk[0:eq_loc]             # <<<<<<<<<<<<<<
+ *         val = chunk[eq_loc + 1 :]
+ * 
+ */
+    __Pyx_TraceLine(137,0,__PYX_ERR(0, 137, __pyx_L1_error))
+    if (unlikely(__pyx_v_chunk == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(0, 137, __pyx_L1_error)
+    }
+    __Pyx_INCREF(__pyx_v_eq_loc);
+    __pyx_t_3 = __pyx_v_eq_loc;
+    __pyx_t_1 = (__pyx_t_3 == Py_None);
+    if (__pyx_t_1) {
+      __pyx_t_5 = PY_SSIZE_T_MAX;
+    } else {
+      __pyx_t_6 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_6 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L1_error)
+      __pyx_t_5 = __pyx_t_6;
+    }
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PySequence_GetSlice(__pyx_v_chunk, 0, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 137, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_XDECREF_SET(__pyx_v_key, ((PyObject*)__pyx_t_3));
+    __pyx_t_3 = 0;
+
+    /* "tacview_client/cython_funs.pyx":138
+ *         eq_loc = chunk.find(b"=")
+ *         key = chunk[0:eq_loc]
+ *         val = chunk[eq_loc + 1 :]             # <<<<<<<<<<<<<<
+ * 
+ *         if key == b"T":
+ */
+    __Pyx_TraceLine(138,0,__PYX_ERR(0, 138, __pyx_L1_error))
+    if (unlikely(__pyx_v_chunk == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(0, 138, __pyx_L1_error)
+    }
+    __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_v_eq_loc, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_1 = (__pyx_t_3 == Py_None);
+    if (__pyx_t_1) {
+      __pyx_t_5 = 0;
+    } else {
+      __pyx_t_6 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_6 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 138, __pyx_L1_error)
+      __pyx_t_5 = __pyx_t_6;
+    }
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PySequence_GetSlice(__pyx_v_chunk, __pyx_t_5, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_XDECREF_SET(__pyx_v_val, ((PyObject*)__pyx_t_3));
+    __pyx_t_3 = 0;
+
+    /* "tacview_client/cython_funs.pyx":140
+ *         val = chunk[eq_loc + 1 :]
+ * 
+ *         if key == b"T":             # <<<<<<<<<<<<<<
+ *             i = 0
+ *             pipe_pos_end = -1
+ */
+    __Pyx_TraceLine(140,0,__PYX_ERR(0, 140, __pyx_L1_error))
+    __pyx_t_1 = (__Pyx_PyBytes_Equals(__pyx_v_key, __pyx_n_b_T, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
+    __pyx_t_7 = (__pyx_t_1 != 0);
+    if (__pyx_t_7) {
+
+      /* "tacview_client/cython_funs.pyx":141
+ * 
+ *         if key == b"T":
+ *             i = 0             # <<<<<<<<<<<<<<
+ *             pipe_pos_end = -1
+ *             pipes_remaining = True
+ */
+      __Pyx_TraceLine(141,0,__PYX_ERR(0, 141, __pyx_L1_error))
+      __Pyx_INCREF(__pyx_int_0);
+      __Pyx_XDECREF_SET(__pyx_v_i, __pyx_int_0);
+
+      /* "tacview_client/cython_funs.pyx":142
+ *         if key == b"T":
+ *             i = 0
+ *             pipe_pos_end = -1             # <<<<<<<<<<<<<<
+ *             pipes_remaining = True
+ *             npipe = val.count(b"|")
+ */
+      __Pyx_TraceLine(142,0,__PYX_ERR(0, 142, __pyx_L1_error))
+      __Pyx_INCREF(__pyx_int_neg_1);
+      __Pyx_XDECREF_SET(__pyx_v_pipe_pos_end, __pyx_int_neg_1);
+
+      /* "tacview_client/cython_funs.pyx":143
+ *             i = 0
+ *             pipe_pos_end = -1
+ *             pipes_remaining = True             # <<<<<<<<<<<<<<
+ *             npipe = val.count(b"|")
+ *             if npipe == 8:
+ */
+      __Pyx_TraceLine(143,0,__PYX_ERR(0, 143, __pyx_L1_error))
+      __pyx_v_pipes_remaining = 1;
+
+      /* "tacview_client/cython_funs.pyx":144
+ *             pipe_pos_end = -1
+ *             pipes_remaining = True
+ *             npipe = val.count(b"|")             # <<<<<<<<<<<<<<
+ *             if npipe == 8:
+ *                 C_KEYS = COORD_KEYS
+ */
+      __Pyx_TraceLine(144,0,__PYX_ERR(0, 144, __pyx_L1_error))
+      __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyByteArray_Type_count, __pyx_v_val, __pyx_kp_b__7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 144, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_XDECREF_SET(__pyx_v_npipe, __pyx_t_3);
+      __pyx_t_3 = 0;
+
+      /* "tacview_client/cython_funs.pyx":145
+ *             pipes_remaining = True
+ *             npipe = val.count(b"|")
+ *             if npipe == 8:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS
+ *                 C_LEN = COORD_KEY_LEN
+ */
+      __Pyx_TraceLine(145,0,__PYX_ERR(0, 145, __pyx_L1_error))
+      __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_v_npipe, __pyx_int_8, 8, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (__pyx_t_7) {
+
+        /* "tacview_client/cython_funs.pyx":146
+ *             npipe = val.count(b"|")
+ *             if npipe == 8:
+ *                 C_KEYS = COORD_KEYS             # <<<<<<<<<<<<<<
+ *                 C_LEN = COORD_KEY_LEN
+ *             elif npipe == 5:
+ */
+        __Pyx_TraceLine(146,0,__PYX_ERR(0, 146, __pyx_L1_error))
+        __Pyx_INCREF(__pyx_v_COORD_KEYS);
+        __Pyx_XDECREF_SET(__pyx_v_C_KEYS, __pyx_v_COORD_KEYS);
+
+        /* "tacview_client/cython_funs.pyx":147
+ *             if npipe == 8:
+ *                 C_KEYS = COORD_KEYS
+ *                 C_LEN = COORD_KEY_LEN             # <<<<<<<<<<<<<<
+ *             elif npipe == 5:
+ *                 C_KEYS = COORD_KEYS_MED
+ */
+        __Pyx_TraceLine(147,0,__PYX_ERR(0, 147, __pyx_L1_error))
+        __pyx_v_C_LEN = __pyx_v_COORD_KEY_LEN;
+
+        /* "tacview_client/cython_funs.pyx":145
+ *             pipes_remaining = True
+ *             npipe = val.count(b"|")
+ *             if npipe == 8:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS
+ *                 C_LEN = COORD_KEY_LEN
+ */
+        goto __pyx_L7;
+      }
+
+      /* "tacview_client/cython_funs.pyx":148
+ *                 C_KEYS = COORD_KEYS
+ *                 C_LEN = COORD_KEY_LEN
+ *             elif npipe == 5:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS_MED
+ *                 C_LEN = COORD_KEYS_MED_LEN
+ */
+      __Pyx_TraceLine(148,0,__PYX_ERR(0, 148, __pyx_L1_error))
+      __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_v_npipe, __pyx_int_5, 5, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 148, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (__pyx_t_7) {
+
+        /* "tacview_client/cython_funs.pyx":149
+ *                 C_LEN = COORD_KEY_LEN
+ *             elif npipe == 5:
+ *                 C_KEYS = COORD_KEYS_MED             # <<<<<<<<<<<<<<
+ *                 C_LEN = COORD_KEYS_MED_LEN
+ *             elif npipe == 4:
+ */
+        __Pyx_TraceLine(149,0,__PYX_ERR(0, 149, __pyx_L1_error))
+        __Pyx_INCREF(__pyx_v_COORD_KEYS_MED);
+        __Pyx_XDECREF_SET(__pyx_v_C_KEYS, __pyx_v_COORD_KEYS_MED);
+
+        /* "tacview_client/cython_funs.pyx":150
+ *             elif npipe == 5:
+ *                 C_KEYS = COORD_KEYS_MED
+ *                 C_LEN = COORD_KEYS_MED_LEN             # <<<<<<<<<<<<<<
+ *             elif npipe == 4:
+ *                 C_KEYS = COORD_KEYS_SHORT
+ */
+        __Pyx_TraceLine(150,0,__PYX_ERR(0, 150, __pyx_L1_error))
+        __pyx_v_C_LEN = __pyx_v_COORD_KEYS_MED_LEN;
+
+        /* "tacview_client/cython_funs.pyx":148
+ *                 C_KEYS = COORD_KEYS
+ *                 C_LEN = COORD_KEY_LEN
+ *             elif npipe == 5:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS_MED
+ *                 C_LEN = COORD_KEYS_MED_LEN
+ */
+        goto __pyx_L7;
+      }
+
+      /* "tacview_client/cython_funs.pyx":151
+ *                 C_KEYS = COORD_KEYS_MED
+ *                 C_LEN = COORD_KEYS_MED_LEN
+ *             elif npipe == 4:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS_SHORT
+ *                 C_LEN = COORD_KEY_SHORT_LEN
+ */
+      __Pyx_TraceLine(151,0,__PYX_ERR(0, 151, __pyx_L1_error))
+      __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_v_npipe, __pyx_int_4, 4, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (__pyx_t_7) {
+
+        /* "tacview_client/cython_funs.pyx":152
+ *                 C_LEN = COORD_KEYS_MED_LEN
+ *             elif npipe == 4:
+ *                 C_KEYS = COORD_KEYS_SHORT             # <<<<<<<<<<<<<<
+ *                 C_LEN = COORD_KEY_SHORT_LEN
+ *             elif npipe == 2:
+ */
+        __Pyx_TraceLine(152,0,__PYX_ERR(0, 152, __pyx_L1_error))
+        __Pyx_INCREF(__pyx_v_COORD_KEYS_SHORT);
+        __Pyx_XDECREF_SET(__pyx_v_C_KEYS, __pyx_v_COORD_KEYS_SHORT);
+
+        /* "tacview_client/cython_funs.pyx":153
+ *             elif npipe == 4:
+ *                 C_KEYS = COORD_KEYS_SHORT
+ *                 C_LEN = COORD_KEY_SHORT_LEN             # <<<<<<<<<<<<<<
+ *             elif npipe == 2:
+ *                 C_KEYS = COORD_KEYS_X_SHORT
+ */
+        __Pyx_TraceLine(153,0,__PYX_ERR(0, 153, __pyx_L1_error))
+        __pyx_v_C_LEN = __pyx_v_COORD_KEY_SHORT_LEN;
+
+        /* "tacview_client/cython_funs.pyx":151
+ *                 C_KEYS = COORD_KEYS_MED
+ *                 C_LEN = COORD_KEYS_MED_LEN
+ *             elif npipe == 4:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS_SHORT
+ *                 C_LEN = COORD_KEY_SHORT_LEN
+ */
+        goto __pyx_L7;
+      }
+
+      /* "tacview_client/cython_funs.pyx":154
+ *                 C_KEYS = COORD_KEYS_SHORT
+ *                 C_LEN = COORD_KEY_SHORT_LEN
+ *             elif npipe == 2:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS_X_SHORT
+ *                 C_LEN = COORD_KEYS_X_SHORT_LEN
+ */
+      __Pyx_TraceLine(154,0,__PYX_ERR(0, 154, __pyx_L1_error))
+      __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_v_npipe, __pyx_int_2, 2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 154, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (likely(__pyx_t_7)) {
+
+        /* "tacview_client/cython_funs.pyx":155
+ *                 C_LEN = COORD_KEY_SHORT_LEN
+ *             elif npipe == 2:
+ *                 C_KEYS = COORD_KEYS_X_SHORT             # <<<<<<<<<<<<<<
+ *                 C_LEN = COORD_KEYS_X_SHORT_LEN
+ *             else:
+ */
+        __Pyx_TraceLine(155,0,__PYX_ERR(0, 155, __pyx_L1_error))
+        __Pyx_INCREF(__pyx_v_COORD_KEYS_X_SHORT);
+        __Pyx_XDECREF_SET(__pyx_v_C_KEYS, __pyx_v_COORD_KEYS_X_SHORT);
+
+        /* "tacview_client/cython_funs.pyx":156
+ *             elif npipe == 2:
+ *                 C_KEYS = COORD_KEYS_X_SHORT
+ *                 C_LEN = COORD_KEYS_X_SHORT_LEN             # <<<<<<<<<<<<<<
+ *             else:
+ *                 raise ValueError(
+ */
+        __Pyx_TraceLine(156,0,__PYX_ERR(0, 156, __pyx_L1_error))
+        __pyx_v_C_LEN = __pyx_v_COORD_KEYS_X_SHORT_LEN;
+
+        /* "tacview_client/cython_funs.pyx":154
+ *                 C_KEYS = COORD_KEYS_SHORT
+ *                 C_LEN = COORD_KEY_SHORT_LEN
+ *             elif npipe == 2:             # <<<<<<<<<<<<<<
+ *                 C_KEYS = COORD_KEYS_X_SHORT
+ *                 C_LEN = COORD_KEYS_X_SHORT_LEN
+ */
+        goto __pyx_L7;
+      }
+
+      /* "tacview_client/cython_funs.pyx":158
+ *                 C_LEN = COORD_KEYS_X_SHORT_LEN
+ *             else:
+ *                 raise ValueError(             # <<<<<<<<<<<<<<
+ *                     "COORD COUNT EITHER 8, 5, OR 4!",
+ *                     npipe,
+ */
+      __Pyx_TraceLine(158,0,__PYX_ERR(0, 158, __pyx_L1_error))
+      /*else*/ {
+
+        /* "tacview_client/cython_funs.pyx":161
+ *                     "COORD COUNT EITHER 8, 5, OR 4!",
+ *                     npipe,
+ *                     raw_line.decode("UTF-8"),             # <<<<<<<<<<<<<<
+ *                 )
+ * 
+ */
+        __Pyx_TraceLine(161,0,__PYX_ERR(0, 161, __pyx_L1_error))
+        if (unlikely(__pyx_v_raw_line == Py_None)) {
+          PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "decode");
+          __PYX_ERR(0, 161, __pyx_L1_error)
+        }
+        __pyx_t_3 = __Pyx_decode_bytearray(__pyx_v_raw_line, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+
+        /* "tacview_client/cython_funs.pyx":158
+ *                 C_LEN = COORD_KEYS_X_SHORT_LEN
+ *             else:
+ *                 raise ValueError(             # <<<<<<<<<<<<<<
+ *                     "COORD COUNT EITHER 8, 5, OR 4!",
+ *                     npipe,
+ */
+        __Pyx_TraceLine(158,0,__PYX_ERR(0, 158, __pyx_L1_error))
+        __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 158, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_INCREF(__pyx_kp_u_COORD_COUNT_EITHER_8_5_OR_4);
+        __Pyx_GIVEREF(__pyx_kp_u_COORD_COUNT_EITHER_8_5_OR_4);
+        PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_kp_u_COORD_COUNT_EITHER_8_5_OR_4);
+        __Pyx_INCREF(__pyx_v_npipe);
+        __Pyx_GIVEREF(__pyx_v_npipe);
+        PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_npipe);
+        __Pyx_GIVEREF(__pyx_t_3);
+        PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_t_3);
+        __pyx_t_3 = 0;
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 158, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __PYX_ERR(0, 158, __pyx_L1_error)
+      }
+      __pyx_L7:;
+
+      /* "tacview_client/cython_funs.pyx":164
+ *                 )
+ * 
+ *             while i < C_LEN and pipes_remaining:             # <<<<<<<<<<<<<<
+ *                 pipe_pos_start = pipe_pos_end + 1
+ *                 pipe_pos_end = val.find(b"|", pipe_pos_start)
+ */
+      __Pyx_TraceLine(164,0,__PYX_ERR(0, 164, __pyx_L1_error))
+      while (1) {
+        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_C_LEN); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 164, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_2 = PyObject_RichCompare(__pyx_v_i, __pyx_t_3, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 164, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 164, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        if (__pyx_t_1) {
+        } else {
+          __pyx_t_7 = __pyx_t_1;
+          goto __pyx_L10_bool_binop_done;
+        }
+        __pyx_t_1 = (__pyx_v_pipes_remaining != 0);
+        __pyx_t_7 = __pyx_t_1;
+        __pyx_L10_bool_binop_done:;
+        if (!__pyx_t_7) break;
+
+        /* "tacview_client/cython_funs.pyx":165
+ * 
+ *             while i < C_LEN and pipes_remaining:
+ *                 pipe_pos_start = pipe_pos_end + 1             # <<<<<<<<<<<<<<
+ *                 pipe_pos_end = val.find(b"|", pipe_pos_start)
+ *                 if pipe_pos_end == -1:
+ */
+        __Pyx_TraceLine(165,0,__PYX_ERR(0, 165, __pyx_L1_error))
+        __pyx_t_2 = __Pyx_PyInt_AddObjC(__pyx_v_pipe_pos_end, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_XDECREF_SET(__pyx_v_pipe_pos_start, __pyx_t_2);
+        __pyx_t_2 = 0;
+
+        /* "tacview_client/cython_funs.pyx":166
+ *             while i < C_LEN and pipes_remaining:
+ *                 pipe_pos_start = pipe_pos_end + 1
+ *                 pipe_pos_end = val.find(b"|", pipe_pos_start)             # <<<<<<<<<<<<<<
+ *                 if pipe_pos_end == -1:
+ *                     pipes_remaining = False
+ */
+        __Pyx_TraceLine(166,0,__PYX_ERR(0, 166, __pyx_L1_error))
+        __pyx_t_2 = __Pyx_CallUnboundCMethod2(&__pyx_umethod_PyByteArray_Type_find, __pyx_v_val, __pyx_kp_b__7, __pyx_v_pipe_pos_start); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_pipe_pos_end, __pyx_t_2);
+        __pyx_t_2 = 0;
+
+        /* "tacview_client/cython_funs.pyx":167
+ *                 pipe_pos_start = pipe_pos_end + 1
+ *                 pipe_pos_end = val.find(b"|", pipe_pos_start)
+ *                 if pipe_pos_end == -1:             # <<<<<<<<<<<<<<
+ *                     pipes_remaining = False
+ *                     coord = val[pipe_pos_start:]
+ */
+        __Pyx_TraceLine(167,0,__PYX_ERR(0, 167, __pyx_L1_error))
+        __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_v_pipe_pos_end, __pyx_int_neg_1, -1L, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 167, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 167, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        if (__pyx_t_7) {
+
+          /* "tacview_client/cython_funs.pyx":168
+ *                 pipe_pos_end = val.find(b"|", pipe_pos_start)
+ *                 if pipe_pos_end == -1:
+ *                     pipes_remaining = False             # <<<<<<<<<<<<<<
+ *                     coord = val[pipe_pos_start:]
+ *                 else:
+ */
+          __Pyx_TraceLine(168,0,__PYX_ERR(0, 168, __pyx_L1_error))
+          __pyx_v_pipes_remaining = 0;
+
+          /* "tacview_client/cython_funs.pyx":169
+ *                 if pipe_pos_end == -1:
+ *                     pipes_remaining = False
+ *                     coord = val[pipe_pos_start:]             # <<<<<<<<<<<<<<
+ *                 else:
+ *                     coord = val[pipe_pos_start:pipe_pos_end]
+ */
+          __Pyx_TraceLine(169,0,__PYX_ERR(0, 169, __pyx_L1_error))
+          if (unlikely(__pyx_v_val == Py_None)) {
+            PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+            __PYX_ERR(0, 169, __pyx_L1_error)
+          }
+          __Pyx_INCREF(__pyx_v_pipe_pos_start);
+          __pyx_t_2 = __pyx_v_pipe_pos_start;
+          __pyx_t_7 = (__pyx_t_2 == Py_None);
+          if (__pyx_t_7) {
+            __pyx_t_5 = 0;
+          } else {
+            __pyx_t_6 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_6 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 169, __pyx_L1_error)
+            __pyx_t_5 = __pyx_t_6;
+          }
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __pyx_t_2 = PySequence_GetSlice(__pyx_v_val, __pyx_t_5, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __Pyx_XDECREF_SET(__pyx_v_coord, ((PyObject*)__pyx_t_2));
+          __pyx_t_2 = 0;
+
+          /* "tacview_client/cython_funs.pyx":167
+ *                 pipe_pos_start = pipe_pos_end + 1
+ *                 pipe_pos_end = val.find(b"|", pipe_pos_start)
+ *                 if pipe_pos_end == -1:             # <<<<<<<<<<<<<<
+ *                     pipes_remaining = False
+ *                     coord = val[pipe_pos_start:]
+ */
+          goto __pyx_L12;
+        }
+
+        /* "tacview_client/cython_funs.pyx":171
+ *                     coord = val[pipe_pos_start:]
+ *                 else:
+ *                     coord = val[pipe_pos_start:pipe_pos_end]             # <<<<<<<<<<<<<<
+ * 
+ *                 if coord != b"":
+ */
+        __Pyx_TraceLine(171,0,__PYX_ERR(0, 171, __pyx_L1_error))
+        /*else*/ {
+          if (unlikely(__pyx_v_val == Py_None)) {
+            PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+            __PYX_ERR(0, 171, __pyx_L1_error)
+          }
+          __Pyx_INCREF(__pyx_v_pipe_pos_start);
+          __pyx_t_2 = __pyx_v_pipe_pos_start;
+          __pyx_t_7 = (__pyx_t_2 == Py_None);
+          if (__pyx_t_7) {
+            __pyx_t_5 = 0;
+          } else {
+            __pyx_t_6 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_6 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L1_error)
+            __pyx_t_5 = __pyx_t_6;
+          }
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __Pyx_INCREF(__pyx_v_pipe_pos_end);
+          __pyx_t_2 = __pyx_v_pipe_pos_end;
+          __pyx_t_7 = (__pyx_t_2 == Py_None);
+          if (__pyx_t_7) {
+            __pyx_t_6 = PY_SSIZE_T_MAX;
+          } else {
+            __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L1_error)
+            __pyx_t_6 = __pyx_t_8;
+          }
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __pyx_t_2 = PySequence_GetSlice(__pyx_v_val, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __Pyx_XDECREF_SET(__pyx_v_coord, ((PyObject*)__pyx_t_2));
+          __pyx_t_2 = 0;
+        }
+        __pyx_L12:;
+
+        /* "tacview_client/cython_funs.pyx":173
+ *                     coord = val[pipe_pos_start:pipe_pos_end]
+ * 
+ *                 if coord != b"":             # <<<<<<<<<<<<<<
+ *                     c_key = C_KEYS[i]
+ *                     if c_key == "lat":
+ */
+        __Pyx_TraceLine(173,0,__PYX_ERR(0, 173, __pyx_L1_error))
+        __pyx_t_7 = (__Pyx_PyBytes_Equals(__pyx_v_coord, __pyx_kp_b__8, Py_NE)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 173, __pyx_L1_error)
+        __pyx_t_1 = (__pyx_t_7 != 0);
+        if (__pyx_t_1) {
+
+          /* "tacview_client/cython_funs.pyx":174
+ * 
+ *                 if coord != b"":
+ *                     c_key = C_KEYS[i]             # <<<<<<<<<<<<<<
+ *                     if c_key == "lat":
+ *                         rec.lat = float(coord) + ref_lat
+ */
+          __Pyx_TraceLine(174,0,__PYX_ERR(0, 174, __pyx_L1_error))
+          __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_C_KEYS, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 174, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __Pyx_XDECREF_SET(__pyx_v_c_key, __pyx_t_2);
+          __pyx_t_2 = 0;
+
+          /* "tacview_client/cython_funs.pyx":175
+ *                 if coord != b"":
+ *                     c_key = C_KEYS[i]
+ *                     if c_key == "lat":             # <<<<<<<<<<<<<<
+ *                         rec.lat = float(coord) + ref_lat
+ *                     elif c_key == "lon":
+ */
+          __Pyx_TraceLine(175,0,__PYX_ERR(0, 175, __pyx_L1_error))
+          __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_c_key, __pyx_n_u_lat, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 175, __pyx_L1_error)
+          if (__pyx_t_1) {
+
+            /* "tacview_client/cython_funs.pyx":176
+ *                     c_key = C_KEYS[i]
+ *                     if c_key == "lat":
+ *                         rec.lat = float(coord) + ref_lat             # <<<<<<<<<<<<<<
+ *                     elif c_key == "lon":
+ *                         rec.lon = float(coord) + ref_lon
+ */
+            __Pyx_TraceLine(176,0,__PYX_ERR(0, 176, __pyx_L1_error))
+            __pyx_t_9 = __Pyx_PyObject_AsDouble(__pyx_v_coord); if (unlikely(__pyx_t_9 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L1_error)
+            __pyx_v_rec->lat = (__pyx_t_9 + __pyx_v_ref_lat);
+
+            /* "tacview_client/cython_funs.pyx":175
+ *                 if coord != b"":
+ *                     c_key = C_KEYS[i]
+ *                     if c_key == "lat":             # <<<<<<<<<<<<<<
+ *                         rec.lat = float(coord) + ref_lat
+ *                     elif c_key == "lon":
+ */
+            goto __pyx_L14;
+          }
+
+          /* "tacview_client/cython_funs.pyx":177
+ *                     if c_key == "lat":
+ *                         rec.lat = float(coord) + ref_lat
+ *                     elif c_key == "lon":             # <<<<<<<<<<<<<<
+ *                         rec.lon = float(coord) + ref_lon
+ *                     else:
+ */
+          __Pyx_TraceLine(177,0,__PYX_ERR(0, 177, __pyx_L1_error))
+          __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_c_key, __pyx_n_u_lon, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 177, __pyx_L1_error)
+          if (__pyx_t_1) {
+
+            /* "tacview_client/cython_funs.pyx":178
+ *                         rec.lat = float(coord) + ref_lat
+ *                     elif c_key == "lon":
+ *                         rec.lon = float(coord) + ref_lon             # <<<<<<<<<<<<<<
+ *                     else:
+ *                         setattr(rec, c_key, float(coord))
+ */
+            __Pyx_TraceLine(178,0,__PYX_ERR(0, 178, __pyx_L1_error))
+            __pyx_t_9 = __Pyx_PyObject_AsDouble(__pyx_v_coord); if (unlikely(__pyx_t_9 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(0, 178, __pyx_L1_error)
+            __pyx_v_rec->lon = (__pyx_t_9 + __pyx_v_ref_lon);
+
+            /* "tacview_client/cython_funs.pyx":177
+ *                     if c_key == "lat":
+ *                         rec.lat = float(coord) + ref_lat
+ *                     elif c_key == "lon":             # <<<<<<<<<<<<<<
+ *                         rec.lon = float(coord) + ref_lon
+ *                     else:
+ */
+            goto __pyx_L14;
+          }
+
+          /* "tacview_client/cython_funs.pyx":180
+ *                         rec.lon = float(coord) + ref_lon
+ *                     else:
+ *                         setattr(rec, c_key, float(coord))             # <<<<<<<<<<<<<<
+ *                 i += 1
+ *         else:
+ */
+          __Pyx_TraceLine(180,0,__PYX_ERR(0, 180, __pyx_L1_error))
+          /*else*/ {
+            __pyx_t_2 = __Pyx_PyNumber_Float(__pyx_v_coord); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 180, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __pyx_t_10 = PyObject_SetAttr(((PyObject *)__pyx_v_rec), __pyx_v_c_key, __pyx_t_2); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 180, __pyx_L1_error)
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          }
+          __pyx_L14:;
+
+          /* "tacview_client/cython_funs.pyx":173
+ *                     coord = val[pipe_pos_start:pipe_pos_end]
+ * 
+ *                 if coord != b"":             # <<<<<<<<<<<<<<
+ *                     c_key = C_KEYS[i]
+ *                     if c_key == "lat":
+ */
+        }
+
+        /* "tacview_client/cython_funs.pyx":181
+ *                     else:
+ *                         setattr(rec, c_key, float(coord))
+ *                 i += 1             # <<<<<<<<<<<<<<
+ *         else:
+ *             setattr(rec,
+ */
+        __Pyx_TraceLine(181,0,__PYX_ERR(0, 181, __pyx_L1_error))
+        __pyx_t_2 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF_SET(__pyx_v_i, __pyx_t_2);
+        __pyx_t_2 = 0;
+      }
+
+      /* "tacview_client/cython_funs.pyx":140
+ *         val = chunk[eq_loc + 1 :]
+ * 
+ *         if key == b"T":             # <<<<<<<<<<<<<<
+ *             i = 0
+ *             pipe_pos_end = -1
+ */
+      goto __pyx_L6;
+    }
+
+    /* "tacview_client/cython_funs.pyx":183
+ *                 i += 1
+ *         else:
+ *             setattr(rec,             # <<<<<<<<<<<<<<
+ *                     key.decode("UTF-8") if key != b"Group" else "grp",
+ *                     val.decode("UTF-8"))
+ */
+    __Pyx_TraceLine(183,0,__PYX_ERR(0, 183, __pyx_L1_error))
+    /*else*/ {
+
+      /* "tacview_client/cython_funs.pyx":184
+ *         else:
+ *             setattr(rec,
+ *                     key.decode("UTF-8") if key != b"Group" else "grp",             # <<<<<<<<<<<<<<
+ *                     val.decode("UTF-8"))
+ * 
+ */
+      __Pyx_TraceLine(184,0,__PYX_ERR(0, 184, __pyx_L1_error))
+      __pyx_t_1 = (__Pyx_PyBytes_Equals(__pyx_v_key, __pyx_n_b_Group, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 184, __pyx_L1_error)
+      if ((__pyx_t_1 != 0)) {
+        if (unlikely(__pyx_v_key == Py_None)) {
+          PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "decode");
+          __PYX_ERR(0, 184, __pyx_L1_error)
+        }
+        __pyx_t_3 = __Pyx_decode_bytearray(__pyx_v_key, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 184, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_2 = __pyx_t_3;
+        __pyx_t_3 = 0;
+      } else {
+        __Pyx_INCREF(__pyx_n_u_grp);
+        __pyx_t_2 = __pyx_n_u_grp;
+      }
+
+      /* "tacview_client/cython_funs.pyx":185
+ *             setattr(rec,
+ *                     key.decode("UTF-8") if key != b"Group" else "grp",
+ *                     val.decode("UTF-8"))             # <<<<<<<<<<<<<<
+ * 
+ *     if rec.updates == 1:
+ */
+      __Pyx_TraceLine(185,0,__PYX_ERR(0, 185, __pyx_L1_error))
+      if (unlikely(__pyx_v_val == Py_None)) {
+        PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "decode");
+        __PYX_ERR(0, 185, __pyx_L1_error)
+      }
+      __pyx_t_3 = __Pyx_decode_bytearray(__pyx_v_val, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+
+      /* "tacview_client/cython_funs.pyx":183
+ *                 i += 1
+ *         else:
+ *             setattr(rec,             # <<<<<<<<<<<<<<
+ *                     key.decode("UTF-8") if key != b"Group" else "grp",
+ *                     val.decode("UTF-8"))
+ */
+      __Pyx_TraceLine(183,0,__PYX_ERR(0, 183, __pyx_L1_error))
+      __pyx_t_10 = PyObject_SetAttr(((PyObject *)__pyx_v_rec), __pyx_t_2, __pyx_t_3); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 183, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    }
+    __pyx_L6:;
+  }
+
+  /* "tacview_client/cython_funs.pyx":187
+ *                     val.decode("UTF-8"))
+ * 
+ *     if rec.updates == 1:             # <<<<<<<<<<<<<<
+ *         rec.can_be_parent = can_be_parent(rec.Type)
+ *         rec.should_have_parent = should_have_parent(rec.Type)
+ */
+  __Pyx_TraceLine(187,0,__PYX_ERR(0, 187, __pyx_L1_error))
+  __pyx_t_1 = ((__pyx_v_rec->updates == 1) != 0);
+  if (__pyx_t_1) {
+
+    /* "tacview_client/cython_funs.pyx":188
+ * 
+ *     if rec.updates == 1:
+ *         rec.can_be_parent = can_be_parent(rec.Type)             # <<<<<<<<<<<<<<
+ *         rec.should_have_parent = should_have_parent(rec.Type)
+ * 
+ */
+    __Pyx_TraceLine(188,0,__PYX_ERR(0, 188, __pyx_L1_error))
+    if (!(likely(PyUnicode_CheckExact(__pyx_v_rec->Type))||((__pyx_v_rec->Type) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_v_rec->Type)->tp_name), 0))) __PYX_ERR(0, 188, __pyx_L1_error)
+    __pyx_t_3 = __pyx_v_rec->Type;
+    __Pyx_INCREF(__pyx_t_3);
+    __pyx_v_rec->can_be_parent = __pyx_f_14tacview_client_11cython_funs_can_be_parent(((PyObject*)__pyx_t_3));
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "tacview_client/cython_funs.pyx":189
+ *     if rec.updates == 1:
+ *         rec.can_be_parent = can_be_parent(rec.Type)
+ *         rec.should_have_parent = should_have_parent(rec.Type)             # <<<<<<<<<<<<<<
+ * 
+ *     rec = compute_velocity(rec)
+ */
+    __Pyx_TraceLine(189,0,__PYX_ERR(0, 189, __pyx_L1_error))
+    if (!(likely(PyUnicode_CheckExact(__pyx_v_rec->Type))||((__pyx_v_rec->Type) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_v_rec->Type)->tp_name), 0))) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_3 = __pyx_v_rec->Type;
+    __Pyx_INCREF(__pyx_t_3);
+    __pyx_v_rec->should_have_parent = __pyx_f_14tacview_client_11cython_funs_should_have_parent(((PyObject*)__pyx_t_3));
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "tacview_client/cython_funs.pyx":187
+ *                     val.decode("UTF-8"))
+ * 
+ *     if rec.updates == 1:             # <<<<<<<<<<<<<<
+ *         rec.can_be_parent = can_be_parent(rec.Type)
+ *         rec.should_have_parent = should_have_parent(rec.Type)
+ */
+  }
+
+  /* "tacview_client/cython_funs.pyx":191
+ *         rec.should_have_parent = should_have_parent(rec.Type)
+ * 
+ *     rec = compute_velocity(rec)             # <<<<<<<<<<<<<<
+ * 
+ *     return rec
+ */
+  __Pyx_TraceLine(191,0,__PYX_ERR(0, 191, __pyx_L1_error))
+  __pyx_t_3 = ((PyObject *)__pyx_f_14tacview_client_11cython_funs_compute_velocity(__pyx_v_rec, 0)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF_SET(__pyx_v_rec, ((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_t_3));
+  __pyx_t_3 = 0;
+
+  /* "tacview_client/cython_funs.pyx":193
+ *     rec = compute_velocity(rec)
+ * 
+ *     return rec             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __Pyx_TraceLine(193,0,__PYX_ERR(0, 193, __pyx_L1_error))
+  __Pyx_XDECREF(((PyObject *)__pyx_r));
+  __Pyx_INCREF(((PyObject *)__pyx_v_rec));
+  __pyx_r = __pyx_v_rec;
+  goto __pyx_L0;
+
+  /* "tacview_client/cython_funs.pyx":101
+ * 
+ * 
+ * cpdef ObjectRec proc_line(ObjectRec rec, bytearray raw_line, double ref_lat,             # <<<<<<<<<<<<<<
+ *                           double ref_lon, int comma):
+ *     """Parse a textline from tacview into an ObjectRec."""
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("tacview_client.cython_funs.proc_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_COORD_KEYS);
+  __Pyx_XDECREF(__pyx_v_COORD_KEYS_SHORT);
+  __Pyx_XDECREF(__pyx_v_COORD_KEYS_MED);
+  __Pyx_XDECREF(__pyx_v_COORD_KEYS_X_SHORT);
+  __Pyx_XDECREF(__pyx_v_chunk);
+  __Pyx_XDECREF(__pyx_v_eq_loc);
+  __Pyx_XDECREF(__pyx_v_key);
+  __Pyx_XDECREF(__pyx_v_val);
+  __Pyx_XDECREF(__pyx_v_i);
+  __Pyx_XDECREF(__pyx_v_pipe_pos_end);
+  __Pyx_XDECREF(__pyx_v_npipe);
+  __Pyx_XDECREF(__pyx_v_C_KEYS);
+  __Pyx_XDECREF(__pyx_v_pipe_pos_start);
+  __Pyx_XDECREF(__pyx_v_coord);
+  __Pyx_XDECREF(__pyx_v_c_key);
+  __Pyx_XDECREF((PyObject *)__pyx_v_rec);
+  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_7proc_line(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_14tacview_client_11cython_funs_6proc_line[] = "Parse a textline from tacview into an ObjectRec.";
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_7proc_line(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_rec = 0;
+  PyObject *__pyx_v_raw_line = 0;
+  double __pyx_v_ref_lat;
+  double __pyx_v_ref_lon;
+  int __pyx_v_comma;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("proc_line (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_lat,&__pyx_n_s_lon,&__pyx_n_s_alt,&__pyx_n_s_cart_coords,&__pyx_n_s_secs_since_last_seen,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_rec,&__pyx_n_s_raw_line,&__pyx_n_s_ref_lat,&__pyx_n_s_ref_lon,&__pyx_n_s_comma,0};
     PyObject* values[5] = {0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -2042,35 +7804,35 @@ static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObj
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lat)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rec)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lon)) != 0)) kw_args--;
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_raw_line)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_velocity", 1, 5, 5, 1); __PYX_ERR(0, 28, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("proc_line", 1, 5, 5, 1); __PYX_ERR(0, 101, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_alt)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ref_lat)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_velocity", 1, 5, 5, 2); __PYX_ERR(0, 28, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("proc_line", 1, 5, 5, 2); __PYX_ERR(0, 101, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cart_coords)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ref_lon)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_velocity", 1, 5, 5, 3); __PYX_ERR(0, 28, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("proc_line", 1, 5, 5, 3); __PYX_ERR(0, 101, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_secs_since_last_seen)) != 0)) kw_args--;
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_comma)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("compute_velocity", 1, 5, 5, 4); __PYX_ERR(0, 28, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("proc_line", 1, 5, 5, 4); __PYX_ERR(0, 101, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "compute_velocity") < 0)) __PYX_ERR(0, 28, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "proc_line") < 0)) __PYX_ERR(0, 101, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -2081,22 +7843,23 @@ static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObj
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_lat = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_lat == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
-    __pyx_v_lon = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_lon == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
-    __pyx_v_alt = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_alt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
-    __pyx_v_cart_coords = ((PyObject*)values[3]);
-    __pyx_v_secs_since_last_seen = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_secs_since_last_seen == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L3_error)
+    __pyx_v_rec = ((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)values[0]);
+    __pyx_v_raw_line = ((PyObject*)values[1]);
+    __pyx_v_ref_lat = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_ref_lat == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 101, __pyx_L3_error)
+    __pyx_v_ref_lon = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_ref_lon == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 102, __pyx_L3_error)
+    __pyx_v_comma = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_comma == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 102, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("compute_velocity", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 28, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("proc_line", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 101, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("tacview_client.cython_funs.compute_velocity", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("tacview_client.cython_funs.proc_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_cart_coords), (&PyList_Type), 1, "cart_coords", 1))) __PYX_ERR(0, 28, __pyx_L1_error)
-  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_4compute_velocity(__pyx_self, __pyx_v_lat, __pyx_v_lon, __pyx_v_alt, __pyx_v_cart_coords, __pyx_v_secs_since_last_seen);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_rec), __pyx_ptype_14tacview_client_11cython_funs_ObjectRec, 1, "rec", 0))) __PYX_ERR(0, 101, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_raw_line), (&PyByteArray_Type), 1, "raw_line", 1))) __PYX_ERR(0, 101, __pyx_L1_error)
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_6proc_line(__pyx_self, __pyx_v_rec, __pyx_v_raw_line, __pyx_v_ref_lat, __pyx_v_ref_lon, __pyx_v_comma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2107,7 +7870,7 @@ static PyObject *__pyx_pw_14tacview_client_11cython_funs_5compute_velocity(PyObj
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14tacview_client_11cython_funs_4compute_velocity(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_lat, double __pyx_v_lon, double __pyx_v_alt, PyObject *__pyx_v_cart_coords, double __pyx_v_secs_since_last_seen) {
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_6proc_line(CYTHON_UNUSED PyObject *__pyx_self, struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v_rec, PyObject *__pyx_v_raw_line, double __pyx_v_ref_lat, double __pyx_v_ref_lon, int __pyx_v_comma) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarations
   __Pyx_RefNannyDeclarations
@@ -2115,10 +7878,10 @@ static PyObject *__pyx_pf_14tacview_client_11cython_funs_4compute_velocity(CYTHO
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("compute_velocity", 0);
-  __Pyx_TraceCall("compute_velocity (wrapper)", __pyx_f[0], 28, 0, __PYX_ERR(0, 28, __pyx_L1_error));
+  __Pyx_RefNannySetupContext("proc_line", 0);
+  __Pyx_TraceCall("proc_line (wrapper)", __pyx_f[0], 101, 0, __PYX_ERR(0, 101, __pyx_L1_error));
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_14tacview_client_11cython_funs_compute_velocity(__pyx_v_lat, __pyx_v_lon, __pyx_v_alt, __pyx_v_cart_coords, __pyx_v_secs_since_last_seen, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_14tacview_client_11cython_funs_proc_line(__pyx_v_rec, __pyx_v_raw_line, __pyx_v_ref_lat, __pyx_v_ref_lon, __pyx_v_comma, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 101, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2127,7 +7890,7 @@ static PyObject *__pyx_pf_14tacview_client_11cython_funs_4compute_velocity(CYTHO
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("tacview_client.cython_funs.compute_velocity", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("tacview_client.cython_funs.proc_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2136,10 +7899,1696 @@ static PyObject *__pyx_pf_14tacview_client_11cython_funs_4compute_velocity(CYTHO
   return __pyx_r;
 }
 
+/* "tacview_client/cython_funs.pyx":196
+ * 
+ * 
+ * cdef bint can_be_parent(str rec_type):             # <<<<<<<<<<<<<<
+ *     """Check if an object is a member of types that could be parents."""
+ *     cdef tuple not_parent_types = (
+ */
+
+static int __pyx_f_14tacview_client_11cython_funs_can_be_parent(PyObject *__pyx_v_rec_type) {
+  PyObject *__pyx_v_not_parent_types = 0;
+  PyObject *__pyx_v_t = NULL;
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  int __pyx_t_5;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("can_be_parent", 0);
+  __Pyx_TraceCall("can_be_parent", __pyx_f[0], 196, 0, __PYX_ERR(0, 196, __pyx_L1_error));
+
+  /* "tacview_client/cython_funs.pyx":199
+ *     """Check if an object is a member of types that could be parents."""
+ *     cdef tuple not_parent_types = (
+ *         "Decoy",             # <<<<<<<<<<<<<<
+ *         "Misc",
+ *         "Weapon",
+ */
+  __Pyx_TraceLine(199,0,__PYX_ERR(0, 199, __pyx_L1_error))
+  __Pyx_INCREF(__pyx_tuple__9);
+  __pyx_v_not_parent_types = __pyx_tuple__9;
+
+  /* "tacview_client/cython_funs.pyx":206
+ *     )
+ * 
+ *     for t in not_parent_types:             # <<<<<<<<<<<<<<
+ *         if t in rec_type:
+ *             return False
+ */
+  __Pyx_TraceLine(206,0,__PYX_ERR(0, 206, __pyx_L1_error))
+  __pyx_t_1 = __pyx_v_not_parent_types; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
+  for (;;) {
+    if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_3); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 206, __pyx_L1_error)
+    #else
+    __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 206, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    #endif
+    __Pyx_XDECREF_SET(__pyx_v_t, ((PyObject*)__pyx_t_3));
+    __pyx_t_3 = 0;
+
+    /* "tacview_client/cython_funs.pyx":207
+ * 
+ *     for t in not_parent_types:
+ *         if t in rec_type:             # <<<<<<<<<<<<<<
+ *             return False
+ *     else:
+ */
+    __Pyx_TraceLine(207,0,__PYX_ERR(0, 207, __pyx_L1_error))
+    if (unlikely(__pyx_v_rec_type == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+      __PYX_ERR(0, 207, __pyx_L1_error)
+    }
+    __pyx_t_4 = (__Pyx_PyUnicode_ContainsTF(__pyx_v_t, __pyx_v_rec_type, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 207, __pyx_L1_error)
+    __pyx_t_5 = (__pyx_t_4 != 0);
+    if (__pyx_t_5) {
+
+      /* "tacview_client/cython_funs.pyx":208
+ *     for t in not_parent_types:
+ *         if t in rec_type:
+ *             return False             # <<<<<<<<<<<<<<
+ *     else:
+ *         return True
+ */
+      __Pyx_TraceLine(208,0,__PYX_ERR(0, 208, __pyx_L1_error))
+      __pyx_r = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      goto __pyx_L0;
+
+      /* "tacview_client/cython_funs.pyx":207
+ * 
+ *     for t in not_parent_types:
+ *         if t in rec_type:             # <<<<<<<<<<<<<<
+ *             return False
+ *     else:
+ */
+    }
+
+    /* "tacview_client/cython_funs.pyx":206
+ *     )
+ * 
+ *     for t in not_parent_types:             # <<<<<<<<<<<<<<
+ *         if t in rec_type:
+ *             return False
+ */
+    __Pyx_TraceLine(206,0,__PYX_ERR(0, 206, __pyx_L1_error))
+  }
+  /*else*/ {
+
+    /* "tacview_client/cython_funs.pyx":210
+ *             return False
+ *     else:
+ *         return True             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+    __Pyx_TraceLine(210,0,__PYX_ERR(0, 210, __pyx_L1_error))
+    __pyx_r = 1;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    goto __pyx_L0;
+  }
+
+  /* "tacview_client/cython_funs.pyx":206
+ *     )
+ * 
+ *     for t in not_parent_types:             # <<<<<<<<<<<<<<
+ *         if t in rec_type:
+ *             return False
+ */
+  __Pyx_TraceLine(206,0,__PYX_ERR(0, 206, __pyx_L1_error))
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "tacview_client/cython_funs.pyx":196
+ * 
+ * 
+ * cdef bint can_be_parent(str rec_type):             # <<<<<<<<<<<<<<
+ *     """Check if an object is a member of types that could be parents."""
+ *     cdef tuple not_parent_types = (
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_WriteUnraisable("tacview_client.cython_funs.can_be_parent", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_not_parent_types);
+  __Pyx_XDECREF(__pyx_v_t);
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "tacview_client/cython_funs.pyx":213
+ * 
+ * 
+ * cdef bint should_have_parent(str rec_type):             # <<<<<<<<<<<<<<
+ *     """Check if an object should have a parent record."""
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+ */
+
+static int __pyx_f_14tacview_client_11cython_funs_should_have_parent(PyObject *__pyx_v_rec_type) {
+  PyObject *__pyx_v_parented_types = 0;
+  PyObject *__pyx_v_t = NULL;
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  int __pyx_t_5;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("should_have_parent", 0);
+  __Pyx_TraceCall("should_have_parent", __pyx_f[0], 213, 0, __PYX_ERR(0, 213, __pyx_L1_error));
+
+  /* "tacview_client/cython_funs.pyx":215
+ * cdef bint should_have_parent(str rec_type):
+ *     """Check if an object should have a parent record."""
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")             # <<<<<<<<<<<<<<
+ *     for t in parented_types:
+ *         if t in rec_type:
+ */
+  __Pyx_TraceLine(215,0,__PYX_ERR(0, 215, __pyx_L1_error))
+  __Pyx_INCREF(__pyx_tuple__10);
+  __pyx_v_parented_types = __pyx_tuple__10;
+
+  /* "tacview_client/cython_funs.pyx":216
+ *     """Check if an object should have a parent record."""
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+ *     for t in parented_types:             # <<<<<<<<<<<<<<
+ *         if t in rec_type:
+ *             return True
+ */
+  __Pyx_TraceLine(216,0,__PYX_ERR(0, 216, __pyx_L1_error))
+  __pyx_t_1 = __pyx_v_parented_types; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
+  for (;;) {
+    if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_3); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 216, __pyx_L1_error)
+    #else
+    __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    #endif
+    __Pyx_XDECREF_SET(__pyx_v_t, ((PyObject*)__pyx_t_3));
+    __pyx_t_3 = 0;
+
+    /* "tacview_client/cython_funs.pyx":217
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+ *     for t in parented_types:
+ *         if t in rec_type:             # <<<<<<<<<<<<<<
+ *             return True
+ *     return False
+ */
+    __Pyx_TraceLine(217,0,__PYX_ERR(0, 217, __pyx_L1_error))
+    if (unlikely(__pyx_v_rec_type == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+      __PYX_ERR(0, 217, __pyx_L1_error)
+    }
+    __pyx_t_4 = (__Pyx_PyUnicode_ContainsTF(__pyx_v_t, __pyx_v_rec_type, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 217, __pyx_L1_error)
+    __pyx_t_5 = (__pyx_t_4 != 0);
+    if (__pyx_t_5) {
+
+      /* "tacview_client/cython_funs.pyx":218
+ *     for t in parented_types:
+ *         if t in rec_type:
+ *             return True             # <<<<<<<<<<<<<<
+ *     return False
+ */
+      __Pyx_TraceLine(218,0,__PYX_ERR(0, 218, __pyx_L1_error))
+      __pyx_r = 1;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      goto __pyx_L0;
+
+      /* "tacview_client/cython_funs.pyx":217
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+ *     for t in parented_types:
+ *         if t in rec_type:             # <<<<<<<<<<<<<<
+ *             return True
+ *     return False
+ */
+    }
+
+    /* "tacview_client/cython_funs.pyx":216
+ *     """Check if an object should have a parent record."""
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+ *     for t in parented_types:             # <<<<<<<<<<<<<<
+ *         if t in rec_type:
+ *             return True
+ */
+    __Pyx_TraceLine(216,0,__PYX_ERR(0, 216, __pyx_L1_error))
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "tacview_client/cython_funs.pyx":219
+ *         if t in rec_type:
+ *             return True
+ *     return False             # <<<<<<<<<<<<<<
+ */
+  __Pyx_TraceLine(219,0,__PYX_ERR(0, 219, __pyx_L1_error))
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "tacview_client/cython_funs.pyx":213
+ * 
+ * 
+ * cdef bint should_have_parent(str rec_type):             # <<<<<<<<<<<<<<
+ *     """Check if an object should have a parent record."""
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_WriteUnraisable("tacview_client.cython_funs.should_have_parent", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_parented_types);
+  __Pyx_XDECREF(__pyx_v_t);
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":1
+ * def __pyx_unpickle_ObjectRec(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     cdef object __pyx_PickleError
+ *     cdef object __pyx_result
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9__pyx_unpickle_ObjectRec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_14tacview_client_11cython_funs_9__pyx_unpickle_ObjectRec = {"__pyx_unpickle_ObjectRec", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14tacview_client_11cython_funs_9__pyx_unpickle_ObjectRec, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_14tacview_client_11cython_funs_9__pyx_unpickle_ObjectRec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v___pyx_type = 0;
+  long __pyx_v___pyx_checksum;
+  PyObject *__pyx_v___pyx_state = 0;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__pyx_unpickle_ObjectRec (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_pyx_type,&__pyx_n_s_pyx_checksum,&__pyx_n_s_pyx_state,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_type)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_checksum)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_ObjectRec", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_state)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_ObjectRec", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_unpickle_ObjectRec") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v___pyx_type = values[0];
+    __pyx_v___pyx_checksum = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v___pyx_checksum == (long)-1) && PyErr_Occurred())) __PYX_ERR(1, 1, __pyx_L3_error)
+    __pyx_v___pyx_state = values[2];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_ObjectRec", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 1, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("tacview_client.cython_funs.__pyx_unpickle_ObjectRec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14tacview_client_11cython_funs_8__pyx_unpickle_ObjectRec(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14tacview_client_11cython_funs_8__pyx_unpickle_ObjectRec(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_v___pyx_PickleError = 0;
+  PyObject *__pyx_v___pyx_result = 0;
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  int __pyx_t_6;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(__pyx_codeobj__11)
+  __Pyx_RefNannySetupContext("__pyx_unpickle_ObjectRec", 0);
+  __Pyx_TraceCall("__pyx_unpickle_ObjectRec", __pyx_f[1], 1, 0, __PYX_ERR(1, 1, __pyx_L1_error));
+
+  /* "(tree fragment)":4
+ *     cdef object __pyx_PickleError
+ *     cdef object __pyx_result
+ *     if __pyx_checksum != 0x4fe25a3:             # <<<<<<<<<<<<<<
+ *         from pickle import PickleError as __pyx_PickleError
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))" % __pyx_checksum)
+ */
+  __Pyx_TraceLine(4,0,__PYX_ERR(1, 4, __pyx_L1_error))
+  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0x4fe25a3) != 0);
+  if (__pyx_t_1) {
+
+    /* "(tree fragment)":5
+ *     cdef object __pyx_result
+ *     if __pyx_checksum != 0x4fe25a3:
+ *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))" % __pyx_checksum)
+ *     __pyx_result = ObjectRec.__new__(__pyx_type)
+ */
+    __Pyx_TraceLine(5,0,__PYX_ERR(1, 5, __pyx_L1_error))
+    __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx_n_s_PickleError);
+    __Pyx_GIVEREF(__pyx_n_s_PickleError);
+    PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_PickleError);
+    __pyx_t_3 = __Pyx_Import(__pyx_n_s_pickle, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 5, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_PickleError); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx_t_2);
+    __pyx_v___pyx_PickleError = __pyx_t_2;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "(tree fragment)":6
+ *     if __pyx_checksum != 0x4fe25a3:
+ *         from pickle import PickleError as __pyx_PickleError
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))" % __pyx_checksum)             # <<<<<<<<<<<<<<
+ *     __pyx_result = ObjectRec.__new__(__pyx_type)
+ *     if __pyx_state is not None:
+ */
+    __Pyx_TraceLine(6,0,__PYX_ERR(1, 6, __pyx_L1_error))
+    __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0x4f, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_INCREF(__pyx_v___pyx_PickleError);
+    __pyx_t_2 = __pyx_v___pyx_PickleError; __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_2);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_2, function);
+      }
+    }
+    __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_5, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 6, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __PYX_ERR(1, 6, __pyx_L1_error)
+
+    /* "(tree fragment)":4
+ *     cdef object __pyx_PickleError
+ *     cdef object __pyx_result
+ *     if __pyx_checksum != 0x4fe25a3:             # <<<<<<<<<<<<<<
+ *         from pickle import PickleError as __pyx_PickleError
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))" % __pyx_checksum)
+ */
+  }
+
+  /* "(tree fragment)":7
+ *         from pickle import PickleError as __pyx_PickleError
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))" % __pyx_checksum)
+ *     __pyx_result = ObjectRec.__new__(__pyx_type)             # <<<<<<<<<<<<<<
+ *     if __pyx_state is not None:
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)
+ */
+  __Pyx_TraceLine(7,0,__PYX_ERR(1, 7, __pyx_L1_error))
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_14tacview_client_11cython_funs_ObjectRec), __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_v___pyx_type) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v___pyx_type);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v___pyx_result = __pyx_t_3;
+  __pyx_t_3 = 0;
+
+  /* "(tree fragment)":8
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))" % __pyx_checksum)
+ *     __pyx_result = ObjectRec.__new__(__pyx_type)
+ *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)
+ *     return __pyx_result
+ */
+  __Pyx_TraceLine(8,0,__PYX_ERR(1, 8, __pyx_L1_error))
+  __pyx_t_1 = (__pyx_v___pyx_state != Py_None);
+  __pyx_t_6 = (__pyx_t_1 != 0);
+  if (__pyx_t_6) {
+
+    /* "(tree fragment)":9
+ *     __pyx_result = ObjectRec.__new__(__pyx_type)
+ *     if __pyx_state is not None:
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
+ *     return __pyx_result
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):
+ */
+    __Pyx_TraceLine(9,0,__PYX_ERR(1, 9, __pyx_L1_error))
+    if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 9, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_14tacview_client_11cython_funs___pyx_unpickle_ObjectRec__set_state(((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 9, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "(tree fragment)":8
+ *         raise __pyx_PickleError("Incompatible checksums (%s vs 0x4fe25a3 = (Coalition, Color, Country, Name, Pilot, Type, alive, alt, can_be_parent, cart_coords, first_seen, grp, heading, id, impacted, impacted_dist, last_seen, lat, lon, parent, parent_dist, pitch, roll, secs_since_last_seen, session_id, should_have_parent, tac_id, u_coord, updates, v_coord, velocity_kts, written, yaw))" % __pyx_checksum)
+ *     __pyx_result = ObjectRec.__new__(__pyx_type)
+ *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)
+ *     return __pyx_result
+ */
+  }
+
+  /* "(tree fragment)":10
+ *     if __pyx_state is not None:
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)
+ *     return __pyx_result             # <<<<<<<<<<<<<<
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]
+ */
+  __Pyx_TraceLine(10,0,__PYX_ERR(1, 10, __pyx_L1_error))
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v___pyx_result);
+  __pyx_r = __pyx_v___pyx_result;
+  goto __pyx_L0;
+
+  /* "(tree fragment)":1
+ * def __pyx_unpickle_ObjectRec(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     cdef object __pyx_PickleError
+ *     cdef object __pyx_result
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_AddTraceback("tacview_client.cython_funs.__pyx_unpickle_ObjectRec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v___pyx_PickleError);
+  __Pyx_XDECREF(__pyx_v___pyx_result);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":11
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)
+ *     return __pyx_result
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]
+ *     if len(__pyx_state) > 33 and hasattr(__pyx_result, '__dict__'):
+ */
+
+static PyObject *__pyx_f_14tacview_client_11cython_funs___pyx_unpickle_ObjectRec__set_state(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_2;
+  float __pyx_t_3;
+  int __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  int __pyx_t_6;
+  int __pyx_t_7;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__pyx_unpickle_ObjectRec__set_state", 0);
+  __Pyx_TraceCall("__pyx_unpickle_ObjectRec__set_state", __pyx_f[1], 11, 0, __PYX_ERR(1, 11, __pyx_L1_error));
+
+  /* "(tree fragment)":12
+ *     return __pyx_result
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]             # <<<<<<<<<<<<<<
+ *     if len(__pyx_state) > 33 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[33])
+ */
+  __Pyx_TraceLine(12,0,__PYX_ERR(1, 12, __pyx_L1_error))
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->Coalition);
+  __Pyx_DECREF(__pyx_v___pyx_result->Coalition);
+  __pyx_v___pyx_result->Coalition = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->Color);
+  __Pyx_DECREF(__pyx_v___pyx_result->Color);
+  __pyx_v___pyx_result->Color = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->Country);
+  __Pyx_DECREF(__pyx_v___pyx_result->Country);
+  __pyx_v___pyx_result->Country = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->Name);
+  __Pyx_DECREF(__pyx_v___pyx_result->Name);
+  __pyx_v___pyx_result->Name = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->Pilot);
+  __Pyx_DECREF(__pyx_v___pyx_result->Pilot);
+  __pyx_v___pyx_result->Pilot = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 5, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->Type);
+  __Pyx_DECREF(__pyx_v___pyx_result->Type);
+  __pyx_v___pyx_result->Type = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 6, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->alive = __pyx_t_2;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->alt = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 8, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->can_be_parent = __pyx_t_2;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 9, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->cart_coords);
+  __Pyx_DECREF(__pyx_v___pyx_result->cart_coords);
+  __pyx_v___pyx_result->cart_coords = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 10, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->first_seen = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 11, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->grp);
+  __Pyx_DECREF(__pyx_v___pyx_result->grp);
+  __pyx_v___pyx_result->grp = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 12, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->heading = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 13, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->id = __pyx_t_4;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 14, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->impacted);
+  __Pyx_DECREF(__pyx_v___pyx_result->impacted);
+  __pyx_v___pyx_result->impacted = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 15, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->impacted_dist = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 16, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->last_seen = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 17, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->lat = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 18, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->lon = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 19, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->parent);
+  __Pyx_DECREF(__pyx_v___pyx_result->parent);
+  __pyx_v___pyx_result->parent = __pyx_t_1;
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 20, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->parent_dist = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 21, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->pitch = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 22, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->roll = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 23, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->secs_since_last_seen = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 24, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->session_id = __pyx_t_4;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 25, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->should_have_parent = __pyx_t_2;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 26, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->tac_id = __pyx_t_4;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 27, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->u_coord = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 28, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->updates = __pyx_t_4;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 29, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->v_coord = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 30, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->velocity_kts = __pyx_t_3;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 31, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->written = __pyx_t_2;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(1, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 32, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v___pyx_result->yaw = __pyx_t_3;
+
+  /* "(tree fragment)":13
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]
+ *     if len(__pyx_state) > 33 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[33])
+ */
+  __Pyx_TraceLine(13,0,__PYX_ERR(1, 13, __pyx_L1_error))
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
+    __PYX_ERR(1, 13, __pyx_L1_error)
+  }
+  __pyx_t_5 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
+  __pyx_t_6 = ((__pyx_t_5 > 33) != 0);
+  if (__pyx_t_6) {
+  } else {
+    __pyx_t_2 = __pyx_t_6;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_6 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
+  __pyx_t_7 = (__pyx_t_6 != 0);
+  __pyx_t_2 = __pyx_t_7;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_2) {
+
+    /* "(tree fragment)":14
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]
+ *     if len(__pyx_state) > 33 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[33])             # <<<<<<<<<<<<<<
+ */
+    __Pyx_TraceLine(14,0,__PYX_ERR(1, 14, __pyx_L1_error))
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 14, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_update); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 14, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(__pyx_v___pyx_state == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(1, 14, __pyx_L1_error)
+    }
+    __pyx_t_8 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 33, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 14, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_10 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
+      __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_9);
+      if (likely(__pyx_t_10)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
+        __Pyx_INCREF(__pyx_t_10);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_9, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_10, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 14, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "(tree fragment)":13
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]
+ *     if len(__pyx_state) > 33 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[33])
+ */
+  }
+
+  /* "(tree fragment)":11
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)
+ *     return __pyx_result
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]
+ *     if len(__pyx_state) > 33 and hasattr(__pyx_result, '__dict__'):
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_AddTraceback("tacview_client.cython_funs.__pyx_unpickle_ObjectRec__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_tp_new_14tacview_client_11cython_funs_ObjectRec(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *p;
+  PyObject *o;
+  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
+    o = (*t->tp_alloc)(t, 0);
+  } else {
+    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+  }
+  if (unlikely(!o)) return 0;
+  p = ((struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)o);
+  p->impacted = Py_None; Py_INCREF(Py_None);
+  p->parent = Py_None; Py_INCREF(Py_None);
+  p->Color = Py_None; Py_INCREF(Py_None);
+  p->Coalition = Py_None; Py_INCREF(Py_None);
+  p->cart_coords = Py_None; Py_INCREF(Py_None);
+  p->Type = Py_None; Py_INCREF(Py_None);
+  p->Name = Py_None; Py_INCREF(Py_None);
+  p->Country = Py_None; Py_INCREF(Py_None);
+  p->grp = Py_None; Py_INCREF(Py_None);
+  p->Pilot = Py_None; Py_INCREF(Py_None);
+  return o;
+}
+
+static void __pyx_tp_dealloc_14tacview_client_11cython_funs_ObjectRec(PyObject *o) {
+  struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *p = (struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)o;
+  #if CYTHON_USE_TP_FINALIZE
+  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
+    if (PyObject_CallFinalizerFromDealloc(o)) return;
+  }
+  #endif
+  PyObject_GC_UnTrack(o);
+  Py_CLEAR(p->impacted);
+  Py_CLEAR(p->parent);
+  Py_CLEAR(p->Color);
+  Py_CLEAR(p->Coalition);
+  Py_CLEAR(p->cart_coords);
+  Py_CLEAR(p->Type);
+  Py_CLEAR(p->Name);
+  Py_CLEAR(p->Country);
+  Py_CLEAR(p->grp);
+  Py_CLEAR(p->Pilot);
+  (*Py_TYPE(o)->tp_free)(o);
+}
+
+static int __pyx_tp_traverse_14tacview_client_11cython_funs_ObjectRec(PyObject *o, visitproc v, void *a) {
+  int e;
+  struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *p = (struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)o;
+  if (p->impacted) {
+    e = (*v)(p->impacted, a); if (e) return e;
+  }
+  if (p->parent) {
+    e = (*v)(p->parent, a); if (e) return e;
+  }
+  if (p->Color) {
+    e = (*v)(p->Color, a); if (e) return e;
+  }
+  if (p->Coalition) {
+    e = (*v)(p->Coalition, a); if (e) return e;
+  }
+  if (p->cart_coords) {
+    e = (*v)(p->cart_coords, a); if (e) return e;
+  }
+  if (p->Type) {
+    e = (*v)(p->Type, a); if (e) return e;
+  }
+  if (p->Name) {
+    e = (*v)(p->Name, a); if (e) return e;
+  }
+  if (p->Country) {
+    e = (*v)(p->Country, a); if (e) return e;
+  }
+  if (p->grp) {
+    e = (*v)(p->grp, a); if (e) return e;
+  }
+  if (p->Pilot) {
+    e = (*v)(p->Pilot, a); if (e) return e;
+  }
+  return 0;
+}
+
+static int __pyx_tp_clear_14tacview_client_11cython_funs_ObjectRec(PyObject *o) {
+  PyObject* tmp;
+  struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *p = (struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec *)o;
+  tmp = ((PyObject*)p->impacted);
+  p->impacted = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->parent);
+  p->parent = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->Color);
+  p->Color = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->Coalition);
+  p->Coalition = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->cart_coords);
+  p->cart_coords = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->Type);
+  p->Type = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->Name);
+  p->Name = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->Country);
+  p->Country = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->grp);
+  p->grp = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->Pilot);
+  p->Pilot = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  return 0;
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_impacted(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_impacted(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_8impacted_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_parent(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_parent(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6parent_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Color(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Color(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Color_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Coalition(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Coalition(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9Coalition_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_cart_coords(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_cart_coords(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11cart_coords_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Type(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Type(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Type_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Name(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Name(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4Name_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Country(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Country(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7Country_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_grp(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_grp(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3grp_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Pilot(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Pilot(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5Pilot_5__del__(o);
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_id(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_2id_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_id(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_2id_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_tac_id(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6tac_id_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_tac_id(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_6tac_id_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_session_id(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10session_id_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_session_id(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10session_id_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_updates(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7updates_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_updates(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7updates_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_first_seen(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10first_seen_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_first_seen(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_10first_seen_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_last_seen(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9last_seen_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_last_seen(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_9last_seen_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_lat(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lat_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_lat(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lat_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_lon(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lon_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_lon(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3lon_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_alt(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3alt_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_alt(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3alt_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_roll(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4roll_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_roll(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_4roll_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_pitch(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5pitch_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_pitch(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5pitch_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_yaw(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3yaw_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_yaw(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3yaw_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_u_coord(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7u_coord_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_u_coord(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7u_coord_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_v_coord(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7v_coord_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_v_coord(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7v_coord_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_heading(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7heading_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_heading(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7heading_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_impacted_dist(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_impacted_dist(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13impacted_dist_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_parent_dist(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_parent_dist(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_11parent_dist_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_velocity_kts(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_velocity_kts(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_12velocity_kts_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_secs_since_last_seen(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_secs_since_last_seen(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_20secs_since_last_seen_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_alive(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5alive_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_alive(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5alive_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_written(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7written_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_written(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_7written_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_can_be_parent(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_can_be_parent(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_13can_be_parent_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyObject *__pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_should_have_parent(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_1__get__(o);
+}
+
+static int __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_should_have_parent(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_18should_have_parent_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
+static PyMethodDef __pyx_methods_14tacview_client_11cython_funs_ObjectRec[] = {
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_3__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_14tacview_client_11cython_funs_9ObjectRec_5__setstate_cython__, METH_O, 0},
+  {0, 0, 0, 0}
+};
+
+static struct PyGetSetDef __pyx_getsets_14tacview_client_11cython_funs_ObjectRec[] = {
+  {(char *)"impacted", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_impacted, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_impacted, (char *)0, 0},
+  {(char *)"parent", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_parent, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_parent, (char *)0, 0},
+  {(char *)"Color", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Color, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Color, (char *)0, 0},
+  {(char *)"Coalition", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Coalition, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Coalition, (char *)0, 0},
+  {(char *)"cart_coords", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_cart_coords, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_cart_coords, (char *)0, 0},
+  {(char *)"Type", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Type, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Type, (char *)0, 0},
+  {(char *)"Name", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Name, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Name, (char *)0, 0},
+  {(char *)"Country", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Country, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Country, (char *)0, 0},
+  {(char *)"grp", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_grp, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_grp, (char *)0, 0},
+  {(char *)"Pilot", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_Pilot, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_Pilot, (char *)0, 0},
+  {(char *)"id", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_id, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_id, (char *)0, 0},
+  {(char *)"tac_id", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_tac_id, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_tac_id, (char *)0, 0},
+  {(char *)"session_id", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_session_id, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_session_id, (char *)0, 0},
+  {(char *)"updates", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_updates, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_updates, (char *)0, 0},
+  {(char *)"first_seen", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_first_seen, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_first_seen, (char *)0, 0},
+  {(char *)"last_seen", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_last_seen, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_last_seen, (char *)0, 0},
+  {(char *)"lat", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_lat, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_lat, (char *)0, 0},
+  {(char *)"lon", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_lon, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_lon, (char *)0, 0},
+  {(char *)"alt", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_alt, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_alt, (char *)0, 0},
+  {(char *)"roll", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_roll, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_roll, (char *)0, 0},
+  {(char *)"pitch", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_pitch, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_pitch, (char *)0, 0},
+  {(char *)"yaw", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_yaw, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_yaw, (char *)0, 0},
+  {(char *)"u_coord", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_u_coord, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_u_coord, (char *)0, 0},
+  {(char *)"v_coord", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_v_coord, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_v_coord, (char *)0, 0},
+  {(char *)"heading", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_heading, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_heading, (char *)0, 0},
+  {(char *)"impacted_dist", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_impacted_dist, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_impacted_dist, (char *)0, 0},
+  {(char *)"parent_dist", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_parent_dist, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_parent_dist, (char *)0, 0},
+  {(char *)"velocity_kts", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_velocity_kts, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_velocity_kts, (char *)0, 0},
+  {(char *)"secs_since_last_seen", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_secs_since_last_seen, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_secs_since_last_seen, (char *)0, 0},
+  {(char *)"alive", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_alive, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_alive, (char *)0, 0},
+  {(char *)"written", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_written, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_written, (char *)0, 0},
+  {(char *)"can_be_parent", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_can_be_parent, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_can_be_parent, (char *)0, 0},
+  {(char *)"should_have_parent", __pyx_getprop_14tacview_client_11cython_funs_9ObjectRec_should_have_parent, __pyx_setprop_14tacview_client_11cython_funs_9ObjectRec_should_have_parent, (char *)0, 0},
+  {0, 0, 0, 0, 0}
+};
+
+static PyTypeObject __pyx_type_14tacview_client_11cython_funs_ObjectRec = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "tacview_client.cython_funs.ObjectRec", /*tp_name*/
+  sizeof(struct __pyx_obj_14tacview_client_11cython_funs_ObjectRec), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_14tacview_client_11cython_funs_ObjectRec, /*tp_dealloc*/
+  #if PY_VERSION_HEX < 0x030800b4
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4
+  0, /*tp_vectorcall_offset*/
+  #endif
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  #if PY_MAJOR_VERSION < 3
+  0, /*tp_compare*/
+  #endif
+  #if PY_MAJOR_VERSION >= 3
+  0, /*tp_as_async*/
+  #endif
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
+  "Dataclass for objects.", /*tp_doc*/
+  __pyx_tp_traverse_14tacview_client_11cython_funs_ObjectRec, /*tp_traverse*/
+  __pyx_tp_clear_14tacview_client_11cython_funs_ObjectRec, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_14tacview_client_11cython_funs_ObjectRec, /*tp_methods*/
+  0, /*tp_members*/
+  __pyx_getsets_14tacview_client_11cython_funs_ObjectRec, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  0, /*tp_dictoffset*/
+  __pyx_pw_14tacview_client_11cython_funs_9ObjectRec_1__init__, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_14tacview_client_11cython_funs_ObjectRec, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if PY_VERSION_HEX >= 0x030400a1
+  0, /*tp_finalize*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b1
+  0, /*tp_vectorcall*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030800b4 && PY_VERSION_HEX < 0x03090000
+  0, /*tp_print*/
+  #endif
+};
+
 static PyMethodDef __pyx_methods[] = {
   {"get_cartesian_coord", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14tacview_client_11cython_funs_1get_cartesian_coord, METH_VARARGS|METH_KEYWORDS, __pyx_doc_14tacview_client_11cython_funs_get_cartesian_coord},
   {"compute_dist", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14tacview_client_11cython_funs_3compute_dist, METH_VARARGS|METH_KEYWORDS, __pyx_doc_14tacview_client_11cython_funs_2compute_dist},
-  {"compute_velocity", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14tacview_client_11cython_funs_5compute_velocity, METH_VARARGS|METH_KEYWORDS, __pyx_doc_14tacview_client_11cython_funs_4compute_velocity},
+  {"compute_velocity", (PyCFunction)__pyx_pw_14tacview_client_11cython_funs_5compute_velocity, METH_O, __pyx_doc_14tacview_client_11cython_funs_4compute_velocity},
+  {"proc_line", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14tacview_client_11cython_funs_7proc_line, METH_VARARGS|METH_KEYWORDS, __pyx_doc_14tacview_client_11cython_funs_6proc_line},
   {0, 0, 0, 0}
 };
 
@@ -2185,34 +9634,180 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_s_alt, __pyx_k_alt, sizeof(__pyx_k_alt), 0, 0, 1, 1},
-  {&__pyx_n_s_cart_coords, __pyx_k_cart_coords, sizeof(__pyx_k_cart_coords), 0, 0, 1, 1},
+  {&__pyx_kp_u_COORD_COUNT_EITHER_8_5_OR_4, __pyx_k_COORD_COUNT_EITHER_8_5_OR_4, sizeof(__pyx_k_COORD_COUNT_EITHER_8_5_OR_4), 0, 1, 0, 0},
+  {&__pyx_n_u_Container, __pyx_k_Container, sizeof(__pyx_k_Container), 0, 1, 0, 1},
+  {&__pyx_n_u_Decoy, __pyx_k_Decoy, sizeof(__pyx_k_Decoy), 0, 1, 0, 1},
+  {&__pyx_n_u_Flare, __pyx_k_Flare, sizeof(__pyx_k_Flare), 0, 1, 0, 1},
+  {&__pyx_kp_u_Ground_Light_Human_Air_Parachuti, __pyx_k_Ground_Light_Human_Air_Parachuti, sizeof(__pyx_k_Ground_Light_Human_Air_Parachuti), 0, 1, 0, 0},
+  {&__pyx_n_b_Group, __pyx_k_Group, sizeof(__pyx_k_Group), 0, 0, 0, 1},
+  {&__pyx_kp_s_Incompatible_checksums_s_vs_0x4f, __pyx_k_Incompatible_checksums_s_vs_0x4f, sizeof(__pyx_k_Incompatible_checksums_s_vs_0x4f), 0, 0, 1, 0},
+  {&__pyx_n_u_Misc, __pyx_k_Misc, sizeof(__pyx_k_Misc), 0, 1, 0, 1},
+  {&__pyx_n_s_ObjectRec, __pyx_k_ObjectRec, sizeof(__pyx_k_ObjectRec), 0, 0, 1, 1},
+  {&__pyx_n_s_PickleError, __pyx_k_PickleError, sizeof(__pyx_k_PickleError), 0, 0, 1, 1},
+  {&__pyx_n_u_Projectile, __pyx_k_Projectile, sizeof(__pyx_k_Projectile), 0, 1, 0, 1},
+  {&__pyx_n_b_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 0, 1},
+  {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
+  {&__pyx_n_u_Weapon, __pyx_k_Weapon, sizeof(__pyx_k_Weapon), 0, 1, 0, 1},
+  {&__pyx_kp_b__5, __pyx_k__5, sizeof(__pyx_k__5), 0, 0, 0, 0},
+  {&__pyx_kp_b__6, __pyx_k__6, sizeof(__pyx_k__6), 0, 0, 0, 0},
+  {&__pyx_kp_b__7, __pyx_k__7, sizeof(__pyx_k__7), 0, 0, 0, 0},
+  {&__pyx_kp_b__8, __pyx_k__8, sizeof(__pyx_k__8), 0, 0, 0, 0},
+  {&__pyx_n_u_alt, __pyx_k_alt, sizeof(__pyx_k_alt), 0, 1, 0, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_comma, __pyx_k_comma, sizeof(__pyx_k_comma), 0, 0, 1, 1},
+  {&__pyx_n_s_count, __pyx_k_count, sizeof(__pyx_k_count), 0, 0, 1, 1},
+  {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
+  {&__pyx_n_s_find, __pyx_k_find, sizeof(__pyx_k_find), 0, 0, 1, 1},
+  {&__pyx_n_s_first_seen, __pyx_k_first_seen, sizeof(__pyx_k_first_seen), 0, 0, 1, 1},
+  {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
+  {&__pyx_n_u_grp, __pyx_k_grp, sizeof(__pyx_k_grp), 0, 1, 0, 1},
   {&__pyx_n_s_h, __pyx_k_h, sizeof(__pyx_k_h), 0, 0, 1, 1},
+  {&__pyx_n_u_heading, __pyx_k_heading, sizeof(__pyx_k_heading), 0, 1, 0, 1},
+  {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
+  {&__pyx_n_s_last_seen, __pyx_k_last_seen, sizeof(__pyx_k_last_seen), 0, 0, 1, 1},
   {&__pyx_n_s_lat, __pyx_k_lat, sizeof(__pyx_k_lat), 0, 0, 1, 1},
+  {&__pyx_n_u_lat, __pyx_k_lat, sizeof(__pyx_k_lat), 0, 1, 0, 1},
   {&__pyx_n_s_lon, __pyx_k_lon, sizeof(__pyx_k_lon), 0, 0, 1, 1},
+  {&__pyx_n_u_lon, __pyx_k_lon, sizeof(__pyx_k_lon), 0, 1, 0, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
+  {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
   {&__pyx_n_s_p_1, __pyx_k_p_1, sizeof(__pyx_k_p_1), 0, 0, 1, 1},
   {&__pyx_n_s_p_2, __pyx_k_p_2, sizeof(__pyx_k_p_2), 0, 0, 1, 1},
-  {&__pyx_n_s_secs_since_last_seen, __pyx_k_secs_since_last_seen, sizeof(__pyx_k_secs_since_last_seen), 0, 0, 1, 1},
+  {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
+  {&__pyx_n_u_pitch, __pyx_k_pitch, sizeof(__pyx_k_pitch), 0, 1, 0, 1},
+  {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_checksum, __pyx_k_pyx_checksum, sizeof(__pyx_k_pyx_checksum), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_result, __pyx_k_pyx_result, sizeof(__pyx_k_pyx_result), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_state, __pyx_k_pyx_state, sizeof(__pyx_k_pyx_state), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_type, __pyx_k_pyx_type, sizeof(__pyx_k_pyx_type), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_unpickle_ObjectRec, __pyx_k_pyx_unpickle_ObjectRec, sizeof(__pyx_k_pyx_unpickle_ObjectRec), 0, 0, 1, 1},
+  {&__pyx_n_s_raw_line, __pyx_k_raw_line, sizeof(__pyx_k_raw_line), 0, 0, 1, 1},
+  {&__pyx_n_s_rec, __pyx_k_rec, sizeof(__pyx_k_rec), 0, 0, 1, 1},
+  {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
+  {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
+  {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
+  {&__pyx_n_s_ref_lat, __pyx_k_ref_lat, sizeof(__pyx_k_ref_lat), 0, 0, 1, 1},
+  {&__pyx_n_s_ref_lon, __pyx_k_ref_lon, sizeof(__pyx_k_ref_lon), 0, 0, 1, 1},
+  {&__pyx_n_u_roll, __pyx_k_roll, sizeof(__pyx_k_roll), 0, 1, 0, 1},
+  {&__pyx_n_s_session_id, __pyx_k_session_id, sizeof(__pyx_k_session_id), 0, 0, 1, 1},
+  {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
+  {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
+  {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
+  {&__pyx_n_s_tac_id, __pyx_k_tac_id, sizeof(__pyx_k_tac_id), 0, 0, 1, 1},
+  {&__pyx_n_s_tacview_client_cython_funs, __pyx_k_tacview_client_cython_funs, sizeof(__pyx_k_tacview_client_cython_funs), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_n_u_u_coord, __pyx_k_u_coord, sizeof(__pyx_k_u_coord), 0, 1, 0, 1},
+  {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
+  {&__pyx_n_u_v_coord, __pyx_k_v_coord, sizeof(__pyx_k_v_coord), 0, 1, 0, 1},
+  {&__pyx_n_u_yaw, __pyx_k_yaw, sizeof(__pyx_k_yaw), 0, 1, 0, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 158, __pyx_L1_error)
   return 0;
+  __pyx_L1_error:;
+  return -1;
 }
 
 static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
+
+  /* "tacview_client/cython_funs.pyx":105
+ *     """Parse a textline from tacview into an ObjectRec."""
+ *     cdef tuple COORD_KEYS = (
+ *         "lon",             # <<<<<<<<<<<<<<
+ *         "lat",
+ *         "alt",
+ */
+  __pyx_tuple_ = PyTuple_Pack(9, __pyx_n_u_lon, __pyx_n_u_lat, __pyx_n_u_alt, __pyx_n_u_roll, __pyx_n_u_pitch, __pyx_n_u_yaw, __pyx_n_u_u_coord, __pyx_n_u_v_coord, __pyx_n_u_heading); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple_);
+  __Pyx_GIVEREF(__pyx_tuple_);
+
+  /* "tacview_client/cython_funs.pyx":117
+ *     cdef int COORD_KEY_LEN = 9
+ * 
+ *     cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")             # <<<<<<<<<<<<<<
+ *     cdef int COORD_KEY_SHORT_LEN = 5
+ * 
+ */
+  __pyx_tuple__2 = PyTuple_Pack(5, __pyx_n_u_lon, __pyx_n_u_lat, __pyx_n_u_alt, __pyx_n_u_u_coord, __pyx_n_u_v_coord); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__2);
+  __Pyx_GIVEREF(__pyx_tuple__2);
+
+  /* "tacview_client/cython_funs.pyx":120
+ *     cdef int COORD_KEY_SHORT_LEN = 5
+ * 
+ *     cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")             # <<<<<<<<<<<<<<
+ *     cdef int COORD_KEYS_MED_LEN = 5
+ * 
+ */
+  __pyx_tuple__3 = PyTuple_Pack(6, __pyx_n_u_lon, __pyx_n_u_lat, __pyx_n_u_alt, __pyx_n_u_roll, __pyx_n_u_pitch, __pyx_n_u_yaw); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 120, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__3);
+  __Pyx_GIVEREF(__pyx_tuple__3);
+
+  /* "tacview_client/cython_funs.pyx":123
+ *     cdef int COORD_KEYS_MED_LEN = 5
+ * 
+ *     cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")             # <<<<<<<<<<<<<<
+ *     cdef int COORD_KEYS_X_SHORT_LEN = 3
+ * 
+ */
+  __pyx_tuple__4 = PyTuple_Pack(3, __pyx_n_u_lon, __pyx_n_u_lat, __pyx_n_u_alt); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__4);
+  __Pyx_GIVEREF(__pyx_tuple__4);
+
+  /* "tacview_client/cython_funs.pyx":199
+ *     """Check if an object is a member of types that could be parents."""
+ *     cdef tuple not_parent_types = (
+ *         "Decoy",             # <<<<<<<<<<<<<<
+ *         "Misc",
+ *         "Weapon",
+ */
+  __pyx_tuple__9 = PyTuple_Pack(5, __pyx_n_u_Decoy, __pyx_n_u_Misc, __pyx_n_u_Weapon, __pyx_n_u_Projectile, __pyx_kp_u_Ground_Light_Human_Air_Parachuti); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
+
+  /* "tacview_client/cython_funs.pyx":215
+ * cdef bint should_have_parent(str rec_type):
+ *     """Check if an object should have a parent record."""
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")             # <<<<<<<<<<<<<<
+ *     for t in parented_types:
+ *         if t in rec_type:
+ */
+  __pyx_tuple__10 = PyTuple_Pack(5, __pyx_n_u_Weapon, __pyx_n_u_Projectile, __pyx_n_u_Decoy, __pyx_n_u_Container, __pyx_n_u_Flare); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 215, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
+
+  /* "(tree fragment)":1
+ * def __pyx_unpickle_ObjectRec(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     cdef object __pyx_PickleError
+ *     cdef object __pyx_result
+ */
+  __pyx_tuple__12 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_ObjectRec, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
+  __pyx_umethod_PyByteArray_Type_count.type = (PyObject*)&PyByteArray_Type;
+  __pyx_umethod_PyByteArray_Type_find.type = (PyObject*)&PyByteArray_Type;
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_4 = PyInt_FromLong(4); if (unlikely(!__pyx_int_4)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_5 = PyInt_FromLong(5); if (unlikely(!__pyx_int_5)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_8 = PyInt_FromLong(8); if (unlikely(!__pyx_int_8)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_83764643 = PyInt_FromLong(83764643L); if (unlikely(!__pyx_int_83764643)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -2252,10 +9847,26 @@ static int __Pyx_modinit_function_export_code(void) {
 
 static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
+  if (PyType_Ready(&__pyx_type_14tacview_client_11cython_funs_ObjectRec) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  #if PY_VERSION_HEX < 0x030800B1
+  __pyx_type_14tacview_client_11cython_funs_ObjectRec.tp_print = 0;
+  #endif
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_14tacview_client_11cython_funs_ObjectRec.tp_dictoffset && __pyx_type_14tacview_client_11cython_funs_ObjectRec.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_14tacview_client_11cython_funs_ObjectRec.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  }
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_ObjectRec, (PyObject *)&__pyx_type_14tacview_client_11cython_funs_ObjectRec) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_14tacview_client_11cython_funs_ObjectRec) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_ptype_14tacview_client_11cython_funs_ObjectRec = &__pyx_type_14tacview_client_11cython_funs_ObjectRec;
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_modinit_type_import_code(void) {
@@ -2476,7 +10087,7 @@ if (!__Pyx_RefNanny) {
   (void)__Pyx_modinit_global_init_code();
   (void)__Pyx_modinit_variable_export_code();
   (void)__Pyx_modinit_function_export_code();
-  (void)__Pyx_modinit_type_init_code();
+  if (unlikely(__Pyx_modinit_type_init_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
   (void)__Pyx_modinit_function_import_code();
@@ -2486,34 +10097,85 @@ if (!__Pyx_RefNanny) {
   #endif
   __Pyx_TraceCall("__Pyx_PyMODINIT_FUNC PyInit_cython_funs(void)", __pyx_f[0], 1, 0, __PYX_ERR(0, 1, __pyx_L1_error));
 
-  /* "tacview_client/cython_funs.pyx":6
- * from libc.math cimport M_PI
+  /* "tacview_client/cython_funs.pyx":59
+ * 
  * 
  * cpdef list get_cartesian_coord(double lat, double lon, double h):             # <<<<<<<<<<<<<<
  *     """Convert coords from geodesic to cartesian."""
  *     cdef double a = 6378137.0
  */
-  __Pyx_TraceLine(6,0,__PYX_ERR(0, 6, __pyx_L1_error))
+  __Pyx_TraceLine(59,0,__PYX_ERR(0, 59, __pyx_L1_error))
 
 
-  /* "tacview_client/cython_funs.pyx":20
+  /* "tacview_client/cython_funs.pyx":73
  * 
  * 
  * cpdef double compute_dist(list p_1, list p_2):             # <<<<<<<<<<<<<<
  *     """Compute cartesian distance between points."""
  *     cdef double result = sqrt(
  */
-  __Pyx_TraceLine(20,0,__PYX_ERR(0, 20, __pyx_L1_error))
+  __Pyx_TraceLine(73,0,__PYX_ERR(0, 73, __pyx_L1_error))
 
 
-  /* "tacview_client/cython_funs.pyx":28
+  /* "tacview_client/cython_funs.pyx":81
  * 
  * 
- * cpdef list compute_velocity(double lat, double lon, double alt, list cart_coords, double secs_since_last_seen):             # <<<<<<<<<<<<<<
- *         """Calculate velocity given the distance from the last point."""
- *         cdef list new_cart_coords = get_cartesian_coord(lat, lon, alt)
+ * cpdef ObjectRec compute_velocity(ObjectRec rec):             # <<<<<<<<<<<<<<
+ *     """Calculate velocity given the distance from the last point."""
+ *     cdef list new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
  */
-  __Pyx_TraceLine(28,0,__PYX_ERR(0, 28, __pyx_L1_error))
+  __Pyx_TraceLine(81,0,__PYX_ERR(0, 81, __pyx_L1_error))
+
+
+  /* "tacview_client/cython_funs.pyx":101
+ * 
+ * 
+ * cpdef ObjectRec proc_line(ObjectRec rec, bytearray raw_line, double ref_lat,             # <<<<<<<<<<<<<<
+ *                           double ref_lon, int comma):
+ *     """Parse a textline from tacview into an ObjectRec."""
+ */
+  __Pyx_TraceLine(101,0,__PYX_ERR(0, 101, __pyx_L1_error))
+
+
+  /* "tacview_client/cython_funs.pyx":196
+ * 
+ * 
+ * cdef bint can_be_parent(str rec_type):             # <<<<<<<<<<<<<<
+ *     """Check if an object is a member of types that could be parents."""
+ *     cdef tuple not_parent_types = (
+ */
+  __Pyx_TraceLine(196,0,__PYX_ERR(0, 196, __pyx_L1_error))
+
+
+  /* "tacview_client/cython_funs.pyx":213
+ * 
+ * 
+ * cdef bint should_have_parent(str rec_type):             # <<<<<<<<<<<<<<
+ *     """Check if an object should have a parent record."""
+ *     cdef tuple parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+ */
+  __Pyx_TraceLine(213,0,__PYX_ERR(0, 213, __pyx_L1_error))
+
+
+  /* "(tree fragment)":1
+ * def __pyx_unpickle_ObjectRec(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ *     cdef object __pyx_PickleError
+ *     cdef object __pyx_result
+ */
+  __Pyx_TraceLine(1,0,__PYX_ERR(1, 1, __pyx_L1_error))
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_14tacview_client_11cython_funs_9__pyx_unpickle_ObjectRec, NULL, __pyx_n_s_tacview_client_cython_funs); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_ObjectRec, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "(tree fragment)":11
+ *         __pyx_unpickle_ObjectRec__set_state(<ObjectRec> __pyx_result, __pyx_state)
+ *     return __pyx_result
+ * cdef __pyx_unpickle_ObjectRec__set_state(ObjectRec __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result.Coalition = __pyx_state[0]; __pyx_result.Color = __pyx_state[1]; __pyx_result.Country = __pyx_state[2]; __pyx_result.Name = __pyx_state[3]; __pyx_result.Pilot = __pyx_state[4]; __pyx_result.Type = __pyx_state[5]; __pyx_result.alive = __pyx_state[6]; __pyx_result.alt = __pyx_state[7]; __pyx_result.can_be_parent = __pyx_state[8]; __pyx_result.cart_coords = __pyx_state[9]; __pyx_result.first_seen = __pyx_state[10]; __pyx_result.grp = __pyx_state[11]; __pyx_result.heading = __pyx_state[12]; __pyx_result.id = __pyx_state[13]; __pyx_result.impacted = __pyx_state[14]; __pyx_result.impacted_dist = __pyx_state[15]; __pyx_result.last_seen = __pyx_state[16]; __pyx_result.lat = __pyx_state[17]; __pyx_result.lon = __pyx_state[18]; __pyx_result.parent = __pyx_state[19]; __pyx_result.parent_dist = __pyx_state[20]; __pyx_result.pitch = __pyx_state[21]; __pyx_result.roll = __pyx_state[22]; __pyx_result.secs_since_last_seen = __pyx_state[23]; __pyx_result.session_id = __pyx_state[24]; __pyx_result.should_have_parent = __pyx_state[25]; __pyx_result.tac_id = __pyx_state[26]; __pyx_result.u_coord = __pyx_state[27]; __pyx_result.updates = __pyx_state[28]; __pyx_result.v_coord = __pyx_state[29]; __pyx_result.velocity_kts = __pyx_state[30]; __pyx_result.written = __pyx_state[31]; __pyx_result.yaw = __pyx_state[32]
+ *     if len(__pyx_state) > 33 and hasattr(__pyx_result, '__dict__'):
+ */
+  __Pyx_TraceLine(11,0,__PYX_ERR(1, 11, __pyx_L1_error))
 
 
   /* "tacview_client/cython_funs.pyx":1
@@ -2570,122 +10232,33 @@ end:
 }
 #endif
 
-/* PyErrFetchRestore */
-#if CYTHON_FAST_THREAD_STATE
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
-    PyObject *tmp_type, *tmp_value, *tmp_tb;
-    tmp_type = tstate->curexc_type;
-    tmp_value = tstate->curexc_value;
-    tmp_tb = tstate->curexc_traceback;
-    tstate->curexc_type = type;
-    tstate->curexc_value = value;
-    tstate->curexc_traceback = tb;
-    Py_XDECREF(tmp_type);
-    Py_XDECREF(tmp_value);
-    Py_XDECREF(tmp_tb);
-}
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
-    *type = tstate->curexc_type;
-    *value = tstate->curexc_value;
-    *tb = tstate->curexc_traceback;
-    tstate->curexc_type = 0;
-    tstate->curexc_value = 0;
-    tstate->curexc_traceback = 0;
+/* PyObjectGetAttrStr */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_getattro))
+        return tp->tp_getattro(obj, attr_name);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_getattr))
+        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+#endif
+    return PyObject_GetAttr(obj, attr_name);
 }
 #endif
 
-/* Profile */
-#if CYTHON_PROFILE
-static int __Pyx_TraceSetupAndCall(PyCodeObject** code,
-                                   PyFrameObject** frame,
-                                   PyThreadState* tstate,
-                                   const char *funcname,
-                                   const char *srcfile,
-                                   int firstlineno) {
-    PyObject *type, *value, *traceback;
-    int retval;
-    if (*frame == NULL || !CYTHON_PROFILE_REUSE_FRAME) {
-        if (*code == NULL) {
-            *code = __Pyx_createFrameCodeObject(funcname, srcfile, firstlineno);
-            if (*code == NULL) return 0;
-        }
-        *frame = PyFrame_New(
-            tstate,                          /*PyThreadState *tstate*/
-            *code,                           /*PyCodeObject *code*/
-            __pyx_d,                  /*PyObject *globals*/
-            0                                /*PyObject *locals*/
-        );
-        if (*frame == NULL) return 0;
-        if (CYTHON_TRACE && (*frame)->f_trace == NULL) {
-            Py_INCREF(Py_None);
-            (*frame)->f_trace = Py_None;
-        }
-#if PY_VERSION_HEX < 0x030400B1
-    } else {
-        (*frame)->f_tstate = tstate;
-#endif
-    }
-      __Pyx_PyFrame_SetLineNumber(*frame, firstlineno);
-    retval = 1;
-    tstate->tracing++;
-    tstate->use_tracing = 0;
-    __Pyx_ErrFetchInState(tstate, &type, &value, &traceback);
-    #if CYTHON_TRACE
-    if (tstate->c_tracefunc)
-        retval = tstate->c_tracefunc(tstate->c_traceobj, *frame, PyTrace_CALL, NULL) == 0;
-    if (retval && tstate->c_profilefunc)
-    #endif
-        retval = tstate->c_profilefunc(tstate->c_profileobj, *frame, PyTrace_CALL, NULL) == 0;
-    tstate->use_tracing = (tstate->c_profilefunc ||
-                           (CYTHON_TRACE && tstate->c_tracefunc));
-    tstate->tracing--;
-    if (retval) {
-        __Pyx_ErrRestoreInState(tstate, type, value, traceback);
-        return tstate->use_tracing && retval;
-    } else {
-        Py_XDECREF(type);
-        Py_XDECREF(value);
-        Py_XDECREF(traceback);
-        return -1;
-    }
-}
-static PyCodeObject *__Pyx_createFrameCodeObject(const char *funcname, const char *srcfile, int firstlineno) {
-    PyCodeObject *py_code = 0;
+/* GetBuiltinName */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
+    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
+    if (unlikely(!result)) {
+        PyErr_Format(PyExc_NameError,
 #if PY_MAJOR_VERSION >= 3
-    py_code = PyCode_NewEmpty(srcfile, funcname, firstlineno);
-    if (likely(py_code)) {
-        py_code->co_flags |= CO_OPTIMIZED | CO_NEWLOCALS;
-    }
+            "name '%U' is not defined", name);
 #else
-    PyObject *py_srcfile = 0;
-    PyObject *py_funcname = 0;
-    py_funcname = PyString_FromString(funcname);
-    if (unlikely(!py_funcname)) goto bad;
-    py_srcfile = PyString_FromString(srcfile);
-    if (unlikely(!py_srcfile)) goto bad;
-    py_code = PyCode_New(
-        0,
-        0,
-        0,
-        CO_OPTIMIZED | CO_NEWLOCALS,
-        __pyx_empty_bytes,     /*PyObject *code,*/
-        __pyx_empty_tuple,     /*PyObject *consts,*/
-        __pyx_empty_tuple,     /*PyObject *names,*/
-        __pyx_empty_tuple,     /*PyObject *varnames,*/
-        __pyx_empty_tuple,     /*PyObject *freevars,*/
-        __pyx_empty_tuple,     /*PyObject *cellvars,*/
-        py_srcfile,       /*PyObject *filename,*/
-        py_funcname,      /*PyObject *name,*/
-        firstlineno,
-        __pyx_empty_bytes      /*PyObject *lnotab*/
-    );
-bad:
-    Py_XDECREF(py_srcfile);
-    Py_XDECREF(py_funcname);
+            "name '%.200s' is not defined", PyString_AS_STRING(name));
 #endif
-    return py_code;
+    }
+    return result;
 }
-#endif
 
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
@@ -2827,6 +10400,237 @@ invalid_keyword:
     #endif
 bad:
     return -1;
+}
+
+/* PyErrFetchRestore */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+}
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+}
+#endif
+
+/* Profile */
+#if CYTHON_PROFILE
+static int __Pyx_TraceSetupAndCall(PyCodeObject** code,
+                                   PyFrameObject** frame,
+                                   PyThreadState* tstate,
+                                   const char *funcname,
+                                   const char *srcfile,
+                                   int firstlineno) {
+    PyObject *type, *value, *traceback;
+    int retval;
+    if (*frame == NULL || !CYTHON_PROFILE_REUSE_FRAME) {
+        if (*code == NULL) {
+            *code = __Pyx_createFrameCodeObject(funcname, srcfile, firstlineno);
+            if (*code == NULL) return 0;
+        }
+        *frame = PyFrame_New(
+            tstate,                          /*PyThreadState *tstate*/
+            *code,                           /*PyCodeObject *code*/
+            __pyx_d,                  /*PyObject *globals*/
+            0                                /*PyObject *locals*/
+        );
+        if (*frame == NULL) return 0;
+        if (CYTHON_TRACE && (*frame)->f_trace == NULL) {
+            Py_INCREF(Py_None);
+            (*frame)->f_trace = Py_None;
+        }
+#if PY_VERSION_HEX < 0x030400B1
+    } else {
+        (*frame)->f_tstate = tstate;
+#endif
+    }
+      __Pyx_PyFrame_SetLineNumber(*frame, firstlineno);
+    retval = 1;
+    tstate->tracing++;
+    tstate->use_tracing = 0;
+    __Pyx_ErrFetchInState(tstate, &type, &value, &traceback);
+    #if CYTHON_TRACE
+    if (tstate->c_tracefunc)
+        retval = tstate->c_tracefunc(tstate->c_traceobj, *frame, PyTrace_CALL, NULL) == 0;
+    if (retval && tstate->c_profilefunc)
+    #endif
+        retval = tstate->c_profilefunc(tstate->c_profileobj, *frame, PyTrace_CALL, NULL) == 0;
+    tstate->use_tracing = (tstate->c_profilefunc ||
+                           (CYTHON_TRACE && tstate->c_tracefunc));
+    tstate->tracing--;
+    if (retval) {
+        __Pyx_ErrRestoreInState(tstate, type, value, traceback);
+        return tstate->use_tracing && retval;
+    } else {
+        Py_XDECREF(type);
+        Py_XDECREF(value);
+        Py_XDECREF(traceback);
+        return -1;
+    }
+}
+static PyCodeObject *__Pyx_createFrameCodeObject(const char *funcname, const char *srcfile, int firstlineno) {
+    PyCodeObject *py_code = 0;
+#if PY_MAJOR_VERSION >= 3
+    py_code = PyCode_NewEmpty(srcfile, funcname, firstlineno);
+    if (likely(py_code)) {
+        py_code->co_flags |= CO_OPTIMIZED | CO_NEWLOCALS;
+    }
+#else
+    PyObject *py_srcfile = 0;
+    PyObject *py_funcname = 0;
+    py_funcname = PyString_FromString(funcname);
+    if (unlikely(!py_funcname)) goto bad;
+    py_srcfile = PyString_FromString(srcfile);
+    if (unlikely(!py_srcfile)) goto bad;
+    py_code = PyCode_New(
+        0,
+        0,
+        0,
+        CO_OPTIMIZED | CO_NEWLOCALS,
+        __pyx_empty_bytes,     /*PyObject *code,*/
+        __pyx_empty_tuple,     /*PyObject *consts,*/
+        __pyx_empty_tuple,     /*PyObject *names,*/
+        __pyx_empty_tuple,     /*PyObject *varnames,*/
+        __pyx_empty_tuple,     /*PyObject *freevars,*/
+        __pyx_empty_tuple,     /*PyObject *cellvars,*/
+        py_srcfile,       /*PyObject *filename,*/
+        py_funcname,      /*PyObject *name,*/
+        firstlineno,
+        __pyx_empty_bytes      /*PyObject *lnotab*/
+    );
+bad:
+    Py_XDECREF(py_srcfile);
+    Py_XDECREF(py_funcname);
+#endif
+    return py_code;
+}
+#endif
+
+/* PyErrExceptionMatches */
+#if CYTHON_FAST_THREAD_STATE
+static int __Pyx_PyErr_ExceptionMatchesTuple(PyObject *exc_type, PyObject *tuple) {
+    Py_ssize_t i, n;
+    n = PyTuple_GET_SIZE(tuple);
+#if PY_MAJOR_VERSION >= 3
+    for (i=0; i<n; i++) {
+        if (exc_type == PyTuple_GET_ITEM(tuple, i)) return 1;
+    }
+#endif
+    for (i=0; i<n; i++) {
+        if (__Pyx_PyErr_GivenExceptionMatches(exc_type, PyTuple_GET_ITEM(tuple, i))) return 1;
+    }
+    return 0;
+}
+static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err) {
+    PyObject *exc_type = tstate->curexc_type;
+    if (exc_type == err) return 1;
+    if (unlikely(!exc_type)) return 0;
+    if (unlikely(PyTuple_Check(err)))
+        return __Pyx_PyErr_ExceptionMatchesTuple(exc_type, err);
+    return __Pyx_PyErr_GivenExceptionMatches(exc_type, err);
+}
+#endif
+
+/* GetAttr */
+static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
+#if CYTHON_USE_TYPE_SLOTS
+#if PY_MAJOR_VERSION >= 3
+    if (likely(PyUnicode_Check(n)))
+#else
+    if (likely(PyString_Check(n)))
+#endif
+        return __Pyx_PyObject_GetAttrStr(o, n);
+#endif
+    return PyObject_GetAttr(o, n);
+}
+
+/* GetAttr3 */
+static PyObject *__Pyx_GetAttr3Default(PyObject *d) {
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    if (unlikely(!__Pyx_PyErr_ExceptionMatches(PyExc_AttributeError)))
+        return NULL;
+    __Pyx_PyErr_Clear();
+    Py_INCREF(d);
+    return d;
+}
+static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *o, PyObject *n, PyObject *d) {
+    PyObject *r = __Pyx_GetAttr(o, n);
+    return (likely(r)) ? r : __Pyx_GetAttr3Default(d);
+}
+
+/* PyDictVersioning */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
+#if CYTHON_COMPILING_IN_CPYTHON
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
+    }
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+}
+#endif
+
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
+#endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
 }
 
 /* GetItemInt */
@@ -2979,45 +10783,1232 @@ static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *nam
     return 0;
 }
 
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
+/* PyObjectCall */
 #if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    PyObject *result;
+    ternaryfunc call = func->ob_type->tp_call;
+    if (unlikely(!call))
+        return PyObject_Call(func, arg, kw);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = (*call)(func, arg, kw);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
     }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
-}
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+    return result;
 }
 #endif
 
-/* PyObjectGetAttrStr */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_getattro))
-        return tp->tp_getattro(obj, attr_name);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_getattr))
-        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+/* UnpackUnboundCMethod */
+static int __Pyx_TryUnpackUnboundCMethod(__Pyx_CachedCFunction* target) {
+    PyObject *method;
+    method = __Pyx_PyObject_GetAttrStr(target->type, *target->method_name);
+    if (unlikely(!method))
+        return -1;
+    target->method = method;
+#if CYTHON_COMPILING_IN_CPYTHON
+    #if PY_MAJOR_VERSION >= 3
+    if (likely(__Pyx_TypeCheck(method, &PyMethodDescr_Type)))
+    #endif
+    {
+        PyMethodDescrObject *descr = (PyMethodDescrObject*) method;
+        target->func = descr->d_method->ml_meth;
+        target->flag = descr->d_method->ml_flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_STACKLESS);
+    }
 #endif
-    return PyObject_GetAttr(obj, attr_name);
+    return 0;
+}
+
+/* CallUnboundCMethod2 */
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030600B1
+static CYTHON_INLINE PyObject *__Pyx_CallUnboundCMethod2(__Pyx_CachedCFunction *cfunc, PyObject *self, PyObject *arg1, PyObject *arg2) {
+    if (likely(cfunc->func)) {
+        PyObject *args[2] = {arg1, arg2};
+        if (cfunc->flag == METH_FASTCALL) {
+            #if PY_VERSION_HEX >= 0x030700A0
+            return (*(__Pyx_PyCFunctionFast)(void*)(PyCFunction)cfunc->func)(self, args, 2);
+            #else
+            return (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)cfunc->func)(self, args, 2, NULL);
+            #endif
+        }
+        #if PY_VERSION_HEX >= 0x030700A0
+        if (cfunc->flag == (METH_FASTCALL | METH_KEYWORDS))
+            return (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)cfunc->func)(self, args, 2, NULL);
+        #endif
+    }
+    return __Pyx__CallUnboundCMethod2(cfunc, self, arg1, arg2);
 }
 #endif
+static PyObject* __Pyx__CallUnboundCMethod2(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg1, PyObject* arg2){
+    PyObject *args, *result = NULL;
+    if (unlikely(!cfunc->func && !cfunc->method) && unlikely(__Pyx_TryUnpackUnboundCMethod(cfunc) < 0)) return NULL;
+#if CYTHON_COMPILING_IN_CPYTHON
+    if (cfunc->func && (cfunc->flag & METH_VARARGS)) {
+        args = PyTuple_New(2);
+        if (unlikely(!args)) goto bad;
+        Py_INCREF(arg1);
+        PyTuple_SET_ITEM(args, 0, arg1);
+        Py_INCREF(arg2);
+        PyTuple_SET_ITEM(args, 1, arg2);
+        if (cfunc->flag & METH_KEYWORDS)
+            result = (*(PyCFunctionWithKeywords)(void*)(PyCFunction)cfunc->func)(self, args, NULL);
+        else
+            result = (*cfunc->func)(self, args);
+    } else {
+        args = PyTuple_New(3);
+        if (unlikely(!args)) goto bad;
+        Py_INCREF(self);
+        PyTuple_SET_ITEM(args, 0, self);
+        Py_INCREF(arg1);
+        PyTuple_SET_ITEM(args, 1, arg1);
+        Py_INCREF(arg2);
+        PyTuple_SET_ITEM(args, 2, arg2);
+        result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
+    }
+#else
+    args = PyTuple_Pack(3, self, arg1, arg2);
+    if (unlikely(!args)) goto bad;
+    result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
+#endif
+bad:
+    Py_XDECREF(args);
+    return result;
+}
+
+/* CallUnboundCMethod1 */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg) {
+    if (likely(cfunc->func)) {
+        int flag = cfunc->flag;
+        if (flag == METH_O) {
+            return (*(cfunc->func))(self, arg);
+        } else if (PY_VERSION_HEX >= 0x030600B1 && flag == METH_FASTCALL) {
+            if (PY_VERSION_HEX >= 0x030700A0) {
+                return (*(__Pyx_PyCFunctionFast)(void*)(PyCFunction)cfunc->func)(self, &arg, 1);
+            } else {
+                return (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)cfunc->func)(self, &arg, 1, NULL);
+            }
+        } else if (PY_VERSION_HEX >= 0x030700A0 && flag == (METH_FASTCALL | METH_KEYWORDS)) {
+            return (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)cfunc->func)(self, &arg, 1, NULL);
+        }
+    }
+    return __Pyx__CallUnboundCMethod1(cfunc, self, arg);
+}
+#endif
+static PyObject* __Pyx__CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg){
+    PyObject *args, *result = NULL;
+    if (unlikely(!cfunc->func && !cfunc->method) && unlikely(__Pyx_TryUnpackUnboundCMethod(cfunc) < 0)) return NULL;
+#if CYTHON_COMPILING_IN_CPYTHON
+    if (cfunc->func && (cfunc->flag & METH_VARARGS)) {
+        args = PyTuple_New(1);
+        if (unlikely(!args)) goto bad;
+        Py_INCREF(arg);
+        PyTuple_SET_ITEM(args, 0, arg);
+        if (cfunc->flag & METH_KEYWORDS)
+            result = (*(PyCFunctionWithKeywords)(void*)(PyCFunction)cfunc->func)(self, args, NULL);
+        else
+            result = (*cfunc->func)(self, args);
+    } else {
+        args = PyTuple_New(2);
+        if (unlikely(!args)) goto bad;
+        Py_INCREF(self);
+        PyTuple_SET_ITEM(args, 0, self);
+        Py_INCREF(arg);
+        PyTuple_SET_ITEM(args, 1, arg);
+        result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
+    }
+#else
+    args = PyTuple_Pack(2, self, arg);
+    if (unlikely(!args)) goto bad;
+    result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
+#endif
+bad:
+    Py_XDECREF(args);
+    return result;
+}
+
+/* PyIntBinop */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, int inplace, int zerodivision_check) {
+    (void)inplace;
+    (void)zerodivision_check;
+    #if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_CheckExact(op1))) {
+        const long b = intval;
+        long x;
+        long a = PyInt_AS_LONG(op1);
+            x = (long)((unsigned long)a + b);
+            if (likely((x^a) >= 0 || (x^b) >= 0))
+                return PyInt_FromLong(x);
+            return PyLong_Type.tp_as_number->nb_add(op1, op2);
+    }
+    #endif
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op1))) {
+        const long b = intval;
+        long a, x;
+#ifdef HAVE_LONG_LONG
+        const PY_LONG_LONG llb = intval;
+        PY_LONG_LONG lla, llx;
+#endif
+        const digit* digits = ((PyLongObject*)op1)->ob_digit;
+        const Py_ssize_t size = Py_SIZE(op1);
+        if (likely(__Pyx_sst_abs(size) <= 1)) {
+            a = likely(size) ? digits[0] : 0;
+            if (size == -1) a = -a;
+        } else {
+            switch (size) {
+                case -2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        a = -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                        lla = -(PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        a = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                        lla = (PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case -3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        a = -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                        lla = -(PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        a = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                        lla = (PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case -4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                        a = -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                        lla = -(PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                        a = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                        lla = (PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                default: return PyLong_Type.tp_as_number->nb_add(op1, op2);
+            }
+        }
+                x = a + b;
+            return PyLong_FromLong(x);
+#ifdef HAVE_LONG_LONG
+        long_long:
+                llx = lla + llb;
+            return PyLong_FromLongLong(llx);
+#endif
+        
+        
+    }
+    #endif
+    if (PyFloat_CheckExact(op1)) {
+        const long b = intval;
+        double a = PyFloat_AS_DOUBLE(op1);
+            double result;
+            PyFPE_START_PROTECT("add", return NULL)
+            result = ((double)a) + (double)b;
+            PyFPE_END_PROTECT(result)
+            return PyFloat_FromDouble(result);
+    }
+    return (inplace ? PyNumber_InPlaceAdd : PyNumber_Add)(op1, op2);
+}
+#endif
+
+/* BytesEquals */
+static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals) {
+#if CYTHON_COMPILING_IN_PYPY
+    return PyObject_RichCompareBool(s1, s2, equals);
+#else
+    if (s1 == s2) {
+        return (equals == Py_EQ);
+    } else if (PyBytes_CheckExact(s1) & PyBytes_CheckExact(s2)) {
+        const char *ps1, *ps2;
+        Py_ssize_t length = PyBytes_GET_SIZE(s1);
+        if (length != PyBytes_GET_SIZE(s2))
+            return (equals == Py_NE);
+        ps1 = PyBytes_AS_STRING(s1);
+        ps2 = PyBytes_AS_STRING(s2);
+        if (ps1[0] != ps2[0]) {
+            return (equals == Py_NE);
+        } else if (length == 1) {
+            return (equals == Py_EQ);
+        } else {
+            int result;
+#if CYTHON_USE_UNICODE_INTERNALS
+            Py_hash_t hash1, hash2;
+            hash1 = ((PyBytesObject*)s1)->ob_shash;
+            hash2 = ((PyBytesObject*)s2)->ob_shash;
+            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
+                return (equals == Py_NE);
+            }
+#endif
+            result = memcmp(ps1, ps2, (size_t)length);
+            return (equals == Py_EQ) ? (result == 0) : (result != 0);
+        }
+    } else if ((s1 == Py_None) & PyBytes_CheckExact(s2)) {
+        return (equals == Py_NE);
+    } else if ((s2 == Py_None) & PyBytes_CheckExact(s1)) {
+        return (equals == Py_NE);
+    } else {
+        int result;
+        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
+        if (!py_result)
+            return -1;
+        result = __Pyx_PyObject_IsTrue(py_result);
+        Py_DECREF(py_result);
+        return result;
+    }
+#endif
+}
+
+/* PyIntCompare */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_EqObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, CYTHON_UNUSED long inplace) {
+    if (op1 == op2) {
+        Py_RETURN_TRUE;
+    }
+    #if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_CheckExact(op1))) {
+        const long b = intval;
+        long a = PyInt_AS_LONG(op1);
+        if (a == b) Py_RETURN_TRUE; else Py_RETURN_FALSE;
+    }
+    #endif
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op1))) {
+        int unequal;
+        unsigned long uintval;
+        Py_ssize_t size = Py_SIZE(op1);
+        const digit* digits = ((PyLongObject*)op1)->ob_digit;
+        if (intval == 0) {
+            if (size == 0) Py_RETURN_TRUE; else Py_RETURN_FALSE;
+        } else if (intval < 0) {
+            if (size >= 0)
+                Py_RETURN_FALSE;
+            intval = -intval;
+            size = -size;
+        } else {
+            if (size <= 0)
+                Py_RETURN_FALSE;
+        }
+        uintval = (unsigned long) intval;
+#if PyLong_SHIFT * 4 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 4)) {
+            unequal = (size != 5) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[4] != ((uintval >> (4 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 3 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 3)) {
+            unequal = (size != 4) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 2 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 2)) {
+            unequal = (size != 3) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 1 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 1)) {
+            unequal = (size != 2) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+            unequal = (size != 1) || (((unsigned long) digits[0]) != (uintval & (unsigned long) PyLong_MASK));
+        if (unequal == 0) Py_RETURN_TRUE; else Py_RETURN_FALSE;
+    }
+    #endif
+    if (PyFloat_CheckExact(op1)) {
+        const long b = intval;
+        double a = PyFloat_AS_DOUBLE(op1);
+        if ((double)a == (double)b) Py_RETURN_TRUE; else Py_RETURN_FALSE;
+    }
+    return (
+        PyObject_RichCompare(op1, op2, Py_EQ));
+}
+
+/* decode_c_bytes */
+static CYTHON_INLINE PyObject* __Pyx_decode_c_bytes(
+         const char* cstring, Py_ssize_t length, Py_ssize_t start, Py_ssize_t stop,
+         const char* encoding, const char* errors,
+         PyObject* (*decode_func)(const char *s, Py_ssize_t size, const char *errors)) {
+    if (unlikely((start < 0) | (stop < 0))) {
+        if (start < 0) {
+            start += length;
+            if (start < 0)
+                start = 0;
+        }
+        if (stop < 0)
+            stop += length;
+    }
+    if (stop > length)
+        stop = length;
+    if (unlikely(stop <= start))
+        return __Pyx_NewRef(__pyx_empty_unicode);
+    length = stop - start;
+    cstring += start;
+    if (decode_func) {
+        return decode_func(cstring, length, errors);
+    } else {
+        return PyUnicode_Decode(cstring, length, encoding, errors);
+    }
+}
+
+/* RaiseException */
+#if PY_MAJOR_VERSION < 3
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
+                        CYTHON_UNUSED PyObject *cause) {
+    __Pyx_PyThreadState_declare
+    Py_XINCREF(type);
+    if (!value || value == Py_None)
+        value = NULL;
+    else
+        Py_INCREF(value);
+    if (!tb || tb == Py_None)
+        tb = NULL;
+    else {
+        Py_INCREF(tb);
+        if (!PyTraceBack_Check(tb)) {
+            PyErr_SetString(PyExc_TypeError,
+                "raise: arg 3 must be a traceback or None");
+            goto raise_error;
+        }
+    }
+    if (PyType_Check(type)) {
+#if CYTHON_COMPILING_IN_PYPY
+        if (!value) {
+            Py_INCREF(Py_None);
+            value = Py_None;
+        }
+#endif
+        PyErr_NormalizeException(&type, &value, &tb);
+    } else {
+        if (value) {
+            PyErr_SetString(PyExc_TypeError,
+                "instance exception may not have a separate value");
+            goto raise_error;
+        }
+        value = type;
+        type = (PyObject*) Py_TYPE(type);
+        Py_INCREF(type);
+        if (!PyType_IsSubtype((PyTypeObject *)type, (PyTypeObject *)PyExc_BaseException)) {
+            PyErr_SetString(PyExc_TypeError,
+                "raise: exception class must be a subclass of BaseException");
+            goto raise_error;
+        }
+    }
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrRestore(type, value, tb);
+    return;
+raise_error:
+    Py_XDECREF(value);
+    Py_XDECREF(type);
+    Py_XDECREF(tb);
+    return;
+}
+#else
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause) {
+    PyObject* owned_instance = NULL;
+    if (tb == Py_None) {
+        tb = 0;
+    } else if (tb && !PyTraceBack_Check(tb)) {
+        PyErr_SetString(PyExc_TypeError,
+            "raise: arg 3 must be a traceback or None");
+        goto bad;
+    }
+    if (value == Py_None)
+        value = 0;
+    if (PyExceptionInstance_Check(type)) {
+        if (value) {
+            PyErr_SetString(PyExc_TypeError,
+                "instance exception may not have a separate value");
+            goto bad;
+        }
+        value = type;
+        type = (PyObject*) Py_TYPE(value);
+    } else if (PyExceptionClass_Check(type)) {
+        PyObject *instance_class = NULL;
+        if (value && PyExceptionInstance_Check(value)) {
+            instance_class = (PyObject*) Py_TYPE(value);
+            if (instance_class != type) {
+                int is_subclass = PyObject_IsSubclass(instance_class, type);
+                if (!is_subclass) {
+                    instance_class = NULL;
+                } else if (unlikely(is_subclass == -1)) {
+                    goto bad;
+                } else {
+                    type = instance_class;
+                }
+            }
+        }
+        if (!instance_class) {
+            PyObject *args;
+            if (!value)
+                args = PyTuple_New(0);
+            else if (PyTuple_Check(value)) {
+                Py_INCREF(value);
+                args = value;
+            } else
+                args = PyTuple_Pack(1, value);
+            if (!args)
+                goto bad;
+            owned_instance = PyObject_Call(type, args, NULL);
+            Py_DECREF(args);
+            if (!owned_instance)
+                goto bad;
+            value = owned_instance;
+            if (!PyExceptionInstance_Check(value)) {
+                PyErr_Format(PyExc_TypeError,
+                             "calling %R should have returned an instance of "
+                             "BaseException, not %R",
+                             type, Py_TYPE(value));
+                goto bad;
+            }
+        }
+    } else {
+        PyErr_SetString(PyExc_TypeError,
+            "raise: exception class must be a subclass of BaseException");
+        goto bad;
+    }
+    if (cause) {
+        PyObject *fixed_cause;
+        if (cause == Py_None) {
+            fixed_cause = NULL;
+        } else if (PyExceptionClass_Check(cause)) {
+            fixed_cause = PyObject_CallObject(cause, NULL);
+            if (fixed_cause == NULL)
+                goto bad;
+        } else if (PyExceptionInstance_Check(cause)) {
+            fixed_cause = cause;
+            Py_INCREF(fixed_cause);
+        } else {
+            PyErr_SetString(PyExc_TypeError,
+                            "exception causes must derive from "
+                            "BaseException");
+            goto bad;
+        }
+        PyException_SetCause(value, fixed_cause);
+    }
+    PyErr_SetObject(type, value);
+    if (tb) {
+#if CYTHON_COMPILING_IN_PYPY
+        PyObject *tmp_type, *tmp_value, *tmp_tb;
+        PyErr_Fetch(&tmp_type, &tmp_value, &tmp_tb);
+        Py_INCREF(tb);
+        PyErr_Restore(tmp_type, tmp_value, tb);
+        Py_XDECREF(tmp_tb);
+#else
+        PyThreadState *tstate = __Pyx_PyThreadState_Current;
+        PyObject* tmp_tb = tstate->curexc_traceback;
+        if (tb != tmp_tb) {
+            Py_INCREF(tb);
+            tstate->curexc_traceback = tb;
+            Py_XDECREF(tmp_tb);
+        }
+#endif
+    }
+bad:
+    Py_XDECREF(owned_instance);
+    return;
+}
+#endif
+
+/* ObjectGetItem */
+#if CYTHON_USE_TYPE_SLOTS
+static PyObject *__Pyx_PyObject_GetIndex(PyObject *obj, PyObject* index) {
+    PyObject *runerr;
+    Py_ssize_t key_value;
+    PySequenceMethods *m = Py_TYPE(obj)->tp_as_sequence;
+    if (unlikely(!(m && m->sq_item))) {
+        PyErr_Format(PyExc_TypeError, "'%.200s' object is not subscriptable", Py_TYPE(obj)->tp_name);
+        return NULL;
+    }
+    key_value = __Pyx_PyIndex_AsSsize_t(index);
+    if (likely(key_value != -1 || !(runerr = PyErr_Occurred()))) {
+        return __Pyx_GetItemInt_Fast(obj, key_value, 0, 1, 1);
+    }
+    if (PyErr_GivenExceptionMatches(runerr, PyExc_OverflowError)) {
+        PyErr_Clear();
+        PyErr_Format(PyExc_IndexError, "cannot fit '%.200s' into an index-sized integer", Py_TYPE(index)->tp_name);
+    }
+    return NULL;
+}
+static PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key) {
+    PyMappingMethods *m = Py_TYPE(obj)->tp_as_mapping;
+    if (likely(m && m->mp_subscript)) {
+        return m->mp_subscript(obj, key);
+    }
+    return __Pyx_PyObject_GetIndex(obj, key);
+}
+#endif
+
+/* UnicodeEquals */
+static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals) {
+#if CYTHON_COMPILING_IN_PYPY
+    return PyObject_RichCompareBool(s1, s2, equals);
+#else
+#if PY_MAJOR_VERSION < 3
+    PyObject* owned_ref = NULL;
+#endif
+    int s1_is_unicode, s2_is_unicode;
+    if (s1 == s2) {
+        goto return_eq;
+    }
+    s1_is_unicode = PyUnicode_CheckExact(s1);
+    s2_is_unicode = PyUnicode_CheckExact(s2);
+#if PY_MAJOR_VERSION < 3
+    if ((s1_is_unicode & (!s2_is_unicode)) && PyString_CheckExact(s2)) {
+        owned_ref = PyUnicode_FromObject(s2);
+        if (unlikely(!owned_ref))
+            return -1;
+        s2 = owned_ref;
+        s2_is_unicode = 1;
+    } else if ((s2_is_unicode & (!s1_is_unicode)) && PyString_CheckExact(s1)) {
+        owned_ref = PyUnicode_FromObject(s1);
+        if (unlikely(!owned_ref))
+            return -1;
+        s1 = owned_ref;
+        s1_is_unicode = 1;
+    } else if (((!s2_is_unicode) & (!s1_is_unicode))) {
+        return __Pyx_PyBytes_Equals(s1, s2, equals);
+    }
+#endif
+    if (s1_is_unicode & s2_is_unicode) {
+        Py_ssize_t length;
+        int kind;
+        void *data1, *data2;
+        if (unlikely(__Pyx_PyUnicode_READY(s1) < 0) || unlikely(__Pyx_PyUnicode_READY(s2) < 0))
+            return -1;
+        length = __Pyx_PyUnicode_GET_LENGTH(s1);
+        if (length != __Pyx_PyUnicode_GET_LENGTH(s2)) {
+            goto return_ne;
+        }
+#if CYTHON_USE_UNICODE_INTERNALS
+        {
+            Py_hash_t hash1, hash2;
+        #if CYTHON_PEP393_ENABLED
+            hash1 = ((PyASCIIObject*)s1)->hash;
+            hash2 = ((PyASCIIObject*)s2)->hash;
+        #else
+            hash1 = ((PyUnicodeObject*)s1)->hash;
+            hash2 = ((PyUnicodeObject*)s2)->hash;
+        #endif
+            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
+                goto return_ne;
+            }
+        }
+#endif
+        kind = __Pyx_PyUnicode_KIND(s1);
+        if (kind != __Pyx_PyUnicode_KIND(s2)) {
+            goto return_ne;
+        }
+        data1 = __Pyx_PyUnicode_DATA(s1);
+        data2 = __Pyx_PyUnicode_DATA(s2);
+        if (__Pyx_PyUnicode_READ(kind, data1, 0) != __Pyx_PyUnicode_READ(kind, data2, 0)) {
+            goto return_ne;
+        } else if (length == 1) {
+            goto return_eq;
+        } else {
+            int result = memcmp(data1, data2, (size_t)(length * kind));
+            #if PY_MAJOR_VERSION < 3
+            Py_XDECREF(owned_ref);
+            #endif
+            return (equals == Py_EQ) ? (result == 0) : (result != 0);
+        }
+    } else if ((s1 == Py_None) & s2_is_unicode) {
+        goto return_ne;
+    } else if ((s2 == Py_None) & s1_is_unicode) {
+        goto return_ne;
+    } else {
+        int result;
+        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
+        #if PY_MAJOR_VERSION < 3
+        Py_XDECREF(owned_ref);
+        #endif
+        if (!py_result)
+            return -1;
+        result = __Pyx_PyObject_IsTrue(py_result);
+        Py_DECREF(py_result);
+        return result;
+    }
+return_eq:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(owned_ref);
+    #endif
+    return (equals == Py_EQ);
+return_ne:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(owned_ref);
+    #endif
+    return (equals == Py_NE);
+#endif
+}
+
+/* pyobject_as_double */
+static double __Pyx__PyObject_AsDouble(PyObject* obj) {
+    PyObject* float_value;
+#if !CYTHON_USE_TYPE_SLOTS
+    float_value = PyNumber_Float(obj);  if ((0)) goto bad;
+#else
+    PyNumberMethods *nb = Py_TYPE(obj)->tp_as_number;
+    if (likely(nb) && likely(nb->nb_float)) {
+        float_value = nb->nb_float(obj);
+        if (likely(float_value) && unlikely(!PyFloat_Check(float_value))) {
+            PyErr_Format(PyExc_TypeError,
+                "__float__ returned non-float (type %.200s)",
+                Py_TYPE(float_value)->tp_name);
+            Py_DECREF(float_value);
+            goto bad;
+        }
+    } else if (PyUnicode_CheckExact(obj) || PyBytes_CheckExact(obj)) {
+#if PY_MAJOR_VERSION >= 3
+        float_value = PyFloat_FromString(obj);
+#else
+        float_value = PyFloat_FromString(obj, 0);
+#endif
+    } else {
+        PyObject* args = PyTuple_New(1);
+        if (unlikely(!args)) goto bad;
+        PyTuple_SET_ITEM(args, 0, obj);
+        float_value = PyObject_Call((PyObject*)&PyFloat_Type, args, 0);
+        PyTuple_SET_ITEM(args, 0, 0);
+        Py_DECREF(args);
+    }
+#endif
+    if (likely(float_value)) {
+        double value = PyFloat_AS_DOUBLE(float_value);
+        Py_DECREF(float_value);
+        return value;
+    }
+bad:
+    return (double)-1;
+}
+
+/* Import */
+static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
+    PyObject *empty_list = 0;
+    PyObject *module = 0;
+    PyObject *global_dict = 0;
+    PyObject *empty_dict = 0;
+    PyObject *list;
+    #if PY_MAJOR_VERSION < 3
+    PyObject *py_import;
+    py_import = __Pyx_PyObject_GetAttrStr(__pyx_b, __pyx_n_s_import);
+    if (!py_import)
+        goto bad;
+    #endif
+    if (from_list)
+        list = from_list;
+    else {
+        empty_list = PyList_New(0);
+        if (!empty_list)
+            goto bad;
+        list = empty_list;
+    }
+    global_dict = PyModule_GetDict(__pyx_m);
+    if (!global_dict)
+        goto bad;
+    empty_dict = PyDict_New();
+    if (!empty_dict)
+        goto bad;
+    {
+        #if PY_MAJOR_VERSION >= 3
+        if (level == -1) {
+            if ((1) && (strchr(__Pyx_MODULE_NAME, '.'))) {
+                module = PyImport_ImportModuleLevelObject(
+                    name, global_dict, empty_dict, list, 1);
+                if (!module) {
+                    if (!PyErr_ExceptionMatches(PyExc_ImportError))
+                        goto bad;
+                    PyErr_Clear();
+                }
+            }
+            level = 0;
+        }
+        #endif
+        if (!module) {
+            #if PY_MAJOR_VERSION < 3
+            PyObject *py_level = PyInt_FromLong(level);
+            if (!py_level)
+                goto bad;
+            module = PyObject_CallFunctionObjArgs(py_import,
+                name, global_dict, empty_dict, list, py_level, (PyObject *)NULL);
+            Py_DECREF(py_level);
+            #else
+            module = PyImport_ImportModuleLevelObject(
+                name, global_dict, empty_dict, list, level);
+            #endif
+        }
+    }
+bad:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(py_import);
+    #endif
+    Py_XDECREF(empty_list);
+    Py_XDECREF(empty_dict);
+    return module;
+}
+
+/* ImportFrom */
+static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
+    PyObject* value = __Pyx_PyObject_GetAttrStr(module, name);
+    if (unlikely(!value) && PyErr_ExceptionMatches(PyExc_AttributeError)) {
+        PyErr_Format(PyExc_ImportError,
+        #if PY_MAJOR_VERSION < 3
+            "cannot import name %.230s", PyString_AS_STRING(name));
+        #else
+            "cannot import name %S", name);
+        #endif
+    }
+    return value;
+}
+
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
+    }
+}
+#endif
+
+/* PyFunctionFastCall */
+#if CYTHON_FAST_PYCALL
+static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
+                                               PyObject *globals) {
+    PyFrameObject *f;
+    PyThreadState *tstate = __Pyx_PyThreadState_Current;
+    PyObject **fastlocals;
+    Py_ssize_t i;
+    PyObject *result;
+    assert(globals != NULL);
+    /* XXX Perhaps we should create a specialized
+       PyFrame_New() that doesn't take locals, but does
+       take builtins without sanity checking them.
+       */
+    assert(tstate != NULL);
+    f = PyFrame_New(tstate, co, globals, NULL);
+    if (f == NULL) {
+        return NULL;
+    }
+    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
+    for (i = 0; i < na; i++) {
+        Py_INCREF(*args);
+        fastlocals[i] = *args++;
+    }
+    result = PyEval_EvalFrameEx(f,0);
+    ++tstate->recursion_depth;
+    Py_DECREF(f);
+    --tstate->recursion_depth;
+    return result;
+}
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
+    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
+    PyObject *globals = PyFunction_GET_GLOBALS(func);
+    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
+    PyObject *closure;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *kwdefs;
+#endif
+    PyObject *kwtuple, **k;
+    PyObject **d;
+    Py_ssize_t nd;
+    Py_ssize_t nk;
+    PyObject *result;
+    assert(kwargs == NULL || PyDict_Check(kwargs));
+    nk = kwargs ? PyDict_Size(kwargs) : 0;
+    if (Py_EnterRecursiveCall((char*)" while calling a Python object")) {
+        return NULL;
+    }
+    if (
+#if PY_MAJOR_VERSION >= 3
+            co->co_kwonlyargcount == 0 &&
+#endif
+            likely(kwargs == NULL || nk == 0) &&
+            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
+        if (argdefs == NULL && co->co_argcount == nargs) {
+            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
+            goto done;
+        }
+        else if (nargs == 0 && argdefs != NULL
+                 && co->co_argcount == Py_SIZE(argdefs)) {
+            /* function called with no arguments, but all parameters have
+               a default value: use default values as arguments .*/
+            args = &PyTuple_GET_ITEM(argdefs, 0);
+            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
+            goto done;
+        }
+    }
+    if (kwargs != NULL) {
+        Py_ssize_t pos, i;
+        kwtuple = PyTuple_New(2 * nk);
+        if (kwtuple == NULL) {
+            result = NULL;
+            goto done;
+        }
+        k = &PyTuple_GET_ITEM(kwtuple, 0);
+        pos = i = 0;
+        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
+            Py_INCREF(k[i]);
+            Py_INCREF(k[i+1]);
+            i += 2;
+        }
+        nk = i / 2;
+    }
+    else {
+        kwtuple = NULL;
+        k = NULL;
+    }
+    closure = PyFunction_GET_CLOSURE(func);
+#if PY_MAJOR_VERSION >= 3
+    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
+#endif
+    if (argdefs != NULL) {
+        d = &PyTuple_GET_ITEM(argdefs, 0);
+        nd = Py_SIZE(argdefs);
+    }
+    else {
+        d = NULL;
+        nd = 0;
+    }
+#if PY_MAJOR_VERSION >= 3
+    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, kwdefs, closure);
+#else
+    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, closure);
+#endif
+    Py_XDECREF(kwtuple);
+done:
+    Py_LeaveRecursiveCall();
+    return result;
+}
+#endif
+#endif
+
+/* PyObjectCall2Args */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
+    PyObject *args, *result = NULL;
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyFunction_FastCall(function, args, 2);
+    }
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyCFunction_FastCall(function, args, 2);
+    }
+    #endif
+    args = PyTuple_New(2);
+    if (unlikely(!args)) goto done;
+    Py_INCREF(arg1);
+    PyTuple_SET_ITEM(args, 0, arg1);
+    Py_INCREF(arg2);
+    PyTuple_SET_ITEM(args, 1, arg2);
+    Py_INCREF(function);
+    result = __Pyx_PyObject_Call(function, args, NULL);
+    Py_DECREF(args);
+    Py_DECREF(function);
+done:
+    return result;
+}
+
+/* PyObjectCallMethO */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
+    PyObject *self, *result;
+    PyCFunction cfunc;
+    cfunc = PyCFunction_GET_FUNCTION(func);
+    self = PyCFunction_GET_SELF(func);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = cfunc(self, arg);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* PyObjectCallOneArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static PyObject* __Pyx__PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_New(1);
+    if (unlikely(!args)) return NULL;
+    Py_INCREF(arg);
+    PyTuple_SET_ITEM(args, 0, arg);
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, &arg, 1);
+    }
+#endif
+    if (likely(PyCFunction_Check(func))) {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_O)) {
+            return __Pyx_PyObject_CallMethO(func, arg);
+#if CYTHON_FAST_PYCCALL
+        } else if (PyCFunction_GET_FLAGS(func) & METH_FASTCALL) {
+            return __Pyx_PyCFunction_FastCall(func, &arg, 1);
+#endif
+        }
+    }
+    return __Pyx__PyObject_CallOneArg(func, arg);
+}
+#else
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_Pack(1, arg);
+    if (unlikely(!args)) return NULL;
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+#endif
+
+/* HasAttr */
+static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
+    PyObject *r;
+    if (unlikely(!__Pyx_PyBaseString_Check(n))) {
+        PyErr_SetString(PyExc_TypeError,
+                        "hasattr(): attribute name must be string");
+        return -1;
+    }
+    r = __Pyx_GetAttr(o, n);
+    if (unlikely(!r)) {
+        PyErr_Clear();
+        return 0;
+    } else {
+        Py_DECREF(r);
+        return 1;
+    }
+}
+
+/* PyObject_GenericGetAttrNoDict */
+#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
+static PyObject *__Pyx_RaiseGenericGetAttributeError(PyTypeObject *tp, PyObject *attr_name) {
+    PyErr_Format(PyExc_AttributeError,
+#if PY_MAJOR_VERSION >= 3
+                 "'%.50s' object has no attribute '%U'",
+                 tp->tp_name, attr_name);
+#else
+                 "'%.50s' object has no attribute '%.400s'",
+                 tp->tp_name, PyString_AS_STRING(attr_name));
+#endif
+    return NULL;
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GenericGetAttrNoDict(PyObject* obj, PyObject* attr_name) {
+    PyObject *descr;
+    PyTypeObject *tp = Py_TYPE(obj);
+    if (unlikely(!PyString_Check(attr_name))) {
+        return PyObject_GenericGetAttr(obj, attr_name);
+    }
+    assert(!tp->tp_dictoffset);
+    descr = _PyType_Lookup(tp, attr_name);
+    if (unlikely(!descr)) {
+        return __Pyx_RaiseGenericGetAttributeError(tp, attr_name);
+    }
+    Py_INCREF(descr);
+    #if PY_MAJOR_VERSION < 3
+    if (likely(PyType_HasFeature(Py_TYPE(descr), Py_TPFLAGS_HAVE_CLASS)))
+    #endif
+    {
+        descrgetfunc f = Py_TYPE(descr)->tp_descr_get;
+        if (unlikely(f)) {
+            PyObject *res = f(descr, obj, (PyObject *)tp);
+            Py_DECREF(descr);
+            return res;
+        }
+    }
+    return descr;
+}
+#endif
+
+/* PyObject_GenericGetAttr */
+#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
+static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_name) {
+    if (unlikely(Py_TYPE(obj)->tp_dictoffset)) {
+        return PyObject_GenericGetAttr(obj, attr_name);
+    }
+    return __Pyx_PyObject_GenericGetAttrNoDict(obj, attr_name);
+}
+#endif
+
+/* PyObjectGetAttrStrNoError */
+static void __Pyx_PyObject_GetAttrStr_ClearAttributeError(void) {
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    if (likely(__Pyx_PyErr_ExceptionMatches(PyExc_AttributeError)))
+        __Pyx_PyErr_Clear();
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStrNoError(PyObject* obj, PyObject* attr_name) {
+    PyObject *result;
+#if CYTHON_COMPILING_IN_CPYTHON && CYTHON_USE_TYPE_SLOTS && PY_VERSION_HEX >= 0x030700B1
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_getattro == PyObject_GenericGetAttr)) {
+        return _PyObject_GenericGetAttrWithDict(obj, attr_name, NULL, 1);
+    }
+#endif
+    result = __Pyx_PyObject_GetAttrStr(obj, attr_name);
+    if (unlikely(!result)) {
+        __Pyx_PyObject_GetAttrStr_ClearAttributeError();
+    }
+    return result;
+}
+
+/* SetupReduce */
+static int __Pyx_setup_reduce_is_named(PyObject* meth, PyObject* name) {
+  int ret;
+  PyObject *name_attr;
+  name_attr = __Pyx_PyObject_GetAttrStr(meth, __pyx_n_s_name);
+  if (likely(name_attr)) {
+      ret = PyObject_RichCompareBool(name_attr, name, Py_EQ);
+  } else {
+      ret = -1;
+  }
+  if (unlikely(ret < 0)) {
+      PyErr_Clear();
+      ret = 0;
+  }
+  Py_XDECREF(name_attr);
+  return ret;
+}
+static int __Pyx_setup_reduce(PyObject* type_obj) {
+    int ret = 0;
+    PyObject *object_reduce = NULL;
+    PyObject *object_reduce_ex = NULL;
+    PyObject *reduce = NULL;
+    PyObject *reduce_ex = NULL;
+    PyObject *reduce_cython = NULL;
+    PyObject *setstate = NULL;
+    PyObject *setstate_cython = NULL;
+#if CYTHON_USE_PYTYPE_LOOKUP
+    if (_PyType_Lookup((PyTypeObject*)type_obj, __pyx_n_s_getstate)) goto __PYX_GOOD;
+#else
+    if (PyObject_HasAttr(type_obj, __pyx_n_s_getstate)) goto __PYX_GOOD;
+#endif
+#if CYTHON_USE_PYTYPE_LOOKUP
+    object_reduce_ex = _PyType_Lookup(&PyBaseObject_Type, __pyx_n_s_reduce_ex); if (!object_reduce_ex) goto __PYX_BAD;
+#else
+    object_reduce_ex = __Pyx_PyObject_GetAttrStr((PyObject*)&PyBaseObject_Type, __pyx_n_s_reduce_ex); if (!object_reduce_ex) goto __PYX_BAD;
+#endif
+    reduce_ex = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_reduce_ex); if (unlikely(!reduce_ex)) goto __PYX_BAD;
+    if (reduce_ex == object_reduce_ex) {
+#if CYTHON_USE_PYTYPE_LOOKUP
+        object_reduce = _PyType_Lookup(&PyBaseObject_Type, __pyx_n_s_reduce); if (!object_reduce) goto __PYX_BAD;
+#else
+        object_reduce = __Pyx_PyObject_GetAttrStr((PyObject*)&PyBaseObject_Type, __pyx_n_s_reduce); if (!object_reduce) goto __PYX_BAD;
+#endif
+        reduce = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_reduce); if (unlikely(!reduce)) goto __PYX_BAD;
+        if (reduce == object_reduce || __Pyx_setup_reduce_is_named(reduce, __pyx_n_s_reduce_cython)) {
+            reduce_cython = __Pyx_PyObject_GetAttrStrNoError(type_obj, __pyx_n_s_reduce_cython);
+            if (likely(reduce_cython)) {
+                ret = PyDict_SetItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_reduce, reduce_cython); if (unlikely(ret < 0)) goto __PYX_BAD;
+                ret = PyDict_DelItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_reduce_cython); if (unlikely(ret < 0)) goto __PYX_BAD;
+            } else if (reduce == object_reduce || PyErr_Occurred()) {
+                goto __PYX_BAD;
+            }
+            setstate = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_setstate);
+            if (!setstate) PyErr_Clear();
+            if (!setstate || __Pyx_setup_reduce_is_named(setstate, __pyx_n_s_setstate_cython)) {
+                setstate_cython = __Pyx_PyObject_GetAttrStrNoError(type_obj, __pyx_n_s_setstate_cython);
+                if (likely(setstate_cython)) {
+                    ret = PyDict_SetItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_setstate, setstate_cython); if (unlikely(ret < 0)) goto __PYX_BAD;
+                    ret = PyDict_DelItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_setstate_cython); if (unlikely(ret < 0)) goto __PYX_BAD;
+                } else if (!setstate || PyErr_Occurred()) {
+                    goto __PYX_BAD;
+                }
+            }
+            PyType_Modified((PyTypeObject*)type_obj);
+        }
+    }
+    goto __PYX_GOOD;
+__PYX_BAD:
+    if (!PyErr_Occurred())
+        PyErr_Format(PyExc_RuntimeError, "Unable to initialize pickling for %s", ((PyTypeObject*)type_obj)->tp_name);
+    ret = -1;
+__PYX_GOOD:
+#if !CYTHON_USE_PYTYPE_LOOKUP
+    Py_XDECREF(object_reduce);
+    Py_XDECREF(object_reduce_ex);
+#endif
+    Py_XDECREF(reduce);
+    Py_XDECREF(reduce_ex);
+    Py_XDECREF(reduce_cython);
+    Py_XDECREF(setstate);
+    Py_XDECREF(setstate_cython);
+    return ret;
+}
 
 /* CLineInTraceback */
 #ifndef CYTHON_CLINE_IN_TRACEBACK
@@ -3227,6 +12218,59 @@ bad:
 }
 
 /* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+    const int neg_one = (int) ((int) 0 - (int) 1), const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntFromPyVerify */
+#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
+#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
+#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
+    {\
+        func_type value = func_value;\
+        if (sizeof(target_type) < sizeof(func_type)) {\
+            if (unlikely(value != (func_type) (target_type) value)) {\
+                func_type zero = 0;\
+                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
+                    return (target_type) -1;\
+                if (is_unsigned && unlikely(value < zero))\
+                    goto raise_neg_overflow;\
+                else\
+                    goto raise_overflow;\
+            }\
+        }\
+        return (target_type) value;\
+    }
+
+/* CIntToPy */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
     const long neg_one = (long) ((long) 0 - (long) 1), const_zero = (long) 0;
     const int is_unsigned = neg_one > const_zero;
@@ -3255,217 +12299,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
         return _PyLong_FromByteArray(bytes, sizeof(long),
                                      little, !is_unsigned);
     }
-}
-
-/* CIntFromPyVerify */
-#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
-#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
-#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
-    {\
-        func_type value = func_value;\
-        if (sizeof(target_type) < sizeof(func_type)) {\
-            if (unlikely(value != (func_type) (target_type) value)) {\
-                func_type zero = 0;\
-                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
-                    return (target_type) -1;\
-                if (is_unsigned && unlikely(value < zero))\
-                    goto raise_neg_overflow;\
-                else\
-                    goto raise_overflow;\
-            }\
-        }\
-        return (target_type) value;\
-    }
-
-/* CIntFromPy */
-static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
-    const long neg_one = (long) ((long) 0 - (long) 1), const_zero = (long) 0;
-    const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if (sizeof(long) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(long, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (long) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (long) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(long, digit, digits[0])
-                case 2:
-                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) >= 2 * PyLong_SHIFT) {
-                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) >= 3 * PyLong_SHIFT) {
-                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) >= 4 * PyLong_SHIFT) {
-                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (long) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if (sizeof(long) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-#endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (long) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(long, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(long,  digit, +digits[0])
-                case -2:
-                    if (8 * sizeof(long) - 1 > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-            }
-#endif
-            if (sizeof(long) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
-            PyErr_SetString(PyExc_RuntimeError,
-                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
-#else
-            long val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
- #if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
- #endif
-            if (likely(v)) {
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                int ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                              bytes, sizeof(val),
-                                              is_little, !is_unsigned);
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-#endif
-            return (long) -1;
-        }
-    } else {
-        long val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (long) -1;
-        val = __Pyx_PyInt_As_long(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to long");
-    return (long) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to long");
-    return (long) -1;
 }
 
 /* CIntFromPy */
@@ -3655,6 +12488,195 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to int");
     return (int) -1;
+}
+
+/* CIntFromPy */
+static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
+    const long neg_one = (long) ((long) 0 - (long) 1), const_zero = (long) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(long) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(long, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (long) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (long) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(long, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) >= 2 * PyLong_SHIFT) {
+                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) >= 3 * PyLong_SHIFT) {
+                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) >= 4 * PyLong_SHIFT) {
+                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (long) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(long) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (long) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(long, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(long,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(long) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(long) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            long val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (long) -1;
+        }
+    } else {
+        long val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (long) -1;
+        val = __Pyx_PyInt_As_long(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to long");
+    return (long) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to long");
+    return (long) -1;
 }
 
 /* FastTypeChecks */
