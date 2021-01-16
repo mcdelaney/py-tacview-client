@@ -3,19 +3,17 @@ Tacview client methods.
 
 Results are parsed into usable format, and then written to a postgres database.
 """
-from io import BytesIO
 import asyncio
 import logging
 from datetime import datetime
+from dataclasses import dataclass
 from math import sqrt, cos, sin, radians
-from typing import Optional, Any, Dict, List, Sequence
+from typing import Optional, Any, Dict, Sequence
 import time
-import struct
 import pytz
 from multiprocessing import Process
 from pathlib import Path
 from functools import partial
-from uuid import uuid1
 import sys
 import os
 
@@ -30,6 +28,10 @@ except (ModuleNotFoundError, NotImplementedError):
     pass
 
 from tacview_client.config import DB_URL, get_logger
+from tacview_client.copy_writer import BinCopyWriter
+from tacview_client.copy_writer import create_single
+from tacview_client.copy_writer import insert_impact
+from tacview_client import cython_funs as cyfuns
 from tacview_client import serve_file
 from tacview_client import __version__
 
@@ -39,27 +41,6 @@ STREAM_PROTOCOL = "XtraLib.Stream.0"
 TACVIEW_PROTOCOL = "Tacview.RealTimeTelemetry.0"
 HANDSHAKE_TERMINATOR = "\0"
 
-COORD_KEYS = (
-    "lon",
-    "lat",
-    "alt",
-    "roll",
-    "pitch",
-    "yaw",
-    "u_coord",
-    "v_coord",
-    "heading",
-)
-COORD_KEY_LEN = len(COORD_KEYS)
-
-COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
-COORD_KEY_SHORT_LEN = len(COORD_KEYS_SHORT)
-
-COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
-COORD_KEYS_MED_LEN = len(COORD_KEYS_MED)
-
-COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
-COORD_KEYS_X_SHORT_LEN = len(COORD_KEYS_X_SHORT)
 
 HOST = "147.135.8.169"  # Hoggit Gaw
 PORT = 42674
@@ -69,7 +50,7 @@ CONTACT_TIME = 0.0
 LOG = get_logger()
 
 
-class Ref:  # pylint: disable=too-many-instance-attributes
+class Ref:
     """Hold and extract Reference values used as offsets."""
 
     __slots__ = (
@@ -185,9 +166,6 @@ class Ref:  # pylint: disable=too-many-instance-attributes
             pass
 
 
-from dataclasses import dataclass
-
-
 @dataclass
 class ObjectRec:
     __slots__ = (
@@ -220,6 +198,8 @@ class ObjectRec:
         "updates",
         "velocity_kts",
         "secs_since_last_seen",
+        "can_be_parent",
+        "should_have_parent",
         "written",
         "cart_coords",
         "Importance",
@@ -261,41 +241,14 @@ class ObjectRec:
         self.parent_dist: Optional[float] = None
         self.updates: int = 1
         self.velocity_kts: float = 0.0
-        self.secs_since_last_seen: Optional[float] = None
+        self.can_be_parent: bool = False
+        self.should_have_parent: bool = False
+        self.secs_since_last_seen: Optional[float] = 0
         self.written: bool = False
-        self.cart_coords: Optional[Sequence] = None
+        self.cart_coords: Optional[Sequence] = []
 
-    def update_val(self, key: str, value: Any) -> None:
-        """Set value for a given key."""
-        setattr(self, key, value)
 
-    def update_last_seen(self, value: float) -> None:
-        """Set the last seen time offset for a record."""
-        self.secs_since_last_seen = value - self.last_seen
-        self.last_seen = value
-
-    def compute_velocity(self) -> None:
-        """Calculate velocity given the distance from the last point."""
-        new_cart_coords = get_cartesian_coord(self.lat, self.lon, self.alt)
-        if (
-            self.cart_coords
-            and self.secs_since_last_seen
-            and self.secs_since_last_seen > 0
-        ):
-            t_dist = compute_dist(new_cart_coords, self.cart_coords)
-            self.velocity_kts = (t_dist / self.secs_since_last_seen) / 1.94384
-        self.cart_coords = new_cart_coords
-
-    def should_have_parent(self) -> bool:
-        """Check if an object should have a parent record."""
-        parented_types = ("weapon", "projectile", "decoy", "container", "flare")
-        tval = self.Type.lower()
-        for t in parented_types:
-            if t in tval:
-                return True
-        return False
-
-    def can_be_parent(self) -> bool:
+def can_be_parent(rec_type: str) -> bool:
         """Check if an object is a member of types that could be parents."""
         not_parent_types = (
             "Decoy",
@@ -304,38 +257,59 @@ class ObjectRec:
             "Projectile",
             "Ground+Light+Human+Air+Parachutist",
         )
-        tval = self.Type
+
         for t in not_parent_types:
-            if t in tval:
+            if t in rec_type:
                 return False
         else:
             return True
 
 
-def get_cartesian_coord(lat, lon, h) -> Sequence:
-    """Convert coords from geodesic to cartesian."""
-    a = 6378137.0
-    rf = 298.257223563
-    lat_rad = radians(lat)
-    lon_rad = radians(lon)
-    N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
-    X = (N + h) * cos(lat_rad) * cos(lon_rad)
-    Y = (N + h) * cos(lat_rad) * sin(lon_rad)
-    Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)
-    return X, Y, Z
+def should_have_parent(rec_type: str) -> bool:
+    """Check if an object should have a parent record."""
+    parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
+    for t in parented_types:
+        if t in rec_type:
+            return True
+    return False
+
+# def compute_velocity(lat, lon, alt, cart_coords, secs_since_last_seen) -> None:
+#         """Calculate velocity given the distance from the last point."""
+#         new_cart_coords = cyfuns.get_cartesian_coord(lat, lon, alt)
+#         velocity_kts = None
+#         if (
+#             cart_coords
+#             and secs_since_last_seen
+#             and secs_since_last_seen > 0.0
+#         ):
+#             t_dist = cyfuns.compute_dist(new_cart_coords, cart_coords)
+#             velocity_kts = (t_dist / secs_since_last_seen) / 1.94384
+#         return new_cart_coords, velocity_kts
+
+# def get_cartesian_coord(lat: float, lon: float, h: float) -> Sequence:
+#     """Convert coords from geodesic to cartesian."""
+#     a = 6378137.0
+#     rf = 298.257223563
+#     lat_rad = radians(lat)
+#     lon_rad = radians(lon)
+#     N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
+#     X = (N + h) * cos(lat_rad) * cos(lon_rad)
+#     Y = (N + h) * cos(lat_rad) * sin(lon_rad)
+#     Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)
+#     return X, Y, Z
 
 
-def compute_dist(p_1: Sequence, p_2: Sequence) -> float:
-    """Compute cartesian distance between points."""
-    return sqrt(
-        (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
-    )
+# def compute_dist(p_1: Sequence, p_2: Sequence) -> float:
+#     """Compute cartesian distance between points."""
+#     return sqrt(
+#         (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
+#     )
 
 
-async def determine_contact(rec, ref: Ref, contact_type="parent"):
+def determine_contact(rec, ref: Ref, contact_type="parent"):
     """Determine the parent of missiles, rockets, and bombs."""
     global CONTACT_TIME
-    t1 = time.time()
+    t1 = time.clock()
 
     LOG.debug(
         f"Determing {contact_type} for object id: %s -- %s-%s...",
@@ -346,7 +320,7 @@ async def determine_contact(rec, ref: Ref, contact_type="parent"):
 
     if contact_type == "parent":
         if rec.Color == "Violet":
-            acpt_colors = ["Red", "Blue", "Grey"]
+            acpt_colors = ("Red", "Blue", "Grey")
         else:
             acpt_colors = [rec.Color]
 
@@ -376,11 +350,11 @@ async def determine_contact(rec, ref: Ref, contact_type="parent"):
             continue
 
         n_checked += 1
-        prox = compute_dist(rec.cart_coords, near.cart_coords)  # type: ignore
+        prox = cyfuns.compute_dist(rec.cart_coords, near.cart_coords)
         LOG.debug("Distance to rec %s-%s is %d...", near.Name, near.Type, prox)
         if not closest or (prox < closest[1]):
             closest = [near.id, prox, near.Name, near.Pilot, near.Type]
-    CONTACT_TIME += time.time() - t1
+    CONTACT_TIME += time.clock() - t1
 
     if not closest:
         return None
@@ -398,29 +372,54 @@ async def determine_contact(rec, ref: Ref, contact_type="parent"):
 
 async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
     """Parse a textline from tacview into an ObjectRec."""
+    COORD_KEYS = (
+        "lon",
+        "lat",
+        "alt",
+        "roll",
+        "pitch",
+        "yaw",
+        "u_coord",
+        "v_coord",
+        "heading",
+    )
+    COORD_KEY_LEN = 9  # len(COORD_KEYS)
+
+    COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
+    COORD_KEY_SHORT_LEN = 5  # len(COORD_KEYS_SHORT)
+
+    COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
+    COORD_KEYS_MED_LEN = 5  # len(COORD_KEYS_MED)
+
+    COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
+    COORD_KEYS_X_SHORT_LEN = 3  # len(COORD_KEYS_X_SHORT)
+
     # secondary_update = None
     if raw_line[0:1] == b"0":
         LOG.debug("Raw line starts with 0...")
-        return None
+        return
 
     if raw_line[0:1] == b"-":
+        # We know the Object is now dead
         rec = ref.obj_store[int(raw_line[1:], 16)]
         rec.alive = False
         rec.updates += 1
 
         if "Weapon" in rec.Type or "Projectile" in rec.Type:
-            impacted = await determine_contact(rec, contact_type="impacted", ref=ref)
+            impacted = determine_contact(rec, contact_type="impacted", ref=ref)
             if impacted:
                 rec.impacted = impacted[0]
                 rec.impacted_dist = impacted[1]
-                await insert_impact(rec, ref.time_offset)
+                await insert_impact(rec, ref.time_offset, ASYNC_CON)
         return rec
 
     comma = raw_line.find(b",")
     rec_id = int(raw_line[0:comma], 16)
     try:
+        # Make update to existing record
         rec = ref.obj_store[rec_id]
-        rec.update_last_seen(ref.time_offset)
+        rec.secs_since_last_seen = ref.time_offset - rec.last_seen
+        rec.last_seen = ref.time_offset
         rec.updates += 1
 
     except KeyError:
@@ -433,8 +432,8 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
         )
         ref.obj_store[rec_id] = rec
 
-    bytes_remaining = True
     try:
+        bytes_remaining = True
         while bytes_remaining:
             last_comma = comma + 1
             comma = raw_line.find(b",", last_comma)
@@ -465,7 +464,6 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                     C_KEYS = COORD_KEYS_X_SHORT
                     C_LEN = COORD_KEYS_X_SHORT_LEN
                 else:
-                    LOG.error("Coord count error!")
                     raise ValueError(
                         "COORD COUNT EITHER 8, 5, OR 4!",
                         npipe,
@@ -488,92 +486,32 @@ async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[ObjectRec]:
                         elif c_key == "lon":
                             rec.lon = float(coord) + ref.lon
                         else:
-                            rec.update_val(c_key, float(coord))
+                            setattr(rec, c_key, float(coord))
                     i += 1
             else:
-                rec.update_val(
-                    key.decode("UTF-8") if key != b"Group" else "grp",
-                    val.decode("UTF-8"),
-                )
+                setattr(rec,
+                        key.decode("UTF-8") if key != b"Group" else "grp",
+                        val.decode("UTF-8"))
+
     except Exception as err:
         raise err
 
-    rec.compute_velocity()
+    if rec.updates == 1:
+        rec.can_be_parent = can_be_parent(rec.Type)
+        rec.should_have_parent = should_have_parent(rec.Type)
 
-    if rec.updates == 1 and rec.should_have_parent():
-        parent_info = await determine_contact(rec, contact_type="parent", ref=ref)
+    new_coords, velocity_kts = cyfuns.compute_velocity(rec.lat, rec.lon, rec.alt, rec.cart_coords, rec.secs_since_last_seen)
+    rec.cart_coords = new_coords
+    if velocity_kts:
+        rec.velocity_kts = velocity_kts
+
+    if rec.updates == 1 and rec.should_have_parent:
+        parent_info = determine_contact(rec, contact_type="parent", ref=ref)
         if parent_info:
             rec.parent = parent_info[0]
             rec.parent_dist = parent_info[1]
 
     return rec
-
-
-async def insert_impact(rec, impact_time):
-    sql = """INSERT into impact (session_id, killer, target,
-                    weapon, time_offset, impact_dist)
-                VALUES($1, $2, $3, $4, $5, $6)
-    """
-    vals = (
-        rec.session_id,
-        rec.parent,
-        rec.impacted,
-        rec.id,
-        impact_time,
-        rec.impacted_dist,
-    )
-    async with ASYNC_CON.acquire() as con:
-        await con.execute(sql, *vals)
-
-
-async def create_single(obj):
-    """Insert a single newly create record to database."""
-    vals = (
-        obj.tac_id,
-        obj.session_id,
-        obj.Name,
-        obj.Color,
-        obj.Country,
-        obj.grp,
-        obj.Pilot,
-        obj.Type,
-        obj.alive,
-        obj.Coalition,
-        obj.first_seen,
-        obj.last_seen,
-        obj.lat,
-        obj.lon,
-        obj.alt,
-        obj.roll,
-        obj.pitch,
-        obj.yaw,
-        obj.u_coord,
-        obj.v_coord,
-        obj.heading,
-        obj.velocity_kts,
-        obj.impacted,
-        obj.impacted_dist,
-        obj.parent,
-        obj.parent_dist,
-        obj.updates,
-        obj.can_be_parent(),
-    )
-
-    sql = """INSERT into object (
-            tac_id, session_id, name, color, country, grp, pilot, type,
-            alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
-            pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
-            impacted_dist, parent, parent_dist, updates, can_be_parent
-        )
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-           $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
-
-        RETURNING id
-        """
-    async with ASYNC_CON.acquire() as con:
-        obj.id = await con.fetchval(sql, *vals)
-    obj.written = True
-
 
 class EndOfFileException(Exception):
     """Throw this exception when the server sends a null string,
@@ -655,166 +593,6 @@ class AsyncStreamReader(Ref):
         LOG.info(f"Session marked as {status}!")
 
 
-class BinCopyWriter:
-    """Manage efficient insertion of bulk data to postgres."""
-
-    db_event_time: float = 0.0
-    event_times: List = []
-    insert: BytesIO
-    fmt_str: str = ">h ii ii if i? if if if if if if if if if if ii"
-    copy_header = struct.pack(">11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
-    copy_trailer = struct.pack(">h", -1)
-
-    # """
-    # WITH src AS (
-    #     UPDATE serial_rate
-    #     SET rate = 22.53, serial_key = '0002'
-    #     WHERE serial_key = '002' AND id = '01'
-    #     RETURNING *
-    #     )
-    # UPDATE serial_table dst
-    # SET serial_key = src.serial_key
-    # FROM src
-    # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
-    # WHERE dst.id = '01' AND dst.serial_key  = '002';
-    # """
-
-    def __init__(self, dsn: str, batch_size: int = 10000, session_id=None):
-        self.dsn = dsn
-        self.batch_size = batch_size
-        self.build_fmt_string()
-        self.create_byte_buffer()
-        self.insert_count = 0
-        self.session_id = session_id
-        self.tbl_uuid = str(uuid1()).replace("-", "_")
-
-    def make_query(self):
-        self.cmd = f"""
-            CREATE UNLOGGED TABLE IF NOT EXISTS "{self.tbl_uuid}"
-                (LIKE event_{self.session_id} INCLUDING DEFAULTS);
-
-            COPY public."{self.tbl_uuid}" FROM STDIN WITH BINARY;
-
-            CREATE INDEX tmp_idx on "{self.tbl_uuid}" (id, updates DESC);
-
-            INSERT INTO event_{self.session_id}
-            SELECT * FROM "{self.tbl_uuid}";
-
-            INSERT INTO object (
-                id, session_id, last_seen, alive, lat, lon, alt, roll, pitch,
-                yaw, u_coord, v_coord, heading, velocity_kts, updates
-            )
-            SELECT id, session_id, last_seen, alive, lat, lon, alt, roll,
-                pitch, yaw, u_coord, v_coord, heading, velocity_kts, updates
-            FROM (
-                SELECT *,
-                    row_number() OVER (
-                        PARTITION BY id
-                        ORDER BY updates DESC) as row_number
-                FROM "{self.tbl_uuid}"
-            ) evt
-            WHERE row_number = 1
-            ON CONFLICT (id)
-            DO UPDATE SET session_id=EXCLUDED.session_id,
-                last_seen=EXCLUDED.last_seen,
-                alive=EXCLUDED.alive,
-                lat=EXCLUDED.lat,
-                lon=EXCLUDED.lon,
-                alt=EXCLUDED.alt,
-                roll=EXCLUDED.roll,
-                pitch=EXCLUDED.pitch,
-                yaw=EXCLUDED.yaw,
-                u_coord=EXCLUDED.u_coord,
-                v_coord=EXCLUDED.v_coord,
-                heading=EXCLUDED.heading,
-                velocity_kts=EXCLUDED.velocity_kts,
-                updates=EXCLUDED.updates
-            WHERE object.updates < EXCLUDED.updates;
-
-            DROP INDEX tmp_idx;
-            DROP TABLE "{self.tbl_uuid}";
-        """
-
-    def build_fmt_string(self):
-        {
-            "INTEGER": ("ii", 4),
-            "FLOAT": ("id", 8),
-            "DOUBLE": ("id", 8),
-            "NUMERIC": ("id", 8),
-        }
-
-    def create_byte_buffer(self) -> None:
-        self.insert = BytesIO()
-        self.insert.write(self.copy_header)
-        self.insert_count = 0
-
-    def add_data(self, obj: ObjectRec) -> None:
-        """Take an ObjectRec, pack it to bytes, then write to byte buffer."""
-        try:
-            data = (
-                15,
-                4,
-                obj.id,
-                4,
-                obj.session_id,
-                4,
-                obj.last_seen,
-                1,
-                obj.alive,
-                4,
-                obj.lat,
-                4,
-                obj.lon,
-                4,
-                obj.alt,
-                4,
-                obj.roll,
-                4,
-                obj.pitch,
-                4,
-                obj.yaw,
-                4,
-                obj.u_coord,
-                4,
-                obj.v_coord,
-                4,
-                obj.heading,
-                4,
-                obj.velocity_kts,
-                4,
-                obj.updates,
-            )
-            packed = struct.pack(self.fmt_str, *data)
-        except Exception as err:
-            LOG.error([obj.tac_id, obj.last_seen])
-            raise err
-
-        self.insert.write(packed)
-        self.insert_count += 1
-
-    async def cleanup(self) -> None:
-        """Shut down and ensure all data is written."""
-        LOG.info("Shutting down copywriter....")
-        self.min_insert_size = -1  # ensure everything gets flushed
-        await self.insert_data(force=True)
-        self.db_event_time = sum(self.event_times)
-
-    async def insert_data(self, force=False) -> None:
-        if not force and self.batch_size > self.insert_count:
-            LOG.debug("Not enough data for insert....")
-            return
-        t1 = datetime.now()
-        LOG.info(f"Inserting {self.insert_count} records...")
-        self.make_query()
-        self.insert.write(self.copy_trailer)
-        self.insert.seek(0)
-        async with ASYNC_CON.acquire() as con:
-            await con._copy_in(self.cmd, self.insert, 100)
-        self.insert.close()
-        self.create_byte_buffer()
-        self.event_times.append((datetime.now()-t1).total_seconds())
-
-
 async def consumer(
     host: str,
     port: int,
@@ -832,7 +610,7 @@ async def consumer(
     dsn = os.getenv("TACVIEW_DATABASE_URL")
     global ASYNC_CON
     ASYNC_CON = await asyncpg.create_pool(DB_URL)
-    copy_writer = BinCopyWriter(dsn, batch_size)
+    copy_writer = BinCopyWriter(dsn, batch_size, ASYNC_CON=ASYNC_CON)
     sock = AsyncStreamReader(
         host,
         port,
@@ -840,7 +618,7 @@ async def consumer(
         client_password,
     )
     await sock.open_connection()
-    init_time = time.time()
+    init_time = time.clock()
     lines_read = 0
     last_log = float(0.0)
     print_log = float(0.0)
@@ -861,7 +639,7 @@ async def consumer(
                     copy_writer.session_id = sock.session_id
                 await copy_writer.insert_data()
 
-                runtime = time.time() - init_time
+                runtime = time.clock() - init_time
                 log_check = runtime - last_log
                 print_check = runtime - print_log
                 if log_check > 0.05:
@@ -883,13 +661,13 @@ async def consumer(
                         print_log = runtime
 
             else:
-                t1 = time.time()
+                t1 = time.clock()
                 obj = await line_to_obj(obj, sock)
-                line_proc_time += time.time() - t1
+                line_proc_time += time.clock() - t1
                 if not obj:
                     continue
                 if not obj.written:
-                    await create_single(obj)
+                    await create_single(obj, ASYNC_CON)
                 copy_writer.add_data(obj)
 
             if max_iters and max_iters < lines_read:
@@ -907,7 +685,7 @@ async def consumer(
             await copy_writer.cleanup()
             await sock.close(status="Success")
 
-            total_time = time.time() - init_time
+            total_time = time.clock() - init_time
             LOG.info("Total Lines Processed : %s", str(lines_read))
             LOG.info("Total seconds running : %.2f", total_time)
             LOG.info(f"Total db write time: {copy_writer.db_event_time}")
@@ -919,7 +697,7 @@ async def consumer(
             LOG.info("Lines/second: %.4f", lines_read / total_time)
             total = {}
             for obj in sock.obj_store.values():
-                if obj.should_have_parent() and not obj.parent:
+                if obj.should_have_parent and not obj.parent:
                     try:
                         total[obj.Type] += 1
                     except KeyError:

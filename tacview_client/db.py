@@ -32,7 +32,9 @@ class Impact(Base):
     __tablename__ = "impact"
     id = sa.Column(sa.Integer, primary_key=True)
     session_id = sa.Column(
-        sa.INTEGER(), sa.ForeignKey("session.session_id", ondelete='CASCADE'), index=True
+        sa.INTEGER(),
+        sa.ForeignKey("session.session_id", ondelete="CASCADE"),
+        index=True,
     )
     killer = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
     target = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id"))
@@ -52,7 +54,9 @@ class Object(Base):
     __tablename__ = "object"
     id = sa.Column(sa.INTEGER, primary_key=True)
     tac_id = sa.Column(sa.INTEGER)
-    session_id = sa.Column(sa.Integer, sa.ForeignKey("session.session_id", ondelete='CASCADE'), index=True)
+    session_id = sa.Column(
+        sa.Integer, sa.ForeignKey("session.session_id", ondelete="CASCADE"), index=True
+    )
     name = sa.Column(sa.String(), index=True)
     color = sa.Column(sa.Enum("Red", "Blue", "Violet", "Grey", name="color_enum"))
     country = sa.Column(sa.String())
@@ -76,9 +80,9 @@ class Object(Base):
     v_coord = sa.Column(sa.REAL())
     heading = sa.Column(sa.REAL())
     velocity_kts = sa.Column(sa.REAL())
-    impacted = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id", ondelete='CASCADE'))
+    impacted = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id", ondelete="CASCADE"))
     impacted_dist = sa.Column(sa.REAL())
-    parent = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id", ondelete='CASCADE'))
+    parent = sa.Column(sa.INTEGER(), sa.ForeignKey("object.id", ondelete="CASCADE"))
     parent_dist = sa.Column(sa.REAL())
     updates = sa.Column(sa.Integer())
     can_be_parent = sa.Column(sa.Boolean())
@@ -87,8 +91,14 @@ class Object(Base):
 Event = sa.Table(
     "event",
     metadata,
-    sa.Column("id", sa.INTEGER(), sa.ForeignKey("object.id", ondelete='CASCADE'), index=True),
-    sa.Column("session_id", sa.INTEGER(), sa.ForeignKey("session.session_id", ondelete='CASCADE')),
+    sa.Column(
+        "id", sa.INTEGER(), sa.ForeignKey("object.id", ondelete="CASCADE"), index=True
+    ),
+    sa.Column(
+        "session_id",
+        sa.INTEGER(),
+        sa.ForeignKey("session.session_id", ondelete="CASCADE"),
+    ),
     sa.Column("last_seen", sa.REAL(), index=True),
     sa.Column("alive", sa.Boolean()),
     sa.Column("lat", sa.REAL()),
@@ -113,7 +123,8 @@ async def create_tables():
         await con.run_sync(Base.metadata.create_all)
         LOG.info("Creating views...")
         await con.execute(
-            text("""
+            text(
+                """
             CREATE OR REPLACE VIEW obj_events AS
                 SELECT * FROM event evt
                 INNER JOIN (SELECT id, session_id, name, color, pilot, first_seen,
@@ -121,11 +132,13 @@ async def create_tables():
                                 --,time_offset AS last_offset
                             FROM object) obj
                 USING (id, session_id)
-            """)
+            """
+            )
         )
 
         await con.execute(
-            text("""
+            text(
+                """
             CREATE OR REPLACE VIEW parent_summary AS
                 SELECT session_id, pilot, name, type, parent, count(*) total,
                     count(impacted) as impacts
@@ -139,7 +152,8 @@ async def create_tables():
                 ) pilots
                 USING (parent, session_id)
                 GROUP BY session_id, name, type, parent, pilot
-            """)
+            """
+            )
         )
 
         await con.execute(

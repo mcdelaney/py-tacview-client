@@ -122,9 +122,11 @@ def process_stream(
 def dropdb():
     """Drop database tables."""
     LOG.info("Dropping tables from specified database...")
+
     async def drop_and_recreate():
         await db.drop_tables()
         await db.create_tables()
+
     asyncio.run(drop_and_recreate())
     LOG.info("Recreating tables in specified database...")
 
