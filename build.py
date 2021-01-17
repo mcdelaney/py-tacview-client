@@ -1,5 +1,7 @@
 import os
 
+from distutils.core import Extension
+import numpy
 
 try:
     from Cython.Build import cythonize
@@ -28,5 +30,6 @@ else:
                 language_level=3,
                 compiler_directives={'linetrace': True},
             ),
+            'include_dirs': [numpy.get_include()],
             'cmdclass': {'build_ext': build_ext}
         })

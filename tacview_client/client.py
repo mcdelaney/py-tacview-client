@@ -36,8 +36,7 @@ from tacview_client import cython_funs as cyfuns
 from tacview_client import serve_file
 from tacview_client import __version__
 
-# CLIENT = "tacview-client"
-# PASSWORD = "0"
+
 STREAM_PROTOCOL = "XtraLib.Stream.0"
 TACVIEW_PROTOCOL = "Tacview.RealTimeTelemetry.0"
 HANDSHAKE_TERMINATOR = "\0"
@@ -46,7 +45,6 @@ HANDSHAKE_TERMINATOR = "\0"
 HOST = "147.135.8.169"  # Hoggit Gaw
 PORT = 42674
 DEBUG = False
-CONTACT_TIME = 0.0
 
 LOG = get_logger()
 
@@ -175,257 +173,23 @@ class Ref:
             pass
 
 
-# @dataclass
-# class ObjectRec:
-#     __slots__ = (
-#         "id",
-#         "tac_id",
-#         "first_seen",
-#         "last_seen",
-#         "session_id",
-#         "alive",
-#         "Name",
-#         "Color",
-#         "Country",
-#         "grp",
-#         "Pilot",
-#         "Type",
-#         "Coalition",
-#         "lat",
-#         "lon",
-#         "alt",
-#         "roll",
-#         "pitch",
-#         "yaw",
-#         "u_coord",
-#         "v_coord",
-#         "heading",
-#         "impacted",
-#         "impacted_dist",
-#         "parent",
-#         "parent_dist",
-#         "updates",
-#         "velocity_kts",
-#         "secs_since_last_seen",
-#         "can_be_parent",
-#         "should_have_parent",
-#         "written",
-#         "cart_coords",
-#         "Importance",
-#     )
-
-#     def __init__(
-#         self,
-#         tac_id: int = None,
-#         first_seen: Optional[float] = None,
-#         last_seen: Optional[float] = None,
-#         session_id: Optional[int] = None,
-#     ):
-#         self.id = None
-#         self.tac_id = tac_id
-#         self.first_seen = first_seen
-#         self.last_seen = last_seen
-#         self.session_id = session_id
-
-#         self.alive: bool = True
-#         self.Name: Optional[str] = None
-#         self.Color: Optional[str] = None
-#         self.Country: Optional[str] = None
-#         self.grp: Optional[str] = None
-#         self.Pilot: Optional[str] = None
-#         self.Type: Optional[str] = None
-#         self.Coalition: Optional[str] = None
-#         self.lat: Optional[float] = None
-#         self.lon: Optional[float] = None
-#         self.alt: Optional[float] = 1  # Ships will have null alt
-#         self.roll: Optional[float] = 0.0
-#         self.pitch: Optional[float] = 0.0
-#         self.yaw: Optional[float] = 0.0
-#         self.u_coord: Optional[float] = 0.0
-#         self.v_coord: Optional[float] = 0.0
-#         self.heading: Optional[float] = 0.0
-#         self.impacted: Optional[int] = None
-#         self.impacted_dist: Optional[float] = None
-#         self.parent: Optional[int] = None
-#         self.parent_dist: Optional[float] = None
-#         self.updates: int = 1
-#         self.velocity_kts: float = 0.0
-#         self.can_be_parent: bool = False
-#         self.should_have_parent: bool = False
-#         self.secs_since_last_seen: Optional[float] = 0
-#         self.written: bool = False
-#         self.cart_coords: Optional[Sequence] = []
-
-
-# def can_be_parent(rec_type: str) -> bool:
-#         """Check if an object is a member of types that could be parents."""
-#         not_parent_types = (
-#             "Decoy",
-#             "Misc",
-#             "Weapon",
-#             "Projectile",
-#             "Ground+Light+Human+Air+Parachutist",
-#         )
-
-#         for t in not_parent_types:
-#             if t in rec_type:
-#                 return False
-#         else:
-#             return True
-
-
-# def should_have_parent(rec_type: str) -> bool:
-#     """Check if an object should have a parent record."""
-#     parented_types = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
-#     for t in parented_types:
-#         if t in rec_type:
-#             return True
-#     return False
-
-# def compute_velocity(lat, lon, alt, cart_coords, secs_since_last_seen) -> None:
-#         """Calculate velocity given the distance from the last point."""
-#         new_cart_coords = cyfuns.get_cartesian_coord(lat, lon, alt)
-#         velocity_kts = None
-#         if (
-#             cart_coords
-#             and secs_since_last_seen
-#             and secs_since_last_seen > 0.0
-#         ):
-#             t_dist = cyfuns.compute_dist(new_cart_coords, cart_coords)
-#             velocity_kts = (t_dist / secs_since_last_seen) / 1.94384
-#         return new_cart_coords, velocity_kts
-
-# def get_cartesian_coord(lat: float, lon: float, h: float) -> Sequence:
-#     """Convert coords from geodesic to cartesian."""
-#     a = 6378137.0
-#     rf = 298.257223563
-#     lat_rad = radians(lat)
-#     lon_rad = radians(lon)
-#     N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
-#     X = (N + h) * cos(lat_rad) * cos(lon_rad)
-#     Y = (N + h) * cos(lat_rad) * sin(lon_rad)
-#     Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)
-#     return X, Y, Z
-
-
-# def compute_dist(p_1: Sequence, p_2: Sequence) -> float:
-#     """Compute cartesian distance between points."""
-#     return sqrt(
-#         (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
-#     )
-
-
-def determine_contact(rec, ref: Ref, contact_type="parent"):
-    """Determine the parent of missiles, rockets, and bombs."""
-    global CONTACT_TIME
-    t1 = time.clock()
-
-    LOG.debug(
-        f"Determing {contact_type} for object id: %s -- %s-%s...",
-        rec.id,
-        rec.Name,
-        rec.Type,
-    )
-
-    if contact_type == "parent":
-        if rec.Color == "Violet":
-            acpt_colors = ("Red", "Blue", "Grey")
-        else:
-            acpt_colors = [rec.Color]
-
-    elif contact_type == "impacted":
-        acpt_colors = ["Red"] if rec.Color == "Blue" else ["Blue"]
-
-    else:
-        raise NotImplementedError
-
-    closest = []
-    n_checked = 0
-    offset_time = rec.last_seen - 2.5
-
-    for near in ref.obj_store.values():
-        if (
-            not near.can_be_parent
-            or near.tac_id == rec.tac_id
-            or near.Color not in acpt_colors
-        ):
-            continue
-        if contact_type == "impacted" and not near.Type.startswith("Air+"):
-            continue
-
-        if offset_time > near.last_seen and (
-            not ("Ground" in near.Type.lower() and near.alive == True)
-        ):
-            continue
-
-        n_checked += 1
-        prox = cyfuns.compute_dist(rec.cart_coords, near.cart_coords)
-        LOG.debug("Distance to rec %s-%s is %d...", near.Name, near.Type, prox)
-        if not closest or (prox < closest[1]):
-            closest = [near.id, prox, near.Name, near.Pilot, near.Type]
-    CONTACT_TIME += time.clock() - t1
-
-    if not closest:
-        return None
-
-    if closest[1] > 200 and contact_type == "parent":
-        LOG.debug(
-            f"Rejecting closest {contact_type} for "
-            f"{rec.id}-{rec.Name}-{rec.Type}: "
-            f"{closest[4]} {closest[1]}m...{n_checked} checked!"
-        )
-        return None
-
-    return closest
-
-
 async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[cyfuns.ObjectRec]:
     """Parse a textline from tacview into an cyfuns.ObjectRec."""
-    # secondary_update = None
-    if raw_line[0:1] == b"0":
-        LOG.debug("Raw line starts with 0...")
-        return
-
     if raw_line[0:1] == b"-":
         # We know the Object is now dead
         rec = ref.obj_store[int(raw_line[1:], 16)]
         rec.alive = False
         rec.updates += 1
 
-        if "Weapon" in rec.Type or "Projectile" in rec.Type:
-            impacted = determine_contact(rec, contact_type="impacted", ref=ref)
-            if impacted:
-                rec.impacted = impacted[0]
-                rec.impacted_dist = impacted[1]
-                await insert_impact(rec, ref.time_offset, ASYNC_CON)
+        impacted = cyfuns.determine_contact(rec, ref.obj_store, contact_type=1)
+        if impacted:
+            rec.impacted = impacted[0]
+            rec.impacted_dist = impacted[1]
+            await insert_impact(rec, ref.time_offset, ASYNC_CON)
         return rec
 
-    comma = raw_line.find(b",")
-    rec_id = int(raw_line[0:comma], 16)
-    try:
-        # Make update to existing record
-        rec = ref.obj_store[rec_id]
-        rec.secs_since_last_seen = ref.time_offset - rec.last_seen
-        rec.last_seen = ref.time_offset
-        rec.updates += 1
-
-    except KeyError:
-        # Object not yet seen...create new record...
-        rec = cyfuns.ObjectRec(
-            tac_id=rec_id,
-            session_id=ref.session_id,
-            first_seen=ref.time_offset,
-            last_seen=ref.time_offset,
-        )
-        ref.obj_store[rec_id] = rec
-
-    rec = cyfuns.proc_line(rec, raw_line, ref.lat, ref.lon, comma)
-
-    if rec.updates == 1 and rec.should_have_parent:
-        parent_info = determine_contact(rec, contact_type="parent", ref=ref)
-        if parent_info:
-            rec.parent = parent_info[0]
-            rec.parent_dist = parent_info[1]
+    rec = cyfuns.proc_line(raw_line, ref.lat, ref.lon, ref.obj_store,
+                           ref.time_offset, ref.session_id)
 
     return rec
 
@@ -576,7 +340,9 @@ async def consumer(
                             )
                         )
                         print_log = runtime
-
+            elif obj[0:1] == b"0":
+                LOG.debug("Raw line starts with zero...skipping...")
+                continue
             else:
                 t1 = time.clock()
                 obj = await line_to_obj(obj, sock)
@@ -609,11 +375,11 @@ async def consumer(
             LOG.info(
                 "Pct Event Write Time: %.2f", copy_writer.db_event_time / total_time
             )
-            LOG.info("Pct Get Contact Time: %.2f", CONTACT_TIME / total_time)
+
             LOG.info("Pct Line Proc Time: %.2f", line_proc_time / total_time)
             LOG.info("Total Line Proc Secs: %.2f", line_proc_time)
-            LOG.info("Lines Proc/Sec: %.2f", lines_read/line_proc_time)
-            LOG.info("Lines/second: %.4f", lines_read / total_time)
+            LOG.info("Lines Proc/Sec: %.2f", lines_read / line_proc_time)
+            LOG.info("Total Lines/second: %.4f", lines_read / total_time)
             total = {}
             for obj in sock.obj_store.values():
                 if obj.should_have_parent and not obj.parent:

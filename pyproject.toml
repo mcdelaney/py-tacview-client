@@ -15,6 +15,7 @@ pytz = "^2020.5"
 typer = "^0.3.2"
 SQLAlchemy = "1.4.0b1"
 Cython = "^0.29.21"
+numpy = "1.18.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
