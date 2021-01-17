@@ -7,7 +7,11 @@ from libcpp cimport bool
 import numpy as np
 cimport numpy as np
 np.import_array()
+
+from tacview_client.config import DB_URL
+
 # ctypedef np.int_t DTYPE_t
+from cython.parallel import prange
 
 cdef tuple COORD_KEYS = (
     "lon",
@@ -159,13 +163,28 @@ cpdef ObjectRec compute_velocity(ObjectRec rec):
     return rec
 
 
-cpdef ObjectRec proc_line(bytearray raw_line, double ref_lat,
+cpdef list proc_line(str line, double ref_lat,
                      double ref_lon, dict obj_store,
                      float time_offset, int session_id):
     """Parse a textline from tacview into an ObjectRec."""
+    # cdef str line = raw_line.decode("UTF-8")
+    cdef ObjectRec rec
+    cdef bint found_impact = False
+    if line[0:1] == "-":
+        # We know the Object is now dead
+        rec = obj_store[int(line[1:], 16)]
+        rec.alive = False
+        rec.updates += 1
 
-    comma = raw_line.find(b",")
-    rec_id = int(raw_line[0:comma], 16)
+        impacted = determine_contact(rec, obj_store, contact_type=1)
+        if impacted:
+            rec.impacted = impacted[0]
+            rec.impacted_dist = impacted[1]
+            found_impact = True
+        return [rec, found_impact]
+
+    comma = line.find(",")
+    rec_id = int(line[0:comma], 16)
     try:
         # Make update to existing record
         rec = obj_store[rec_id]
@@ -185,23 +204,27 @@ cpdef ObjectRec proc_line(bytearray raw_line, double ref_lat,
 
     cdef bint bytes_remaining = True
 
+    cdef tuple C_KEYS
+    cdef int C_LEN, commma, npipe, pipe_pos_start, pipes_remaining, pipe_pos_end, i, eq_loc
+    cdef str key, val
+
     while bytes_remaining:
         last_comma = comma + 1
-        comma = raw_line.find(b",", last_comma)
+        comma = line.find(",", last_comma)
         if comma == -1:
             bytes_remaining = False
-            chunk = raw_line[last_comma:]
+            chunk = line[last_comma:]
         else:
-            chunk = raw_line[last_comma:comma]
-        eq_loc = chunk.find(b"=")
+            chunk = line[last_comma:comma]
+        eq_loc = chunk.find("=")
         key = chunk[0:eq_loc]
         val = chunk[eq_loc + 1 :]
 
-        if key == b"T":
+        if key == "T":
             i = 0
             pipe_pos_end = -1
             pipes_remaining = True
-            npipe = val.count(b"|")
+            npipe = val.count("|")
             if npipe == 8:
                 C_KEYS = COORD_KEYS
                 C_LEN = COORD_KEY_LEN
@@ -217,20 +240,18 @@ cpdef ObjectRec proc_line(bytearray raw_line, double ref_lat,
             else:
                 raise ValueError(
                     "COORD COUNT EITHER 8, 5, OR 4!",
-                    npipe,
-                    raw_line.decode("UTF-8"),
-                )
+                    npipe, line)
 
             while i < C_LEN and pipes_remaining:
                 pipe_pos_start = pipe_pos_end + 1
-                pipe_pos_end = val.find(b"|", pipe_pos_start)
+                pipe_pos_end = val.find("|", pipe_pos_start)
                 if pipe_pos_end == -1:
                     pipes_remaining = False
                     coord = val[pipe_pos_start:]
                 else:
                     coord = val[pipe_pos_start:pipe_pos_end]
 
-                if coord != b"":
+                if coord != "":
                     c_key = C_KEYS[i]
                     if c_key == "lat":
                         rec.lat = float(coord) + ref_lat
@@ -240,9 +261,7 @@ cpdef ObjectRec proc_line(bytearray raw_line, double ref_lat,
                         setattr(rec, c_key, float(coord))
                 i += 1
         else:
-            setattr(rec,
-                    key.decode("UTF-8") if key != b"Group" else "grp",
-                    val.decode("UTF-8"))
+            setattr(rec, key  if key != "Group" else "grp", val)
 
     if rec.updates == 1:
         rec = set_obj_class(rec)
@@ -257,7 +276,7 @@ cpdef ObjectRec proc_line(bytearray raw_line, double ref_lat,
             rec.parent = parent_info[0]
             rec.parent_dist = parent_info[1]
 
-    return rec # [rec, obj_store]
+    return [rec, found_impact] # [rec, obj_store]
 
 
 cdef bint can_be_parent(str rec_type):
@@ -298,6 +317,30 @@ cpdef list determine_contact(ObjectRec rec, dict obj_store, int contact_type):
     cdef list possible_ids = []
     n_checked = 0
     offset_time = rec.last_seen - 2.5
+
+    # cdef list obj_store_vals = list(obj_store.values())
+    # cdef int loops  = len(obj_store_vals)
+    # for i in prange(loops, nogil=True):
+    #     near = obj_store_vals[i]
+    #     if (near.can_be_parent == False
+    #         or near.tac_id == rec.tac_id
+    #         or near.Color not in acpt_colors
+    #         or (contact_type == 1 and near.is_air == False)
+    #         or (offset_time > near.last_seen and (
+    #             not near.is_ground == True
+    #             and near.alive == True)
+    #         )):
+    #         continue
+
+    #     prox = compute_dist(rec.cart_coords, near.cart_coords)
+    #     closest.append([near.id, prox])
+    #     # if not closest or (prox < closest[1]):
+    #     #     closest = [near.id, prox]
+
+    # if closest[1] > 200 and contact_type == 2:
+    #     return
+
+    # return closest
 
     for near in obj_store.values():
 

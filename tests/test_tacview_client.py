@@ -5,7 +5,8 @@ import pytest
 # import sys
 # sys.path.append("..")
 from tacview_client import __version__
-from tacview_client.client import line_to_obj, Ref
+from tacview_client.client import Ref
+from tacview_client.cython_funs import cyfuns
 
 # pytestmark = pytest.mark.asyncio
 
@@ -33,11 +34,11 @@ async def test_update_string(ref_obj):
         b"Type=Ground+Static+Aerodrome,Name=FARP,Color=Blue,"
         b"Coalition=Enemies,Country=us"
     )
-    await line_to_obj(raw_line=new_string, ref=ref_obj)
+    cyfuns.proc_line(raw_line=new_string, ref=ref_obj)
 
     update_string = bytearray(b"802,T=123.45|678.09|234.2||")
     correct_resp = {"id": int("802", 16), "lat": 678.09, "lon": 123.45, "alt": 234.2}
-    parsed = await line_to_obj(raw_line=update_string, ref=ref_obj)
+    parsed = cyfuns.proc_line(raw_line=update_string, ref=ref_obj)
     for key, value in correct_resp.items():
         if key == "id":
             continue
@@ -52,7 +53,8 @@ async def test_new_entry_without_alt(ref_obj):
         b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
         b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru"
     )
-    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    parsed = cyfuns.proc_line(input_bytes, ref_obj.lat, ref_obj.lon, ref_obj.obj_store,
+                              ref_obj.time_offset, ref_obj.session_id)
     assert parsed.alt == 1.0
 
 
@@ -63,10 +65,12 @@ async def test_negative_integer_alt(ref_obj):
         b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
         b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru"
     )
-    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    parsed = cyfuns.proc_line(input_bytes, ref_obj.lat, ref_obj.lon, ref_obj.obj_store,
+                              ref_obj.time_offset, ref_obj.session_id)
 
     input_bytes = bytearray(b"4001,T=6.96369|4.0232604|-2||")
-    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    parsed = cyfuns.proc_line(input_bytes, ref_obj.lat, ref_obj.lon, ref_obj.obj_store,
+                              ref_obj.time_offset, ref_obj.session_id)
     assert parsed.alt == -2.0
 
 
@@ -77,15 +81,18 @@ async def test_u_coord_error(ref_obj):
         b"Type=Ground+Heavy+Armor+Vehicle+Tank,Name=BTR-80,"
         b"Group=New Vehicle Group #041,Color=Red,Coalition=Enemies,Country=ru"
     )
-    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    parsed = cyfuns.proc_line(input_bytes, ref_obj.lat, ref_obj.lon, ref_obj.obj_store,
+                              ref_obj.time_offset, ref_obj.session_id)
 
     input_bytes = bytearray(b"76502,T=6.6632117|4.8577435|6640.74|-57047.37|76446.19")
-    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    parsed = cyfuns.proc_line(input_bytes, ref_obj.lat, ref_obj.lon, ref_obj.obj_store,
+                              ref_obj.time_offset, ref_obj.session_id)
     assert parsed.v_coord == 76446.19
     assert parsed.alt == 6640.74
 
     input_bytes = bytearray(b"76502,T=5.8429775|4.1803246|7224.58|-139814.45|2511.76")
-    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    parsed = cyfuns.proc_line(input_bytes, ref_obj.lat, ref_obj.lon, ref_obj.obj_store,
+                              ref_obj.time_offset, ref_obj.session_id)
     assert parsed.v_coord == 2511.76
     assert parsed.u_coord == -139814.45
     assert parsed.alt == 7224.58
@@ -99,7 +106,8 @@ async def test_line_parser(ref_obj):
         b"Type=Ground+Static+Aerodrome,Name=FARP,Color=Blue,"
         b"Coalition=Enemies,Country=us"
     )
-    parsed = await line_to_obj(raw_line=input_bytes, ref=ref_obj)
+    parsed = cyfuns.proc_line(input_bytes, ref_obj.lat, ref_obj.lon, ref_obj.obj_store,
+                              ref_obj.time_offset, ref_obj.session_id)
 
     correct_resp = {
         "tac_id": int(b"802", 16),

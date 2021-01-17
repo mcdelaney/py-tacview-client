@@ -30,6 +30,8 @@ else:
                 language_level=3,
                 compiler_directives={'linetrace': True},
             ),
+            'extra_compile_args': ['-fopenmp'],
+            'extra_link_args':['-fopenmp'],
             'include_dirs': [numpy.get_include()],
             'cmdclass': {'build_ext': build_ext}
         })

@@ -97,36 +97,36 @@ class Ref:
         ReferenceTime from a line object.
         """
         try:
-            val = line.split(b",")[-1].split(b"=")
+            val = line.split(",")[-1].split("=")
 
-            if val[0] == b"ReferenceLatitude":
+            if val[0] == "ReferenceLatitude":
                 LOG.debug("Ref latitude found...")
                 self.lat = float(val[1])
 
-            elif val[0] == b"ReferenceLongitude":
+            elif val[0] == "ReferenceLongitude":
                 LOG.debug("Ref longitude found...")
                 self.lon = float(val[1])
 
-            elif val[0] == b"DataSource":
+            elif val[0] == "DataSource":
                 LOG.debug("Ref datasource found...")
-                self.datasource = val[1].decode("UTF-8")
+                self.datasource = val[1]
 
-            elif val[0] == b"Title":
+            elif val[0] == "Title":
                 LOG.debug("Ref Title found...")
-                self.title = val[1].decode("UTF-8")
+                self.title = val[1]
 
-            elif val[0] == b"Author":
+            elif val[0] == "Author":
                 LOG.debug("Ref Author found...")
-                self.author = val[1].decode("UTF-8")
+                self.author = val[1]
 
-            elif val[0] == b"FileVersion":
+            elif val[0] == "FileVersion":
                 LOG.debug("Ref Author found...")
                 self.file_version = float(val[1])
 
-            elif val[0] == b"RecordingTime":
+            elif val[0] == "RecordingTime":
                 LOG.debug("Ref time found...")
                 self.start_time = datetime.strptime(
-                    val[1].decode("UTF-8"), "%Y-%m-%dT%H:%M:%S.%fZ"
+                    val[1], "%Y-%m-%dT%H:%M:%S.%fZ"
                 )
                 self.start_time = self.start_time.replace(microsecond=0)
                 self.start_time = self.start_time.replace(tzinfo=pytz.UTC)
@@ -172,26 +172,6 @@ class Ref:
         except IndexError:
             pass
 
-
-async def line_to_obj(raw_line: bytearray, ref: Ref) -> Optional[cyfuns.ObjectRec]:
-    """Parse a textline from tacview into an cyfuns.ObjectRec."""
-    if raw_line[0:1] == b"-":
-        # We know the Object is now dead
-        rec = ref.obj_store[int(raw_line[1:], 16)]
-        rec.alive = False
-        rec.updates += 1
-
-        impacted = cyfuns.determine_contact(rec, ref.obj_store, contact_type=1)
-        if impacted:
-            rec.impacted = impacted[0]
-            rec.impacted_dist = impacted[1]
-            await insert_impact(rec, ref.time_offset, ASYNC_CON)
-        return rec
-
-    rec = cyfuns.proc_line(raw_line, ref.lat, ref.lon, ref.obj_store,
-                           ref.time_offset, ref.session_id)
-
-    return rec
 
 class EndOfFileException(Exception):
     """Throw this exception when the server sends a null string,
@@ -254,10 +234,10 @@ class AsyncStreamReader(Ref):
 
     async def read_stream(self):
         """Read lines from socket stream."""
-        data = bytearray(await self.reader.readuntil(b"\n"))
+        data = await self.reader.readuntil(b"\n")
         if not data:
             raise EndOfFileException
-        return data[:-1]
+        return data[:-1].decode("UTF-8")
 
     async def close(self, status):
         """Close the socket connection and reset ref object."""
@@ -314,7 +294,7 @@ async def consumer(
                 await sock.parse_ref_obj(obj, overwrite)
                 continue
 
-            if obj[0:1] == b"#":
+            if obj[0:1] == "#":
                 sock.update_time(obj)
                 if not copy_writer.session_id:
                     copy_writer.session_id = sock.session_id
@@ -340,17 +320,22 @@ async def consumer(
                             )
                         )
                         print_log = runtime
-            elif obj[0:1] == b"0":
+            elif obj[0:1] == "0":
                 LOG.debug("Raw line starts with zero...skipping...")
                 continue
             else:
                 t1 = time.clock()
-                obj = await line_to_obj(obj, sock)
+                obj, found_impact = cyfuns.proc_line(obj, sock.lat, sock.lon, sock.obj_store,
+                                                     sock.time_offset, sock.session_id)
+                if found_impact:
+                    await insert_impact(obj, sock.time_offset, ASYNC_CON)
+
                 line_proc_time += time.clock() - t1
                 if not obj:
                     continue
                 if not obj.written:
                     await create_single(obj, ASYNC_CON)
+
                 copy_writer.add_data(obj)
 
             if max_iters and max_iters < lines_read:
