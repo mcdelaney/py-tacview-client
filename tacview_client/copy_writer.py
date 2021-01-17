@@ -40,7 +40,7 @@ class BinCopyWriter:
     # WHERE dst.id = '01' AND dst.serial_key  = '002';
     # """
 
-    def __init__(self, dsn: str, batch_size: int = 10000, session_id=None, ASYNC_CON=None):
+    def __init__(self, dsn: str, batch_size: int = 10000, session_id=None, ASYNC_CON=None, ref=None):
         self.dsn = dsn
         self.batch_size = batch_size
         self.build_fmt_string()
@@ -49,6 +49,8 @@ class BinCopyWriter:
         self.session_id = session_id
         self.tbl_uuid = str(uuid1()).replace("-", "_")
         self.ASYNC_CON = ASYNC_CON
+        self.impacts = []
+        self.ref = ref
 
     def make_query(self):
         self.cmd = f"""
@@ -96,6 +98,12 @@ class BinCopyWriter:
             DROP INDEX tmp_idx;
             DROP TABLE "{self.tbl_uuid}";
         """
+
+    async def flush_impacts(self):
+        LOG.info(f"Flushing {len(self.impacts)} impacts...")
+        for impact in self.impacts:
+            await insert_impact(impact, self.ref.time_offset, self.ASYNC_CON)
+
 
     def build_fmt_string(self):
         {
@@ -174,6 +182,8 @@ class BinCopyWriter:
             await con._copy_in(self.cmd, self.insert, 100)
         self.insert.close()
         self.create_byte_buffer()
+
+        await self.flush_impacts()
         self.event_times.append((datetime.now() - t1).total_seconds())
 
 

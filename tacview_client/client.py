@@ -271,13 +271,13 @@ async def consumer(
     dsn = os.getenv("TACVIEW_DATABASE_URL")
     global ASYNC_CON
     ASYNC_CON = await asyncpg.create_pool(DB_URL)
-    copy_writer = BinCopyWriter(dsn, batch_size, ASYNC_CON=ASYNC_CON)
     sock = AsyncStreamReader(
         host,
         port,
         client_username,
         client_password,
     )
+    copy_writer = BinCopyWriter(dsn, batch_size, ASYNC_CON=ASYNC_CON, ref=sock)
     await sock.open_connection()
     init_time = time.clock()
     lines_read = 0
@@ -327,12 +327,15 @@ async def consumer(
                 t1 = time.clock()
                 obj, found_impact = cyfuns.proc_line(obj, sock.lat, sock.lon, sock.obj_store,
                                                      sock.time_offset, sock.session_id)
-                if found_impact:
-                    await insert_impact(obj, sock.time_offset, ASYNC_CON)
-
-                line_proc_time += time.clock() - t1
                 if not obj:
                     continue
+
+                if found_impact:
+                    copy_writer.impacts.append(obj)
+                    # await insert_impact(obj, sock.time_offset, ASYNC_CON)
+
+                line_proc_time += time.clock() - t1
+
                 if not obj.written:
                     await create_single(obj, ASYNC_CON)
 
