@@ -1,9 +1,9 @@
-# distutils: language = c++
+
 from libc.math cimport sqrt
 from libc.math cimport cos
 from libc.math cimport sin
 from libc.math cimport M_PI
-from libcpp.vector cimport vector
+# from libcpp.vector cimport vector
 
 import pytz
 import numpy as np
@@ -36,7 +36,7 @@ cdef class Ref:
     """Hold and extract Reference values used as offsets."""
     cdef public int session_id
     cdef public float file_version, time_offset, time_since_last
-    cdef public double lat, lon
+    cdef public float lat, lon
     cdef public str title, datasource, author, client_version, status
     cdef public object start_time
     cdef public bint all_refs
@@ -111,16 +111,15 @@ cdef class Ref:
             pass
 
 
-
 cdef class ObjectRec:
     """Dataclass for objects."""
     cdef public object parent, impacted
     cdef public str Color, Coalition, Name, Country, Pilot, Type
     cdef public int id, tac_id, session_id, updates
-    cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist
-    cdef public double secs_since_last_seen, velocity_kts
+    cdef public float first_seen, last_seen, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist
+    cdef public float secs_since_last_seen, velocity_kts, lat, lon, alt
     cdef public bint alive, written, can_be_parent, should_have_parent, is_air, is_ground, is_weapon
-    cdef public tuple cart_coords
+    cdef public list cart_coords
     cdef public str grp
 
     def __init__(
@@ -163,7 +162,7 @@ cdef class ObjectRec:
         self.should_have_parent = False
         self.secs_since_last_seen = 0.0
         self.written = False
-        self.cart_coords = ()
+        self.cart_coords = []
         self.is_weapon = False
         self.is_ground = False
         self.is_air = False
@@ -186,26 +185,29 @@ cdef ObjectRec set_obj_class(ObjectRec rec):
     return rec
 
 
-cpdef tuple get_cartesian_coord(double lat, double lon, double h):
+cpdef list get_cartesian_coord(float lat, float lon, float h):
     """Convert coords from geodesic to cartesian."""
-    cdef double a = 6378137.0
-    cdef double rf = 298.257223563
+    cdef list out = [0.0, 0.0, 0.0]
+    cdef float a = 6378137.0
+    cdef float rf = 298.257223563
+    cdef float const = M_PI/180
+    cdef float lat_rad = lat * const
+    cdef float lon_rad = lon * const
+    cdef float sin_lat_rad = sin(lat_rad)
+    cdef float cos_lat_rad = cos(lat_rad)
+    cdef float N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin_lat_rad) ** 2))
 
-    cdef double lat_rad = lat * M_PI/180
-    cdef double lon_rad = lon * M_PI/180
-    cdef double sin_lat_rad = sin(lat_rad)
-    cdef double cos_lat_rad = cos(lat_rad)
-    cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin_lat_rad) ** 2))
-    cdef double X = (N + h) * cos_lat_rad * cos(lon_rad)
-    cdef double Y = (N + h) * cos_lat_rad * sin(lon_rad)
-    cdef double Z = ((1 - 1 / rf) ** 2 * N + h) * sin_lat_rad
-    return (X, Y, Z)
+    cdef float intermed = (N + h) * cos_lat_rad
+    out[0] = intermed * cos(lon_rad)
+    out[1] = intermed * sin(lon_rad)
+    out[2] = ((1 - 1 / rf) ** 2 * N + h) * sin_lat_rad
+    return out
 
 
-cpdef double compute_dist(tuple p_1, tuple p_2):
+cpdef float compute_dist(list p_1, list p_2):
     """Compute cartesian distance between points."""
     # return np.sqrt(np.sum(np.square(p_2 - p_1), axis=0))
-    cdef double result = sqrt(
+    cdef float result = sqrt(
         (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
     )
     return result
@@ -218,14 +220,12 @@ cpdef np.ndarray compute_dist_arr(np.ndarray p_1, np.ndarray p_2):
 
 cpdef ObjectRec compute_velocity(ObjectRec rec):
     """Calculate velocity given the distance from the last point."""
-    cdef tuple new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
-    cdef double velocity_kts
-    cdef double t_dist
-    cdef double cnst = 1.94384
+    cdef list new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
+    cdef float velocity_kts
+    cdef float t_dist
+    cdef float cnst = 1.94384
     if (
-        rec.cart_coords
-        and rec.secs_since_last_seen
-        and rec.secs_since_last_seen > 0.0
+        rec.cart_coords and rec.secs_since_last_seen > 0.0
     ):
         t_dist = compute_dist(new_cart_coords, rec.cart_coords)
         velocity_kts = (t_dist / rec.secs_since_last_seen) / cnst
@@ -235,6 +235,29 @@ cpdef ObjectRec compute_velocity(ObjectRec rec):
         rec.velocity_kts = velocity_kts
 
     return rec
+
+cdef tuple COORD_KEYS = (
+        "lon",
+        "lat",
+        "alt",
+        "roll",
+        "pitch",
+        "yaw",
+        "u_coord",
+        "v_coord",
+        "heading",
+    )
+
+cdef int COORD_KEY_LEN = 9
+
+cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
+cdef int COORD_KEY_SHORT_LEN = 5
+
+cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
+cdef int COORD_KEYS_MED_LEN = 6
+
+cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
+cdef int COORD_KEYS_X_SHORT_LEN = 3
 
 
 cpdef list proc_line(str line, Ref ref):
@@ -259,27 +282,7 @@ cpdef list proc_line(str line, Ref ref):
             found_impact = True
         return [rec, found_impact]
 
-    cdef tuple COORD_KEYS = (
-        "lon",
-        "lat",
-        "alt",
-        "roll",
-        "pitch",
-        "yaw",
-        "u_coord",
-        "v_coord",
-        "heading",
-    )
-    cdef int COORD_KEY_LEN = 9
 
-    cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
-    cdef int COORD_KEY_SHORT_LEN = 5
-
-    cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
-    cdef int COORD_KEYS_MED_LEN = 6
-
-    cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
-    cdef int COORD_KEYS_X_SHORT_LEN = 3
 
     cdef list line_split = line.split(',')
     cdef int rec_id = int(line_split[0], 16)
@@ -351,7 +354,7 @@ cpdef list proc_line(str line, Ref ref):
             rec.parent = parent_info[0]
             rec.parent_dist = parent_info[1]
 
-    return [rec, found_impact] # [rec, obj_store]
+    return [rec, found_impact]
 
 
 cdef bint can_be_parent(str rec_type):
@@ -386,36 +389,31 @@ cpdef list determine_contact(ObjectRec rec, dict obj_store, int contact_type):
     #         acpt_colors = ("Red", "Blue", "Grey")
     #     else:
     #         acpt_colors = tuple([rec.Color])
-    cdef vector[int] possible_ids
+    # cdef vector[int] possible_ids
     cdef list closest = []
     cdef list possible_coords = []
-    # cdef list possible_ids = []
+    cdef list possible_ids = []
     offset_time = rec.last_seen - 2.5
 
     cdef ObjectRec near
     for near in obj_store.values():
         if (near.can_be_parent == False
-            or near.tac_id == rec.tac_id
             # or near.Color not in acpt_colors
             or (contact_type == 1 and near.is_air == False)
             or (offset_time > near.last_seen and (
                 not near.is_ground == True
                 and near.alive == True)
+            or near.tac_id == rec.tac_id
         )):
             continue
 
-        # n_checked += 1
         possible_coords.append(near.cart_coords)
-        possible_ids.push_back(near.id)
-
-        # prox = compute_dist(rec.cart_coords, near.cart_coords)
-        # if not closest or (prox < closest[1]):
-        #     closest = [near.id, prox]
+        possible_ids.append(near.id)
 
     if not possible_coords:
         return
 
-    cdef np.ndarray prox_arr = compute_dist_arr(np.array(rec.cart_coords), np.array(possible_coords))
+    cdef np.ndarray prox_arr = compute_dist_arr(np.array(rec.cart_coords, dtype='float'), np.array(possible_coords, dtype='float'))
     cdef int prox_idx = prox_arr.argmin()
     closest = [possible_ids[prox_idx], prox_arr[prox_idx]]
 
