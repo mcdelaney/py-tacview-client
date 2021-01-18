@@ -51,6 +51,13 @@ async def handle_req(
     except (ConnectionResetError, BrokenPipeError, CancelledError):
         LOG.info("Cancel received..shutting down...")
         writer.close()
+
+    except Exception as err:
+        LOG.info(f"Unexepcted error! {err}")
+        try:
+            writer.close()
+        except:
+            pass
     LOG.info("Exiting...")
 
 

@@ -28,9 +28,8 @@ except (ModuleNotFoundError, NotImplementedError):
     pass
 
 from tacview_client.config import DB_URL, get_logger
-from tacview_client.copy_writer import BinCopyWriter
+from tacview_client.copy_writer import BinCopyWriter, prep_single_insert_stmt
 from tacview_client.copy_writer import create_single
-from tacview_client.copy_writer import insert_impact
 from tacview_client import cython_funs as cyfuns
 
 from tacview_client import serve_file
@@ -48,6 +47,14 @@ DEBUG = False
 
 LOG = get_logger()
 
+
+class EndOfFileException(Exception):
+    """Throw this exception when the server sends a null string,
+    indicating end of file.."""
+
+
+class MaxIterationsException(Exception):
+    """Throw this exception when max iters < total_iters."""
 
 class Ref:
     """Hold and extract Reference values used as offsets."""
@@ -134,21 +141,22 @@ class Ref:
             self.all_refs = bool(self.lat and self.lon and self.start_time)
             if self.all_refs and not self.session_id:
 
-                if overwrite:
-                    async with ASYNC_CON.acquire() as con:
+
+                async with ASYNC_CON.acquire() as con:
+                    if overwrite:
                         await con.execute(
                             f"""DELETE FROM session
                             WHERE start_time = '{self.start_time}'
                             """)
 
-                LOG.info("All Refs found...writing session data to db...")
-                sql = """INSERT into session (lat, lon, title,
-                                datasource, author, file_version, start_time,
-                                client_version, status)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                        RETURNING session_id
-                """
-                async with ASYNC_CON.acquire() as con:
+                    LOG.info("All Refs found...writing session data to db...")
+                    sql = """INSERT into session (lat, lon, title,
+                                    datasource, author, file_version, start_time,
+                                    client_version, status)
+                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                            RETURNING session_id
+                    """
+
                     self.session_id = await con.fetchval(
                         sql,
                         self.lat,
@@ -161,25 +169,18 @@ class Ref:
                         self.client_version,
                         self.status,
                     )
-                LOG.info(f"Creating table partion for {self.session_id}...")
-                async with ASYNC_CON.acquire() as con:
-                    await con.execute(
-                        f"""CREATE TABLE event_{self.session_id} PARTITION OF event
-                            FOR VALUES IN ({self.session_id});
-                        """
-                    )
+                    LOG.info(f"Creating table partion for {self.session_id}...")
+                    async with ASYNC_CON.acquire() as con:
+                        await con.execute(
+                            f"""CREATE TABLE event_{self.session_id} PARTITION OF event
+                                FOR VALUES IN ({self.session_id});
+                            """
+                        )
+
                 LOG.info("Session session data saved...")
         except IndexError:
             pass
 
-
-class EndOfFileException(Exception):
-    """Throw this exception when the server sends a null string,
-    indicating end of file.."""
-
-
-class MaxIterationsException(Exception):
-    """Throw this exception when max iters < total_iters."""
 
 
 class AsyncStreamReader(Ref):
@@ -245,8 +246,10 @@ class AsyncStreamReader(Ref):
         await self.writer.wait_closed()
         LOG.info(f"Marking session status: {status}...")
         await ASYNC_CON.execute(
-            """UPDATE session SET status = $1
-                                WHERE session_id = $2""",
+            """
+                UPDATE session SET status = $1
+                WHERE session_id = $2
+            """,
             status,
             self.session_id,
         )
@@ -277,15 +280,21 @@ async def consumer(
         client_username,
         client_password,
     )
-    copy_writer = BinCopyWriter(dsn, batch_size, ASYNC_CON=ASYNC_CON, ref=sock)
+    copy_writer = BinCopyWriter(dsn, batch_size, ref=sock)
+    await copy_writer.setup()
     await sock.open_connection()
     init_time = time.clock()
     lines_read = 0
     last_log = float(0.0)
     print_log = float(0.0)
     line_proc_time = float(0.0)
-    while True:
-        try:
+    post_proc_time = float(0.0)
+    con = await asyncpg.connect(DB_URL)
+    single_stmt = await prep_single_insert_stmt(con)
+
+    try:
+        while True:
+            # Loop until ref header is read.
             obj = await sock.read_stream()
             LOG.debug(obj)
             lines_read += 1
@@ -294,11 +303,18 @@ async def consumer(
                 await sock.parse_ref_obj(obj, overwrite)
                 continue
 
+            copy_writer.session_id = sock.session_id
+            break  # All refs have been collected. Break to main loop.
+
+        while True:
+
+            obj = await sock.read_stream()
+            LOG.debug(obj)
+            lines_read += 1
+
             if obj[0:1] == "#":
                 sock.update_time(obj)
-                if not copy_writer.session_id:
-                    copy_writer.session_id = sock.session_id
-                await copy_writer.insert_data()
+                await copy_writer.insert_data_maybe()
 
                 runtime = time.clock() - init_time
                 log_check = runtime - last_log
@@ -320,83 +336,81 @@ async def consumer(
                             )
                         )
                         print_log = runtime
-            elif obj[0:1] == "0":
-                LOG.debug("Raw line starts with zero...skipping...")
-                continue
             else:
                 t1 = time.clock()
                 obj, found_impact = cyfuns.proc_line(obj, sock.lat, sock.lon, sock.obj_store,
                                                      sock.time_offset, sock.session_id)
+                line_proc_time += time.clock() - t1
+
+                t2 = time.clock()
                 if not obj:
                     continue
 
                 if found_impact:
-                    copy_writer.impacts.append(obj)
-                    # await insert_impact(obj, sock.time_offset, ASYNC_CON)
-
-                line_proc_time += time.clock() - t1
+                    copy_writer.add_impact(obj)
 
                 if not obj.written:
-                    await create_single(obj, ASYNC_CON)
+                    await create_single(obj, single_stmt)
 
                 copy_writer.add_data(obj)
+                post_proc_time += time.clock() - t2
 
             if max_iters and max_iters < lines_read:
                 copy_writer.session_id = sock.session_id
-                await copy_writer.insert_data()
+                await copy_writer.insert_data_maybe()
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
 
-        except (
-            MaxIterationsException,
-            EndOfFileException,
-            asyncio.IncompleteReadError,
-        ) as err:
-            LOG.info(f"Starting shutdown due to: {err.__class__.__name__}")
-            await copy_writer.cleanup()
-            await sock.close(status="Success")
+    except (
+        MaxIterationsException,
+        EndOfFileException,
+        asyncio.IncompleteReadError,
+    ) as err:
+        LOG.info(f"Starting shutdown due to: {err.__class__.__name__}")
+        await copy_writer.cleanup()
+        await sock.close(status="Success")
 
-            total_time = time.clock() - init_time
-            LOG.info("Total Lines Processed : %s", str(lines_read))
-            LOG.info("Total seconds running : %.2f", total_time)
-            LOG.info(f"Total db write time: {copy_writer.db_event_time}")
-            LOG.info(
-                "Pct Event Write Time: %.2f", copy_writer.db_event_time / total_time
-            )
+        total_time = time.clock() - init_time
+        LOG.info("Total Lines Processed: %s", str(lines_read))
+        LOG.info("Total seconds running: %.2f", total_time)
+        LOG.info("Total db write time: : %.2f", copy_writer.db_event_time)
+        LOG.info(
+            "Pct Event Write Time: %.2f", copy_writer.db_event_time / total_time
+        )
+        LOG.info("Pct Line Proc Time: %.2f", line_proc_time / total_time)
+        LOG.info("Total Line Proc Secs: %.2f", line_proc_time)
+        LOG.info("Total Post Proc Secs: %.2f", post_proc_time)
+        LOG.info("Lines Proc Per Sec: %.2f", lines_read / line_proc_time)
+        LOG.info("Total Lines/second: %.4f", lines_read / total_time)
+        total = {}
+        for obj in sock.obj_store.values():
+            if obj.should_have_parent and not obj.parent:
+                try:
+                    total[obj.Type] += 1
+                except KeyError:
+                    total[obj.Type] = 1
+        for key, value in total.items():
+            LOG.info(f"Total events without parent but should {key}: {value}")
+        await check_results()
+        LOG.info("Exiting tacview-client!")
+        return
 
-            LOG.info("Pct Line Proc Time: %.2f", line_proc_time / total_time)
-            LOG.info("Total Line Proc Secs: %.2f", line_proc_time)
-            LOG.info("Lines Proc/Sec: %.2f", lines_read / line_proc_time)
-            LOG.info("Total Lines/second: %.4f", lines_read / total_time)
-            total = {}
-            for obj in sock.obj_store.values():
-                if obj.should_have_parent and not obj.parent:
-                    try:
-                        total[obj.Type] += 1
-                    except KeyError:
-                        total[obj.Type] = 1
-            for key, value in total.items():
-                LOG.info(f"Total events without parent but should {key}: {value}")
-            await check_results()
-            LOG.info("Exiting tacview-client!")
-            return
+    except asyncpg.UniqueViolationError as err:
+        LOG.error(
+            "The file you are trying to process is already in the database! "
+            "To re-process it, delete all associated rows."
+        )
+        await sock.close(status="Error")
+        raise err
 
-        except asyncpg.UniqueViolationError as err:
-            LOG.error(
-                "The file you are trying to process is already in the database! "
-                "To re-process it, delete all associated rows."
-            )
-            await sock.close(status="Error")
-            raise err
+    except Exception as err:
+        await sock.close(status="Error")
 
-        except Exception as err:
-            await sock.close(status="Error")
-
-            LOG.error(
-                "Unhandled Exception!" "Writing remaining updates to db and exiting!"
-            )
-            LOG.error(err)
-            raise err
+        LOG.error(
+            "Unhandled Exception!" "Writing remaining updates to db and exiting!"
+        )
+        LOG.error(err)
+        raise err
 
 
 async def check_results():
@@ -412,9 +426,9 @@ async def check_results():
     )
 
     LOG.info(
-        "Results:\nobjects: {} \nparents: {} \nimpacts: {}"
-        "\nmax_updates: {} \ntotal updates: {}"
-        "\ntotal events: {} \ntotal alive: {}".format(*list(result))
+        "Results:\n\tobjects: {} \n\tparents: {} \n\timpacts: {}"
+        "\n\tmax_updates: {} \n\ttotal updates: {}"
+        "\n\ttotal events: {} \n\ttotal alive: {}".format(*list(result))
     )
     await con.close()
 

@@ -8,12 +8,12 @@ from uuid import uuid1
 import struct
 from typing import List
 
+import asyncpg
+
 from tacview_client.config import get_logger
 
 
 LOG = get_logger()
-# global ASYNC_CON
-# ASYNC_CON = None
 
 
 class BinCopyWriter:
@@ -26,21 +26,8 @@ class BinCopyWriter:
     copy_header = struct.pack(">11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
     copy_trailer = struct.pack(">h", -1)
 
-    # """
-    # WITH src AS (
-    #     UPDATE serial_rate
-    #     SET rate = 22.53, serial_key = '0002'
-    #     WHERE serial_key = '002' AND id = '01'
-    #     RETURNING *
-    #     )
-    # UPDATE serial_table dst
-    # SET serial_key = src.serial_key
-    # FROM src
-    # -- WHERE dst.id = src.id AND dst.serial_key  = '002'
-    # WHERE dst.id = '01' AND dst.serial_key  = '002';
-    # """
 
-    def __init__(self, dsn: str, batch_size: int = 10000, session_id=None, ASYNC_CON=None, ref=None):
+    def __init__(self, dsn: str, batch_size: int = 10000, session_id=None, ref=None):
         self.dsn = dsn
         self.batch_size = batch_size
         self.build_fmt_string()
@@ -48,9 +35,19 @@ class BinCopyWriter:
         self.insert_count = 0
         self.session_id = session_id
         self.tbl_uuid = str(uuid1()).replace("-", "_")
-        self.ASYNC_CON = ASYNC_CON
         self.impacts = []
         self.ref = ref
+        self.con = None
+        self.flush_stmt = None
+
+    async def setup(self):
+        self.con = await asyncpg.connect(self.dsn)
+        sql = """
+            INSERT into impact
+                (session_id, killer, target, weapon, time_offset, impact_dist)
+                VALUES($1, $2, $3, $4, $5, $6)
+        """
+        self.flush_stmt = await self.con.prepare(sql)
 
     def make_query(self):
         self.cmd = f"""
@@ -99,11 +96,17 @@ class BinCopyWriter:
             DROP TABLE "{self.tbl_uuid}";
         """
 
-    async def flush_impacts(self):
-        LOG.info(f"Flushing {len(self.impacts)} impacts...")
-        for impact in self.impacts:
-            await insert_impact(impact, self.ref.time_offset, self.ASYNC_CON)
-
+    def add_impact(self, impact):
+        self.impacts.append(
+            (
+                impact.session_id,
+                impact.parent,
+                impact.impacted,
+                impact.id,
+                self.ref.time_offset,
+                impact.impacted_dist,
+            )
+        )
 
     def build_fmt_string(self):
         {
@@ -166,45 +169,52 @@ class BinCopyWriter:
         """Shut down and ensure all data is written."""
         LOG.info("Shutting down copywriter....")
         self.min_insert_size = -1  # ensure everything gets flushed
-        await self.insert_data(force=True)
+        await self.insert_data_maybe(force=True)
         self.db_event_time = sum(self.event_times)
 
-    async def insert_data(self, force=False) -> None:
-        if not force and self.batch_size > self.insert_count:
+    async def insert_data_maybe(self, force: bool = False):
+        if self.batch_size > self.insert_count and not force:
             LOG.debug("Not enough data for insert....")
             return
+
         t1 = datetime.now()
-        LOG.info(f"Inserting {self.insert_count} records...")
+        LOG.info(f"Inserting {self.insert_count} events and flushing {len(self.impacts)} impacts...")
         self.make_query()
         self.insert.write(self.copy_trailer)
         self.insert.seek(0)
-        async with self.ASYNC_CON.acquire() as con:
-            await con._copy_in(self.cmd, self.insert, 100)
-        self.insert.close()
-        self.create_byte_buffer()
 
-        await self.flush_impacts()
+        copy_future = self.con._copy_in(self.cmd, self.insert, 100)
+        if len(self.impacts) > 0:
+            for impact in self.impacts:
+                await self.flush_stmt.fetchval(*impact)
+            # impact_future = self.flush_impacts(con)
+        await copy_future
+        self.insert.close()
+
+        self.create_byte_buffer()
+        self.impacts = []
         self.event_times.append((datetime.now() - t1).total_seconds())
 
 
-async def insert_impact(rec, impact_time, ASYNC_CON):
-    sql = """INSERT into impact (session_id, killer, target,
-                    weapon, time_offset, impact_dist)
-                VALUES($1, $2, $3, $4, $5, $6)
-    """
-    vals = (
-        rec.session_id,
-        rec.parent,
-        rec.impacted,
-        rec.id,
-        impact_time,
-        rec.impacted_dist,
-    )
-    async with ASYNC_CON.acquire() as con:
-        await con.execute(sql, *vals)
+
+async def prep_single_insert_stmt(con):
+    """Create the prepared statement for single record inserts."""
+    sql = """INSERT into object (
+            tac_id, session_id, name, color, country, grp, pilot, type,
+            alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
+            pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
+            impacted_dist, parent, parent_dist, updates, can_be_parent
+        )
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
+           $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
+
+        RETURNING id
+        """
+    stmt = await con.prepare(sql)
+    return stmt
 
 
-async def create_single(obj, ASYNC_CON):
+async def create_single(obj, stmt):
     """Insert a single newly create record to database."""
     vals = (
         obj.tac_id,
@@ -237,17 +247,17 @@ async def create_single(obj, ASYNC_CON):
         obj.can_be_parent,
     )
 
-    sql = """INSERT into object (
-            tac_id, session_id, name, color, country, grp, pilot, type,
-            alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
-            pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
-            impacted_dist, parent, parent_dist, updates, can_be_parent
-        )
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-           $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
+    # sql = """INSERT into object (
+    #         tac_id, session_id, name, color, country, grp, pilot, type,
+    #         alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
+    #         pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
+    #         impacted_dist, parent, parent_dist, updates, can_be_parent
+    #     )
+    #     VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
+    #        $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
 
-        RETURNING id
-        """
-    async with ASYNC_CON.acquire() as con:
-        obj.id = await con.fetchval(sql, *vals)
+    #     RETURNING id
+    #     """
+
+    obj.id = await stmt.fetchval(*vals)
     obj.written = True

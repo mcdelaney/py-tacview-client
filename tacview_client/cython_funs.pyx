@@ -13,27 +13,6 @@ from tacview_client.config import DB_URL
 # ctypedef np.int_t DTYPE_t
 from cython.parallel import prange
 
-cdef tuple COORD_KEYS = (
-    "lon",
-    "lat",
-    "alt",
-    "roll",
-    "pitch",
-    "yaw",
-    "u_coord",
-    "v_coord",
-    "heading",
-)
-cdef int COORD_KEY_LEN = 9
-
-cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
-cdef int COORD_KEY_SHORT_LEN = 5
-
-cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
-cdef int COORD_KEYS_MED_LEN = 5
-
-cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
-cdef int COORD_KEYS_X_SHORT_LEN = 3
 
 cdef tuple NON_PARENTED_TYPES = (
     "Decoy",
@@ -50,9 +29,10 @@ cdef class ObjectRec:
     """Dataclass for objects."""
     cdef public object impacted, parent, Color, Coalition, Name, Country, grp, Pilot, Type
     cdef public int id, tac_id, session_id, updates
-    cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist, velocity_kts, secs_since_last_seen
+    cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist
+    cdef public double secs_since_last_seen, velocity_kts
     cdef public bint alive, written, can_be_parent, should_have_parent, is_air, is_ground, is_weapon
-    cdef public list cart_coords
+    cdef public tuple cart_coords
 
     def __init__(
         self,
@@ -92,9 +72,9 @@ cdef class ObjectRec:
         self.velocity_kts = 0.0
         self.can_be_parent = False
         self.should_have_parent = False
-        self.secs_since_last_seen = 0
+        self.secs_since_last_seen = 0.0
         self.written = False
-        self.cart_coords = []
+        self.cart_coords = ()
         self.is_weapon = False
         self.is_ground = False
         self.is_air = False
@@ -113,22 +93,25 @@ cdef ObjectRec set_obj_class(ObjectRec rec):
     return rec
 
 
-cpdef list get_cartesian_coord(double lat, double lon, double h):
+cpdef tuple get_cartesian_coord(double lat, double lon, double h):
     """Convert coords from geodesic to cartesian."""
     cdef double a = 6378137.0
     cdef double rf = 298.257223563
 
     cdef double lat_rad = lat * M_PI/180
     cdef double lon_rad = lon * M_PI/180
-    cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin(lat_rad)) ** 2))
-    cdef double X = (N + h) * cos(lat_rad) * cos(lon_rad)
-    cdef double Y = (N + h) * cos(lat_rad) * sin(lon_rad)
-    cdef double Z = ((1 - 1 / rf) ** 2 * N + h) * sin(lat_rad)
-    return [X, Y, Z]
+    cdef double sin_lat_rad = sin(lat_rad)
+    cdef double cos_lat_rad = cos(lat_rad)
+    cdef double N = sqrt(a / (1 - (1 - (1 - 1 / rf) ** 2) * (sin_lat_rad) ** 2))
+    cdef double X = (N + h) * cos_lat_rad * cos(lon_rad)
+    cdef double Y = (N + h) * cos_lat_rad * sin(lon_rad)
+    cdef double Z = ((1 - 1 / rf) ** 2 * N + h) * sin_lat_rad
+    return (X, Y, Z)
 
 
-cpdef double compute_dist(list p_1, list p_2):
+cpdef double compute_dist(tuple p_1, tuple p_2):
     """Compute cartesian distance between points."""
+    # return np.sqrt(np.sum(np.square(p_2 - p_1), axis=0))
     cdef double result = sqrt(
         (p_2[0] - p_1[0]) ** 2 + (p_2[1] - p_1[1]) ** 2 + (p_2[2] - p_1[2]) ** 2
     )
@@ -137,15 +120,12 @@ cpdef double compute_dist(list p_1, list p_2):
 
 cpdef np.ndarray compute_dist_arr(np.ndarray p_1, np.ndarray p_2):
     """Compute cartesian distance between points."""
-    return np.sqrt(
-        (p_2[:,0] - p_1[0]) ** 2 + (p_2[:,1] - p_1[1]) ** 2 + (p_2[:,2] - p_1[2]) ** 2
-    )
-
+    return np.sqrt(np.sum(np.square(p_2[:,] - p_1), axis = 1))
 
 
 cpdef ObjectRec compute_velocity(ObjectRec rec):
     """Calculate velocity given the distance from the last point."""
-    cdef list new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
+    cdef tuple new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
     cdef double velocity_kts
     cdef double t_dist
     if (
@@ -170,6 +150,32 @@ cpdef list proc_line(str line, double ref_lat,
     # cdef str line = raw_line.decode("UTF-8")
     cdef ObjectRec rec
     cdef bint found_impact = False
+    cdef tuple COORD_KEYS = (
+        "lon",
+        "lat",
+        "alt",
+        "roll",
+        "pitch",
+        "yaw",
+        "u_coord",
+        "v_coord",
+        "heading",
+    )
+    cdef int COORD_KEY_LEN = 9
+
+    cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
+    cdef int COORD_KEY_SHORT_LEN = 5
+
+    cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
+    cdef int COORD_KEYS_MED_LEN = 5
+
+    cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
+    cdef int COORD_KEYS_X_SHORT_LEN = 3
+
+
+    if line[0:1] == "0":
+        return [None, found_impact]
+
     if line[0:1] == "-":
         # We know the Object is now dead
         rec = obj_store[int(line[1:], 16)]
