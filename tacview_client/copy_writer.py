@@ -30,7 +30,6 @@ class BinCopyWriter:
     def __init__(self, dsn: str, batch_size: int = 10000, session_id=None, ref=None):
         self.dsn = dsn
         self.batch_size = batch_size
-        self.build_fmt_string()
         self.create_byte_buffer()
         self.insert_count = 0
         self.session_id = session_id
@@ -39,6 +38,7 @@ class BinCopyWriter:
         self.ref = ref
         self.con = None
         self.flush_stmt = None
+        self.single_insert_stmt = None
 
     async def setup(self):
         self.con = await asyncpg.connect(self.dsn)
@@ -48,6 +48,7 @@ class BinCopyWriter:
                 VALUES($1, $2, $3, $4, $5, $6)
         """
         self.flush_stmt = await self.con.prepare(sql)
+        self.single_insert_stmt = await self.prep_single_insert_stmt()
 
     def make_query(self):
         self.cmd = f"""
@@ -107,14 +108,6 @@ class BinCopyWriter:
                 impact.impacted_dist,
             )
         )
-
-    def build_fmt_string(self):
-        {
-            "INTEGER": ("ii", 4),
-            "FLOAT": ("id", 8),
-            "DOUBLE": ("id", 8),
-            "NUMERIC": ("id", 8),
-        }
 
     def create_byte_buffer(self) -> None:
         self.insert = BytesIO()
@@ -195,69 +188,54 @@ class BinCopyWriter:
         self.impacts = []
         self.event_times.append((datetime.now() - t1).total_seconds())
 
+    async def prep_single_insert_stmt(self):
+        """Create the prepared statement for single record inserts."""
+        sql = """INSERT into object (
+                tac_id, session_id, name, color, country, grp, pilot, type,
+                alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
+                pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
+                impacted_dist, parent, parent_dist, updates, can_be_parent
+            )
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
+            $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
 
+            RETURNING id
+            """
+        stmt = await self.con.prepare(sql)
+        return stmt
 
-async def prep_single_insert_stmt(con):
-    """Create the prepared statement for single record inserts."""
-    sql = """INSERT into object (
-            tac_id, session_id, name, color, country, grp, pilot, type,
-            alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
-            pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
-            impacted_dist, parent, parent_dist, updates, can_be_parent
+    async def create_single(self, obj):
+        """Insert a single newly create record to database."""
+        vals = (
+            obj.tac_id,
+            obj.session_id,
+            obj.Name,
+            obj.Color,
+            obj.Country,
+            obj.grp,
+            obj.Pilot,
+            obj.Type,
+            obj.alive,
+            obj.Coalition,
+            obj.first_seen,
+            obj.last_seen,
+            obj.lat,
+            obj.lon,
+            obj.alt,
+            obj.roll,
+            obj.pitch,
+            obj.yaw,
+            obj.u_coord,
+            obj.v_coord,
+            obj.heading,
+            obj.velocity_kts,
+            obj.impacted,
+            obj.impacted_dist,
+            obj.parent,
+            obj.parent_dist,
+            obj.updates,
+            obj.can_be_parent,
         )
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-           $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
 
-        RETURNING id
-        """
-    stmt = await con.prepare(sql)
-    return stmt
-
-
-async def create_single(obj, stmt):
-    """Insert a single newly create record to database."""
-    vals = (
-        obj.tac_id,
-        obj.session_id,
-        obj.Name,
-        obj.Color,
-        obj.Country,
-        obj.grp,
-        obj.Pilot,
-        obj.Type,
-        obj.alive,
-        obj.Coalition,
-        obj.first_seen,
-        obj.last_seen,
-        obj.lat,
-        obj.lon,
-        obj.alt,
-        obj.roll,
-        obj.pitch,
-        obj.yaw,
-        obj.u_coord,
-        obj.v_coord,
-        obj.heading,
-        obj.velocity_kts,
-        obj.impacted,
-        obj.impacted_dist,
-        obj.parent,
-        obj.parent_dist,
-        obj.updates,
-        obj.can_be_parent,
-    )
-
-    # sql = """INSERT into object (
-    #         tac_id, session_id, name, color, country, grp, pilot, type,
-    #         alive, coalition, first_seen, last_seen, lat, lon, alt, roll,
-    #         pitch, yaw, u_coord, v_coord, heading, velocity_kts, impacted,
-    #         impacted_dist, parent, parent_dist, updates, can_be_parent
-    #     )
-    #     VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-    #        $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
-
-    #     RETURNING id
-    #     """
-
-    obj.id = await stmt.fetchval(*vals)
-    obj.written = True
+        obj.id = await self.single_insert_stmt.fetchval(*vals)
+        obj.written = True

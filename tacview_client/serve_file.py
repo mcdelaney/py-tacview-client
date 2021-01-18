@@ -47,7 +47,7 @@ async def handle_req(
             writer.write(line)
         await writer.drain()
         writer.close()
-        LOG.info("All lines sent...closing...")
+        LOG.debug("All lines sent...closing...")
     except (ConnectionResetError, BrokenPipeError, CancelledError):
         LOG.info("Cancel received..shutting down...")
         writer.close()

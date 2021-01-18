@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from math import sqrt, cos, sin, radians
 from typing import Optional, Any, Dict, Sequence
 import time
-import pytz
+
 from multiprocessing import Process
 from pathlib import Path
 from functools import partial
@@ -28,8 +28,7 @@ except (ModuleNotFoundError, NotImplementedError):
     pass
 
 from tacview_client.config import DB_URL, get_logger
-from tacview_client.copy_writer import BinCopyWriter, prep_single_insert_stmt
-from tacview_client.copy_writer import create_single
+from tacview_client.copy_writer import BinCopyWriter
 from tacview_client import cython_funs as cyfuns
 
 from tacview_client import serve_file
@@ -56,134 +55,50 @@ class EndOfFileException(Exception):
 class MaxIterationsException(Exception):
     """Throw this exception when max iters < total_iters."""
 
-class Ref:
-    """Hold and extract Reference values used as offsets."""
-
-    __slots__ = (
-        "session_id",
-        "lat",
-        "lon",
-        "title",
-        "datasource",
-        "author",
-        "file_version",
-        "start_time",
-        "time_offset",
-        "all_refs",
-        "time_since_last",
-        "obj_store",
-        "client_version",
-        "status",
-    )
-
-    def __init__(self):
-        self.session_id: Optional[int] = None
-        self.lat: Optional[float] = None
-        self.lon: Optional[float] = None
-        self.title: Optional[str] = None
-        self.datasource: Optional[str]
-        self.file_version: Optional[float] = None
-        self.author: Optional[str]
-        self.start_time: Optional[datetime] = None
-        self.time_offset: float = 0.0
-        self.all_refs: bool = False
-        self.time_since_last: float = 0.0
-        self.obj_store: Dict[int, cyfuns.ObjectRec] = {}
-        self.client_version: str = __version__
-        self.status: str = "In Progress"
-
-    def update_time(self, offset):
-        """Update the refence time attribute with a new offset."""
-        offset = float(offset[1:])
-        self.time_since_last = offset - self.time_offset
-        self.time_offset = offset
-
-    async def parse_ref_obj(self, line, overwrite=False):
-        """
-        Attempt to extract ReferenceLatitude, ReferenceLongitude or
-        ReferenceTime from a line object.
-        """
-        try:
-            val = line.split(",")[-1].split("=")
-
-            if val[0] == "ReferenceLatitude":
-                LOG.debug("Ref latitude found...")
-                self.lat = float(val[1])
-
-            elif val[0] == "ReferenceLongitude":
-                LOG.debug("Ref longitude found...")
-                self.lon = float(val[1])
-
-            elif val[0] == "DataSource":
-                LOG.debug("Ref datasource found...")
-                self.datasource = val[1]
-
-            elif val[0] == "Title":
-                LOG.debug("Ref Title found...")
-                self.title = val[1]
-
-            elif val[0] == "Author":
-                LOG.debug("Ref Author found...")
-                self.author = val[1]
-
-            elif val[0] == "FileVersion":
-                LOG.debug("Ref Author found...")
-                self.file_version = float(val[1])
-
-            elif val[0] == "RecordingTime":
-                LOG.debug("Ref time found...")
-                self.start_time = datetime.strptime(
-                    val[1], "%Y-%m-%dT%H:%M:%S.%fZ"
-                )
-                self.start_time = self.start_time.replace(microsecond=0)
-                self.start_time = self.start_time.replace(tzinfo=pytz.UTC)
-
-            self.all_refs = bool(self.lat and self.lon and self.start_time)
-            if self.all_refs and not self.session_id:
 
 
-                async with ASYNC_CON.acquire() as con:
-                    if overwrite:
-                        await con.execute(
-                            f"""DELETE FROM session
-                            WHERE start_time = '{self.start_time}'
-                            """)
+async def write_ref_values(ref, overwrite):
+    if ref.all_refs and not ref.session_id:
+        async with ASYNC_CON.acquire() as con:
+            if overwrite:
+                await con.execute(
+                    f"""DELETE FROM session
+                    WHERE start_time = '{ref.start_time}'
+                    """)
 
-                    LOG.info("All Refs found...writing session data to db...")
-                    sql = """INSERT into session (lat, lon, title,
-                                    datasource, author, file_version, start_time,
-                                    client_version, status)
-                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                            RETURNING session_id
+            LOG.info("All Refs found...writing session data to db...")
+            sql = """INSERT into session (lat, lon, title,
+                            datasource, author, file_version, start_time,
+                            client_version, status)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                    RETURNING session_id
+            """
+
+            ref.session_id = await con.fetchval(
+                sql,
+                ref.lat,
+                ref.lon,
+                ref.title,
+                ref.datasource,
+                ref.author,
+                ref.file_version,
+                ref.start_time,
+                ref.client_version,
+                ref.status,
+            )
+            LOG.info(f"Creating table partion for {ref.session_id}...")
+            async with ASYNC_CON.acquire() as con:
+                await con.execute(
+                    f"""CREATE TABLE event_{ref.session_id} PARTITION OF event
+                        FOR VALUES IN ({ref.session_id});
                     """
+                )
 
-                    self.session_id = await con.fetchval(
-                        sql,
-                        self.lat,
-                        self.lon,
-                        self.title,
-                        self.datasource,
-                        self.author,
-                        self.file_version,
-                        self.start_time,
-                        self.client_version,
-                        self.status,
-                    )
-                    LOG.info(f"Creating table partion for {self.session_id}...")
-                    async with ASYNC_CON.acquire() as con:
-                        await con.execute(
-                            f"""CREATE TABLE event_{self.session_id} PARTITION OF event
-                                FOR VALUES IN ({self.session_id});
-                            """
-                        )
-
-                LOG.info("Session session data saved...")
-        except IndexError:
-            pass
+        LOG.info("Session session data saved...")
+        return ref
 
 
-
-class AsyncStreamReader(Ref):
+class AsyncStreamReader:
     reader: asyncio.StreamReader
     writer: asyncio.StreamWriter
     """Read from Tacview socket."""
@@ -240,7 +155,7 @@ class AsyncStreamReader(Ref):
             raise EndOfFileException
         return data[:-1].decode("UTF-8")
 
-    async def close(self, status):
+    async def close(self, status, session_id):
         """Close the socket connection and reset ref object."""
         self.writer.close()
         await self.writer.wait_closed()
@@ -251,7 +166,7 @@ class AsyncStreamReader(Ref):
                 WHERE session_id = $2
             """,
             status,
-            self.session_id,
+            session_id,
         )
         LOG.info(f"Session marked as {status}!")
 
@@ -280,7 +195,8 @@ async def consumer(
         client_username,
         client_password,
     )
-    copy_writer = BinCopyWriter(dsn, batch_size, ref=sock)
+    ref = cyfuns.Ref()
+    copy_writer = BinCopyWriter(dsn, batch_size, ref=ref)
     await copy_writer.setup()
     await sock.open_connection()
     init_time = time.clock()
@@ -289,8 +205,6 @@ async def consumer(
     print_log = float(0.0)
     line_proc_time = float(0.0)
     post_proc_time = float(0.0)
-    con = await asyncpg.connect(DB_URL)
-    single_stmt = await prep_single_insert_stmt(con)
 
     try:
         while True:
@@ -299,11 +213,12 @@ async def consumer(
             LOG.debug(obj)
             lines_read += 1
 
-            if not sock.all_refs:
-                await sock.parse_ref_obj(obj, overwrite)
+            if not ref.all_refs:
+                ref.parse_ref_obj(obj)
                 continue
 
-            copy_writer.session_id = sock.session_id
+            ref = await write_ref_values(ref, overwrite)
+            copy_writer.session_id = ref.session_id
             break  # All refs have been collected. Break to main loop.
 
         while True:
@@ -313,7 +228,7 @@ async def consumer(
             lines_read += 1
 
             if obj[0:1] == "#":
-                sock.update_time(obj)
+                ref.update_time(obj)
                 await copy_writer.insert_data_maybe()
 
                 runtime = time.clock() - init_time
@@ -337,12 +252,13 @@ async def consumer(
                         )
                         print_log = runtime
             else:
-                t1 = time.clock()
-                obj, found_impact = cyfuns.proc_line(obj, sock.lat, sock.lon, sock.obj_store,
-                                                     sock.time_offset, sock.session_id)
-                line_proc_time += time.clock() - t1
+                t1 = time.time()
+                obj, found_impact = cyfuns.proc_line(obj, ref)
+                line_proc_time += time.time() - t1
+                if not obj:
+                    continue
 
-                t2 = time.clock()
+                # t2 = time.clock()
                 if not obj:
                     continue
 
@@ -350,13 +266,14 @@ async def consumer(
                     copy_writer.add_impact(obj)
 
                 if not obj.written:
-                    await create_single(obj, single_stmt)
+                    await copy_writer.create_single(obj)
 
                 copy_writer.add_data(obj)
-                post_proc_time += time.clock() - t2
+                # post_proc_time += time.clock() - t2
+
 
             if max_iters and max_iters < lines_read:
-                copy_writer.session_id = sock.session_id
+                copy_writer.session_id = ref.session_id
                 await copy_writer.insert_data_maybe()
                 LOG.info(f"Max iters reached: {max_iters}...returning...")
                 raise MaxIterationsException
@@ -368,7 +285,7 @@ async def consumer(
     ) as err:
         LOG.info(f"Starting shutdown due to: {err.__class__.__name__}")
         await copy_writer.cleanup()
-        await sock.close(status="Success")
+        await sock.close(status="Success",session_id= ref.session_id)
 
         total_time = time.clock() - init_time
         LOG.info("Total Lines Processed: %s", str(lines_read))
@@ -383,7 +300,7 @@ async def consumer(
         LOG.info("Lines Proc Per Sec: %.2f", lines_read / line_proc_time)
         LOG.info("Total Lines/second: %.4f", lines_read / total_time)
         total = {}
-        for obj in sock.obj_store.values():
+        for obj in ref.obj_store.values():
             if obj.should_have_parent and not obj.parent:
                 try:
                     total[obj.Type] += 1
@@ -404,7 +321,7 @@ async def consumer(
         raise err
 
     except Exception as err:
-        await sock.close(status="Error")
+        await sock.close(status="Error", session_id=ref.session_id)
 
         LOG.error(
             "Unhandled Exception!" "Writing remaining updates to db and exiting!"

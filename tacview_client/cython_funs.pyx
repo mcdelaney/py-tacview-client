@@ -1,14 +1,18 @@
+# distutils: language = c++
 from libc.math cimport sqrt
 from libc.math cimport cos
 from libc.math cimport sin
 from libc.math cimport M_PI
-from libcpp cimport bool
+from libcpp.vector cimport vector
 
+import pytz
 import numpy as np
+from datetime import datetime
 cimport numpy as np
 np.import_array()
 
 from tacview_client.config import DB_URL
+from tacview_client import __version__
 
 # ctypedef np.int_t DTYPE_t
 from cython.parallel import prange
@@ -24,15 +28,100 @@ cdef tuple NON_PARENTED_TYPES = (
 
 cdef tuple PARENTED_TYPES = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
 
+cdef dict obj_store = {}
+
+
+
+cdef class Ref:
+    """Hold and extract Reference values used as offsets."""
+    cdef public int session_id
+    cdef public float file_version, time_offset, time_since_last
+    cdef public double lat, lon
+    cdef public str title, datasource, author, client_version, status
+    cdef public object start_time
+    cdef public bint all_refs
+    cdef public dict obj_store
+
+    def __init__(self):
+        self.session_id = 0
+        self.lat = 0.0
+        self.lon = 0.0
+        self.title = None
+        self.datasource
+        self.file_version = 0.0
+        self.author = None
+        self.start_time = None
+        self.time_offset = 0.0
+        self.all_refs = False
+        self.time_since_last = 0.0
+        self.obj_store = {}
+        self.client_version = __version__
+        self.status = "In Progress"
+
+    def update_time(self, str line):
+        """Update the refence time attribute with a new offset."""
+        cdef float offset
+        offset = float(line[1:])
+        self.time_since_last = offset - self.time_offset
+        self.time_offset = offset
+
+    def parse_ref_obj(self, str line):
+        """
+        Attempt to extract ReferenceLatitude, ReferenceLongitude or
+        ReferenceTime from a line object.
+        """
+        cdef list val
+        try:
+            val = line.split(",")[-1].split("=")
+
+            if val[0] == "ReferenceLatitude":
+                # LOG.debug("Ref latitude found...")
+                self.lat = float(val[1])
+
+            elif val[0] == "ReferenceLongitude":
+                # LOG.debug("Ref longitude found...")
+                self.lon = float(val[1])
+
+            elif val[0] == "DataSource":
+                # LOG.debug("Ref datasource found...")
+                self.datasource = val[1]
+
+            elif val[0] == "Title":
+                # LOG.debug("Ref Title found...")
+                self.title = val[1]
+
+            elif val[0] == "Author":
+                # LOG.debug("Ref Author found...")
+                self.author = val[1]
+
+            elif val[0] == "FileVersion":
+                # LOG.debug("Ref Author found...")
+                self.file_version = float(val[1])
+
+            elif val[0] == "RecordingTime":
+                # LOG.debug("Ref time found...")
+                self.start_time = datetime.strptime(
+                    val[1], "%Y-%m-%dT%H:%M:%S.%fZ"
+                )
+                self.start_time = self.start_time.replace(microsecond=0)
+                self.start_time = self.start_time.replace(tzinfo=pytz.UTC)
+
+            self.all_refs = bool(self.lat and self.lon and self.start_time)
+        except IndexError:
+            pass
+
+
 
 cdef class ObjectRec:
     """Dataclass for objects."""
-    cdef public object impacted, parent, Color, Coalition, Name, Country, grp, Pilot, Type
+    cdef public object parent, impacted
+    cdef public str Color, Coalition, Name, Country, Pilot, Type
     cdef public int id, tac_id, session_id, updates
     cdef public float first_seen, last_seen, lat, lon, alt, roll, pitch, yaw, u_coord, v_coord, heading, impacted_dist, parent_dist
     cdef public double secs_since_last_seen, velocity_kts
     cdef public bint alive, written, can_be_parent, should_have_parent, is_air, is_ground, is_weapon
     cdef public tuple cart_coords
+    cdef public str grp
 
     def __init__(
         self,
@@ -78,6 +167,10 @@ cdef class ObjectRec:
         self.is_weapon = False
         self.is_ground = False
         self.is_air = False
+
+    property Group:
+        def __set__(self, str value):
+            self.grp = value
 
 
 cdef ObjectRec set_obj_class(ObjectRec rec):
@@ -128,13 +221,14 @@ cpdef ObjectRec compute_velocity(ObjectRec rec):
     cdef tuple new_cart_coords = get_cartesian_coord(rec.lat, rec.lon, rec.alt)
     cdef double velocity_kts
     cdef double t_dist
+    cdef double cnst = 1.94384
     if (
         rec.cart_coords
         and rec.secs_since_last_seen
         and rec.secs_since_last_seen > 0.0
     ):
         t_dist = compute_dist(new_cart_coords, rec.cart_coords)
-        velocity_kts = (t_dist / rec.secs_since_last_seen) / 1.94384
+        velocity_kts = (t_dist / rec.secs_since_last_seen) / cnst
 
     rec.cart_coords = new_cart_coords
     if velocity_kts:
@@ -143,35 +237,11 @@ cpdef ObjectRec compute_velocity(ObjectRec rec):
     return rec
 
 
-cpdef list proc_line(str line, double ref_lat,
-                     double ref_lon, dict obj_store,
-                     float time_offset, int session_id):
+cpdef list proc_line(str line, Ref ref):
     """Parse a textline from tacview into an ObjectRec."""
     # cdef str line = raw_line.decode("UTF-8")
     cdef ObjectRec rec
     cdef bint found_impact = False
-    cdef tuple COORD_KEYS = (
-        "lon",
-        "lat",
-        "alt",
-        "roll",
-        "pitch",
-        "yaw",
-        "u_coord",
-        "v_coord",
-        "heading",
-    )
-    cdef int COORD_KEY_LEN = 9
-
-    cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
-    cdef int COORD_KEY_SHORT_LEN = 5
-
-    cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
-    cdef int COORD_KEYS_MED_LEN = 5
-
-    cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
-    cdef int COORD_KEYS_X_SHORT_LEN = 3
-
 
     if line[0:1] == "0":
         return [None, found_impact]
@@ -189,85 +259,84 @@ cpdef list proc_line(str line, double ref_lat,
             found_impact = True
         return [rec, found_impact]
 
-    comma = line.find(",")
-    rec_id = int(line[0:comma], 16)
-    try:
+    cdef tuple COORD_KEYS = (
+        "lon",
+        "lat",
+        "alt",
+        "roll",
+        "pitch",
+        "yaw",
+        "u_coord",
+        "v_coord",
+        "heading",
+    )
+    cdef int COORD_KEY_LEN = 9
+
+    cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
+    cdef int COORD_KEY_SHORT_LEN = 5
+
+    cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
+    cdef int COORD_KEYS_MED_LEN = 6
+
+    cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
+    cdef int COORD_KEYS_X_SHORT_LEN = 3
+
+    cdef list line_split = line.split(',')
+    cdef int rec_id = int(line_split[0], 16)
+    cdef list coords, split_eq
+    cdef str coord, key, val, c_key
+    cdef int npipe, i
+
+    # try:
+    if rec_id in obj_store.keys():
         # Make update to existing record
         rec = obj_store[rec_id]
-        rec.secs_since_last_seen = time_offset - rec.last_seen
-        rec.last_seen = time_offset
+        rec.secs_since_last_seen = ref.time_offset - rec.last_seen
+        rec.last_seen = ref.time_offset
         rec.updates += 1
 
-    except KeyError:
+    # except KeyError:
+    else:
         # Object not yet seen...create new record...
         rec = ObjectRec(
             tac_id=rec_id,
-            session_id=session_id,
-            first_seen=time_offset,
-            last_seen=time_offset,
+            session_id=ref.session_id,
+            first_seen=ref.time_offset,
+            last_seen=ref.time_offset,
         )
         obj_store[rec_id] = rec
 
-    cdef bint bytes_remaining = True
+    coords = line_split[1][2:].split("|")
+    npipe = len(coords)
+    if npipe == COORD_KEY_LEN:
+        C_KEYS = COORD_KEYS
+    elif npipe == COORD_KEYS_MED_LEN:
+        C_KEYS = COORD_KEYS_MED
+    elif npipe == COORD_KEY_SHORT_LEN:
+        C_KEYS = COORD_KEYS_SHORT
+    elif npipe == COORD_KEYS_X_SHORT_LEN:
+        C_KEYS = COORD_KEYS_X_SHORT
+    else:
+        pass
 
-    cdef tuple C_KEYS
-    cdef int C_LEN, commma, npipe, pipe_pos_start, pipes_remaining, pipe_pos_end, i, eq_loc
-    cdef str key, val
-
-    while bytes_remaining:
-        last_comma = comma + 1
-        comma = line.find(",", last_comma)
-        if comma == -1:
-            bytes_remaining = False
-            chunk = line[last_comma:]
+    for i, c_key in enumerate(C_KEYS):
+        coord = coords[i]
+        if not coord:
+            continue
+        if i == 0:
+            rec.lon = float(coord) + ref.lon
+        elif i == 1:
+            rec.lat = float(coord) + ref.lat
+        elif i == 1:
+            rec.alt = float(coord)
         else:
-            chunk = line[last_comma:comma]
-        eq_loc = chunk.find("=")
-        key = chunk[0:eq_loc]
-        val = chunk[eq_loc + 1 :]
+            setattr(rec, c_key, float(coord))
 
-        if key == "T":
-            i = 0
-            pipe_pos_end = -1
-            pipes_remaining = True
-            npipe = val.count("|")
-            if npipe == 8:
-                C_KEYS = COORD_KEYS
-                C_LEN = COORD_KEY_LEN
-            elif npipe == 5:
-                C_KEYS = COORD_KEYS_MED
-                C_LEN = COORD_KEYS_MED_LEN
-            elif npipe == 4:
-                C_KEYS = COORD_KEYS_SHORT
-                C_LEN = COORD_KEY_SHORT_LEN
-            elif npipe == 2:
-                C_KEYS = COORD_KEYS_X_SHORT
-                C_LEN = COORD_KEYS_X_SHORT_LEN
-            else:
-                raise ValueError(
-                    "COORD COUNT EITHER 8, 5, OR 4!",
-                    npipe, line)
-
-            while i < C_LEN and pipes_remaining:
-                pipe_pos_start = pipe_pos_end + 1
-                pipe_pos_end = val.find("|", pipe_pos_start)
-                if pipe_pos_end == -1:
-                    pipes_remaining = False
-                    coord = val[pipe_pos_start:]
-                else:
-                    coord = val[pipe_pos_start:pipe_pos_end]
-
-                if coord != "":
-                    c_key = C_KEYS[i]
-                    if c_key == "lat":
-                        rec.lat = float(coord) + ref_lat
-                    elif c_key == "lon":
-                        rec.lon = float(coord) + ref_lon
-                    else:
-                        setattr(rec, c_key, float(coord))
-                i += 1
-        else:
-            setattr(rec, key  if key != "Group" else "grp", val)
+    for el in line_split[2:]:
+        split_eq = el.split('=')
+        key = split_eq[0]
+        val = split_eq[1]
+        setattr(rec, key, val)
 
     if rec.updates == 1:
         rec = set_obj_class(rec)
@@ -304,55 +373,30 @@ cdef bint should_have_parent(str rec_type):
 
 cpdef list determine_contact(ObjectRec rec, dict obj_store, int contact_type):
     """Determine the parent of missiles, rockets, and bombs."""
-    cdef tuple acpt_colors
+    # cdef tuple acpt_colors
     # 1 = impacted
     # 2 = parent
     if contact_type == 1:
         if not (rec.should_have_parent and rec.is_weapon == True):
             return
-        acpt_colors = tuple(["Red"]) if rec.Color == "Blue" else tuple(["Blue"])
+        # acpt_colors = tuple(["Red"]) if rec.Color == "Blue" else tuple(["Blue"])
 
-    else:
-        if rec.Color == "Violet":
-            acpt_colors = ("Red", "Blue", "Grey")
-        else:
-            acpt_colors = tuple([rec.Color])
-
+    # else:
+    #     if rec.Color == "Violet":
+    #         acpt_colors = ("Red", "Blue", "Grey")
+    #     else:
+    #         acpt_colors = tuple([rec.Color])
+    cdef vector[int] possible_ids
     cdef list closest = []
     cdef list possible_coords = []
-    cdef list possible_ids = []
-    n_checked = 0
+    # cdef list possible_ids = []
     offset_time = rec.last_seen - 2.5
 
-    # cdef list obj_store_vals = list(obj_store.values())
-    # cdef int loops  = len(obj_store_vals)
-    # for i in prange(loops, nogil=True):
-    #     near = obj_store_vals[i]
-    #     if (near.can_be_parent == False
-    #         or near.tac_id == rec.tac_id
-    #         or near.Color not in acpt_colors
-    #         or (contact_type == 1 and near.is_air == False)
-    #         or (offset_time > near.last_seen and (
-    #             not near.is_ground == True
-    #             and near.alive == True)
-    #         )):
-    #         continue
-
-    #     prox = compute_dist(rec.cart_coords, near.cart_coords)
-    #     closest.append([near.id, prox])
-    #     # if not closest or (prox < closest[1]):
-    #     #     closest = [near.id, prox]
-
-    # if closest[1] > 200 and contact_type == 2:
-    #     return
-
-    # return closest
-
+    cdef ObjectRec near
     for near in obj_store.values():
-
         if (near.can_be_parent == False
             or near.tac_id == rec.tac_id
-            or near.Color not in acpt_colors
+            # or near.Color not in acpt_colors
             or (contact_type == 1 and near.is_air == False)
             or (offset_time > near.last_seen and (
                 not near.is_ground == True
@@ -360,9 +404,9 @@ cpdef list determine_contact(ObjectRec rec, dict obj_store, int contact_type):
         )):
             continue
 
-        n_checked += 1
+        # n_checked += 1
         possible_coords.append(near.cart_coords)
-        possible_ids.append(near.id)
+        possible_ids.push_back(near.id)
 
         # prox = compute_dist(rec.cart_coords, near.cart_coords)
         # if not closest or (prox < closest[1]):
