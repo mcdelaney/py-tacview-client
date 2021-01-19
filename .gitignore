@@ -1,5 +1,7 @@
 .vscode/settings.json
 scratch.py
+log
+scratch.ipynb
 data/**/**
 tests/data/**/**
 **.pyc
