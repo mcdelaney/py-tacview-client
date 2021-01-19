@@ -1,9 +1,7 @@
-
 from libc.math cimport sqrt
 from libc.math cimport cos
 from libc.math cimport sin
 from libc.math cimport M_PI
-# from libcpp.vector cimport vector
 
 import pytz
 import numpy as np
@@ -17,6 +15,27 @@ from tacview_client import __version__
 # ctypedef np.int_t DTYPE_t
 from cython.parallel import prange
 
+cdef tuple COORD_KEYS = (
+    "lon",
+    "lat",
+    "alt",
+    "roll",
+    "pitch",
+    "yaw",
+    "u_coord",
+    "v_coord",
+    "heading",
+)
+cdef int COORD_KEY_LEN = 9
+
+cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
+cdef int COORD_KEY_SHORT_LEN = 5
+
+cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
+cdef int COORD_KEYS_MED_LEN = 6
+
+cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
+cdef int COORD_KEYS_X_SHORT_LEN = 3
 
 cdef tuple NON_PARENTED_TYPES = (
     "Decoy",
@@ -29,7 +48,6 @@ cdef tuple NON_PARENTED_TYPES = (
 cdef tuple PARENTED_TYPES = ("Weapon", "Projectile", "Decoy", "Container", "Flare")
 
 cdef dict obj_store = {}
-
 
 
 cdef class Ref:
@@ -236,30 +254,6 @@ cpdef ObjectRec compute_velocity(ObjectRec rec):
 
     return rec
 
-cdef tuple COORD_KEYS = (
-        "lon",
-        "lat",
-        "alt",
-        "roll",
-        "pitch",
-        "yaw",
-        "u_coord",
-        "v_coord",
-        "heading",
-    )
-
-cdef int COORD_KEY_LEN = 9
-
-cdef tuple COORD_KEYS_SHORT = ("lon", "lat", "alt", "u_coord", "v_coord")
-cdef int COORD_KEY_SHORT_LEN = 5
-
-cdef tuple COORD_KEYS_MED = ("lon", "lat", "alt", "roll", "pitch", "yaw")
-cdef int COORD_KEYS_MED_LEN = 6
-
-cdef tuple COORD_KEYS_X_SHORT = ("lon", "lat", "alt")
-cdef int COORD_KEYS_X_SHORT_LEN = 3
-
-
 cpdef list proc_line(str line, Ref ref):
     """Parse a textline from tacview into an ObjectRec."""
     # cdef str line = raw_line.decode("UTF-8")
@@ -281,8 +275,6 @@ cpdef list proc_line(str line, Ref ref):
             rec.impacted_dist = impacted[1]
             found_impact = True
         return [rec, found_impact]
-
-
 
     cdef list line_split = line.split(',')
     cdef int rec_id = int(line_split[0], 16)
@@ -322,7 +314,8 @@ cpdef list proc_line(str line, Ref ref):
     else:
         pass
 
-    for i, c_key in enumerate(C_KEYS):
+    cdef int key_len = len(C_KEYS)
+    for i in range(key_len):
         coord = coords[i]
         if not coord:
             continue
@@ -333,6 +326,7 @@ cpdef list proc_line(str line, Ref ref):
         elif i == 1:
             rec.alt = float(coord)
         else:
+            c_key = C_KEYS[i]
             setattr(rec, c_key, float(coord))
 
     for el in line_split[2:]:
@@ -343,8 +337,8 @@ cpdef list proc_line(str line, Ref ref):
 
     if rec.updates == 1:
         rec = set_obj_class(rec)
-        rec.can_be_parent = can_be_parent(rec.Type)
-        rec.should_have_parent = should_have_parent(rec.Type)
+        can_be_parent(rec)
+        should_have_parent(rec)
 
     rec = compute_velocity(rec)
 
@@ -357,21 +351,28 @@ cpdef list proc_line(str line, Ref ref):
     return [rec, found_impact]
 
 
-cdef bint can_be_parent(str rec_type):
+cdef can_be_parent(ObjectRec rec):
     """Check if an object is a member of types that could be parents."""
+    if rec.is_weapon:
+        return
+    cdef str t
     for t in NON_PARENTED_TYPES:
-        if t in rec_type:
-            return False
+        if t in rec.Type:
+            return
     else:
-        return True
+        rec.can_be_parent = True
 
 
-cdef bint should_have_parent(str rec_type):
+cdef should_have_parent(ObjectRec rec):
     """Check if an object should have a parent record."""
+    if rec.is_weapon:
+        rec.should_have_parent = True
+        return
+    cdef str t
     for t in PARENTED_TYPES:
-        if t in rec_type:
-            return True
-    return False
+        if t in rec.Type:
+            rec.should_have_parent = True
+            return
 
 
 cpdef list determine_contact(ObjectRec rec, dict obj_store, int contact_type):
