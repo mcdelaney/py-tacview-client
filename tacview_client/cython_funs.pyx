@@ -8,12 +8,10 @@ import numpy as np
 from datetime import datetime
 cimport numpy as np
 np.import_array()
-
-from tacview_client.config import DB_URL
+from tacview_client.config import get_logger
 from tacview_client import __version__
 
-# ctypedef np.int_t DTYPE_t
-from cython.parallel import prange
+LOG = get_logger()
 
 cdef tuple COORD_KEYS = (
     "lon",
@@ -312,7 +310,9 @@ cpdef list proc_line(str line, Ref ref):
     elif npipe == COORD_KEYS_X_SHORT_LEN:
         C_KEYS = COORD_KEYS_X_SHORT
     else:
-        pass
+        LOG.error(f"Key match error for line: {line}")
+        return
+        # pass
 
     cdef int key_len = len(C_KEYS)
     for i in range(key_len):
