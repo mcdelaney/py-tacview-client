@@ -3,12 +3,11 @@ import sqlalchemy as sa
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import create_async_engine
-from tacview_client.config import DB_URL, get_logger
+from tacview_client.config import get_db_dsn, get_logger
 
 LOG = get_logger()
+DB_URL = get_db_dsn()
 DB_URL = DB_URL.replace("postgresql://", "postgresql+asyncpg://")
-LOG.info(DB_URL)
-
 engine = create_async_engine(DB_URL)
 metadata = sa.MetaData(engine)
 Base = declarative_base(engine, metadata)

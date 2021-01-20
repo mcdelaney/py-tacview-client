@@ -4,16 +4,13 @@ Tacview client methods.
 Results are parsed into usable format, and then written to a postgres database.
 """
 import asyncio
-import logging
-from datetime import datetime
-from dataclasses import dataclass
-from math import sqrt, cos, sin, radians
-from typing import Optional, Any, Dict, Sequence
-import time
-
-from multiprocessing import Process
-from pathlib import Path
+from asyncio.streams import IncompleteReadError
 from functools import partial
+import logging
+from multiprocessing import Process
+import time
+from typing import Optional
+from pathlib import Path
 import sys
 import os
 
@@ -27,13 +24,15 @@ try:
 except (ModuleNotFoundError, NotImplementedError):
     pass
 
-from tacview_client.config import DB_URL, get_logger
+from tacview_client.config import get_db_dsn, get_logger
 from tacview_client.copy_writer import BinCopyWriter
 from tacview_client import cython_funs as cyfuns
 
 from tacview_client import serve_file
 from tacview_client import __version__
 
+
+DB_URL = get_db_dsn()
 
 STREAM_PROTOCOL = "XtraLib.Stream.0"
 TACVIEW_PROTOCOL = "Tacview.RealTimeTelemetry.0"
@@ -150,7 +149,12 @@ class AsyncStreamReader:
 
     async def read_stream(self):
         """Read lines from socket stream."""
-        data = await self.reader.readuntil(b"\n")
+        # if self.reader.at_eof():
+        #     raise EndOfFileException
+        try:
+            data = await self.reader.readuntil(b"\n")
+        except IncompleteReadError:
+            raise EndOfFileException
         if not data:
             raise EndOfFileException
         return data[:-1].decode("UTF-8")
@@ -199,13 +203,11 @@ async def consumer(
     copy_writer = BinCopyWriter(dsn, batch_size, ref=ref)
     await copy_writer.setup()
     await sock.open_connection()
-    init_time = time.clock()
+    init_time = time.time()
     lines_read = 0
     last_log = float(0.0)
     print_log = float(0.0)
     line_proc_time = float(0.0)
-    post_proc_time = float(0.0)
-
     try:
         while True:
             # Loop until ref header is read.
@@ -231,7 +233,7 @@ async def consumer(
                 ref.update_time(obj)
                 await copy_writer.insert_data_maybe()
 
-                runtime = time.clock() - init_time
+                runtime = time.time() - init_time
                 log_check = runtime - last_log
                 print_check = runtime - print_log
                 if log_check > 0.05:
@@ -258,7 +260,6 @@ async def consumer(
                 if not obj:
                     continue
 
-                # t2 = time.clock()
                 if not obj:
                     continue
 
@@ -269,8 +270,6 @@ async def consumer(
                     await copy_writer.create_single(obj)
 
                 copy_writer.add_data(obj)
-                # post_proc_time += time.clock() - t2
-
 
             if max_iters and max_iters < lines_read:
                 copy_writer.session_id = ref.session_id
@@ -281,13 +280,13 @@ async def consumer(
     except (
         MaxIterationsException,
         EndOfFileException,
-        asyncio.IncompleteReadError,
     ) as err:
         LOG.info(f"Starting shutdown due to: {err.__class__.__name__}")
+        LOG.info(f"Don't worry, this is expected behavior...")
         await copy_writer.cleanup()
         await sock.close(status="Success",session_id= ref.session_id)
 
-        total_time = time.clock() - init_time
+        total_time = time.time() - init_time
         LOG.info("Total Lines Processed: %s", str(lines_read))
         LOG.info("Total seconds running: %.2f", total_time)
         LOG.info("Total db write time: : %.2f", copy_writer.db_event_time)
@@ -296,7 +295,6 @@ async def consumer(
         )
         LOG.info("Pct Line Proc Time: %.2f", line_proc_time / total_time)
         LOG.info("Total Line Proc Secs: %.2f", line_proc_time)
-        LOG.info("Total Post Proc Secs: %.2f", post_proc_time)
         LOG.info("Lines Proc Per Sec: %.2f", lines_read / line_proc_time)
         LOG.info("Total Lines/second: %.4f", lines_read / total_time)
         total = {}

@@ -42,11 +42,12 @@ async def handle_req(
             line = fp_.readline()
             if not line:
                 LOG.info("No remaining line...sending term line and breaking...")
-                writer.write(b"-exit")
                 break
             writer.write(line)
-        await writer.drain()
+            await writer.drain()
+        writer.write_eof()
         writer.close()
+        await writer.wait_closed()
         LOG.debug("All lines sent...closing...")
     except (ConnectionResetError, BrokenPipeError, CancelledError):
         LOG.info("Cancel received..shutting down...")
