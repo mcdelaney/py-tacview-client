@@ -4,7 +4,7 @@ Tacview client methods.
 Results are parsed into usable format, and then written to a postgres database.
 """
 import asyncio
-from asyncio.streams import IncompleteReadError
+from asyncio import IncompleteReadError
 from functools import partial
 import logging
 from multiprocessing import Process
@@ -149,8 +149,6 @@ class AsyncStreamReader:
 
     async def read_stream(self):
         """Read lines from socket stream."""
-        # if self.reader.at_eof():
-        #     raise EndOfFileException
         try:
             data = await self.reader.readuntil(b"\n")
         except IncompleteReadError:
