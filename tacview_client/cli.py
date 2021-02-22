@@ -39,8 +39,12 @@ def process_file(
 ):
     """Interface to the tacview batch/single file processer."""
     LOG.info(f"Starting client...")
+    if not filename:
+        LOG.error("Filename must be specified!")
+        sys.exit(1)
+
     if filename and not filename.exists():
-        LOG.info(f"File does not exist at location: {filename}")
+        LOG.erro(f"File does not exist at location: {filename}")
         sys.exit(1)
 
     try:
