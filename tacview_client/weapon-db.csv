@@ -1,0 +1,238 @@
+﻿Air-to-Air,ADM-141A,Unguided
+Air-to-Air,AIM-120B,Active Radar
+Air-to-Air,AIM-120C,Active Radar
+Air-to-Air,AIM_120C,Active Radar
+Air-to-Air,SD-10,Active Radar
+Air-to-Air,AIM-54A Mk47,Semi-Active Radar
+Air-to-Air,AIM-54A Mk60,Semi-Active Radar
+Air-to-Air,AIM_54A_Mk60,Semi-Active Radar
+Air-to-Air,AIM-54A-MK,Semi-Active Radar
+Air-to-Air,AIM-54C-MK,Semi-Active Radar
+Air-to-Air,AIM_54C_Mk47,Semi-Active Radar
+Air-to-Air,AIM-54C Mk47,Semi-Active Radar
+Air-to-Air,AIM-7E,Semi-Active Radar
+Air-to-Air,AIM-7F,Semi-Active Radar
+Air-to-Air,AIM-7M,Semi-Active Radar
+Air-to-Air,AIM-7MH,Semi-Active Radar
+Air-to-Air,AIM-9B,Infrared
+Air-to-Air,AIM-9C,Semi-Active Radar
+Air-to-Air,AIM-9D,Infrared
+Air-to-Air,AIM-9E,Infrared
+Air-to-Air,PL-5EII,Infrared
+Air-to-Air,Matra_S530D,Active Radar
+Air-to-Air,AIM-9G,Infrared
+Air-to-Air,AIM-9H,Infrared
+Air-to-Air,MMagicII,Infrared
+Air-to-Air,AIM-9J,Infrared
+Air-to-Air,AIM-9L,Infrared
+Air-to-Air,AIM-9M,Infrared
+Air-to-Air,AIM-9P,Infrared
+Air-to-Air,AIM-9P5,Infrared
+Air-to-Air,AIM-9X,Infrared
+Air-to-Air,CAP-9M,Infrared
+Air-to-Air,Mistral,Infrared
+Air-to-Air,R.550,Infrared
+Air-to-Air,R-13M,Infrared
+Air-to-Air,R-60 (AA-8 Aphid),Infrared
+Air-to-Air,R-13M1,Infrared
+Air-to-Air,R-27ER,Semi-Active Radar
+Air-to-Air,R-27ER (AA-10C),Semi-Active Radar
+Air-to-Air,R-27ET,Infrared
+Air-to-Air,R-27R,Semi-Active Radar
+Air-to-Air,R-27T,Infrared
+Air-to-Air,R-3R,Semi-Active Radar
+Air-to-Air,R-3S,Infrared
+Air-to-Air,R4M,Unguided
+Air-to-Air,R-55,Infrared
+Air-to-Air,R-60,Infrared
+Air-to-Air,R-60M,Infrared
+Air-to-Air,R-73,Infrared
+Air-to-Air,R-77,Active Radar
+Air-to-Air,R-73 (AA-11 Archer),Infrared
+Air-to-Air,RS-2US,Semi-Active Radar
+Air-to-Air,Super 530D,Semi-Active Radar
+Air-to-Air,Werfer-Granate 21,Unguided
+Gun,2A42,Autocannon
+Gun,DEFA 554,Revolver cannon
+Gun,GAU-8/A,Autocannon
+Gun,GIAT 621,Autocannon
+Gun,GSh-23,Autocannon
+Gun,GSh-2-23,Autocannon
+Gun,GSh-2-30,Autocannon
+Gun,GSh-30,Autocannon
+Gun,GSh-23L,Autocannon
+Gun,GSh-30-2,Autocannon
+Gun,GSh-301,Autocannon
+Gun,GSh-302,Autocannon
+Gun,Hispano Mk.II,Autocannon
+Gun,M1919 Browning,Machine gun
+Gun,M134 Minigun,Machine gun
+Gun,M2 Browning,Machine gun
+Gun,GAU_12,Autocannon
+Gun,M-39,Autocannon
+Gun,M3 Browning,Machine gun
+Gun,M39A2,Revolver cannon
+Gun,M-61A1,Autocannon
+Gun,M-61,Autocannon
+Gun,M-61A2,Autocannon
+Gun,MG 131,Machine gun
+Gun,MG 151,Autocannon
+Gun,MK 108,Autocannon
+Gun,N-37,Autocannon
+Gun,NR-23,Autocannon
+Gun,NR-30,Autocannon
+Gun,Oerlikon KCA,Revolver cannon
+Gun,ShKAS,Machine gun
+Air-to-Surface,9A4172 Vikhr,Laser
+Air-to-Surface,AGM-122 Sidearm,Anti-Radiation
+Air-to-Surface,AGM-65A,TV guided
+Air-to-Surface,AGM-65B,TV guided
+Air-to-Surface,AGM-65D,Infrared
+Air-to-Surface,AGM-65E,Laser
+Air-to-Surface,AGM-65F,Infrared
+Air-to-Surface,AGM-154A,GPS
+Air-to-Surface,AGM-154C,GPS
+Air-to-Surface,AGM-65G,Infrared
+Air-to-Surface,AGM-65H,TV guided
+Air-to-Surface,AGM-65K,TV guided
+Air-to-Surface,AGM-88C,Anti-Radiation
+Air-to-Surface,BK90 mix,Active Radar
+Air-to-Surface,BK90 MJ1,Active Radar
+Air-to-Surface,BK90 MJ2,Active Radar
+Air-to-Surface,CATM-65K,Training
+Air-to-Surface,HOT3,Wire guided
+Air-to-Surface,HVAR,Unguided
+Air-to-Surface,Kh-25 ML,Laser
+Air-to-Surface,Kh-25 MPU,Anti-Radiation
+Air-to-Surface,Kh-29 L,Laser
+Air-to-Surface,Kh-29 T,TV guided
+Air-to-Surface,Kh-58 U,Anti-Radiation
+Air-to-Surface,Kh-58U,Anti-Radiation
+Air-to-Surface,Kh-25MPU,Anti-Radiation
+Air-to-Surface,Kh-66 Grom,Radar Beam Riding
+Air-to-Surface,M-151,Unguided
+Air-to-Surface,M-156,Unguided
+Air-to-Surface,C-802AK,GPS
+Air-to-Surface,LS-6-500,GPS
+Air-to-Surface,M-257,Unguided
+Air-to-Surface,M-258,Unguided
+Air-to-Surface,Kh-29T,Laser
+Air-to-Surface,S-25L,Unguided
+Air-to-Surface,AGM-84D,Active Radar
+Air-to-Surface,C-701IR,TV guided
+Air-to-Surface,CM-802AKG,GPS
+Air-to-Surface,GB-6-HE,GPS
+Air-to-Surface,M-274,Training
+Air-to-Surface,M70B AP,Unguided
+Air-to-Surface,M70B HE,Unguided
+Air-to-Surface,Matra 155,Unguided
+Air-to-Surface,MK-1,Training
+Air-to-Surface,BRM-1 90MM,Laser
+Air-to-Surface,Kh-25ML,Anti-Radiation
+Air-to-Surface,Mk-20 Rockeye,Unguided
+Air-to-Surface,Unguided Rocket 90mm,Unguided
+Air-to-Surface,MK-151,Unguided
+Air-to-Surface,MK-156,Unguided
+Air-to-Surface,MK-5,Unguided
+Air-to-Surface,MK-61,Training
+Air-to-Surface,MK-71 Zuni,Unguided
+Air-to-Surface,Zuni-127,Unguided
+Air-to-Surface,LD-10,Anti-Radiation
+Air-to-Surface,HYDRA-70 M151,Unguided
+Air-to-Surface,Rb 04E,Active Radar
+Air-to-Surface,Rb 05A,Semi-Active Radar
+Air-to-Surface,Rb 15F,Active Radar
+Air-to-Surface,RS-82,Unguided
+Air-to-Surface,S-13 OF,Unguided
+Air-to-Surface,S-24 A,Unguided
+Air-to-Surface,S-24 B,Unguided
+Air-to-Surface,S-25 L,Laser
+Air-to-Surface,S-25 OFM,Unguided
+Air-to-Surface,S-5 KO,Unguided
+Air-to-Surface,S-5KO,Unguided
+Air-to-Surface,S-5 M,Unguided
+Air-to-Surface,S-8 KOM,Unguided
+Air-to-Surface,S-8KOM,Unguided
+Air-to-Surface,S-8 OFP2,Unguided
+Air-to-Surface,S-8OFP2,Unguided
+Air-to-Surface,S-8 OM,Unguided
+Air-to-Surface,S-8 TsM,Unguided
+Air-to-Surface,Sea Eagle,Active Radar
+Air-to-Surface,SNEB 68 EAP,Unguided
+Air-to-Surface,TGM-65D,Training
+Air-to-Surface,TGM-65G,Training
+Air-to-Surface,TGM-65H,Training
+Air-to-Surface,WTU1B,Training
+Bomb,AN-M64,Unguided
+Bomb,BDU-33,Training
+Bomb,BDU-50HD,Training
+Bomb,BDU-50LD,Training
+Bomb,BDU-50LGB,Training
+Bomb,BDU-56,Training
+Bomb,BetAB-500,Unguided
+Bomb,BetAB-500ShP,Unguided
+Bomb,BIN-200,Unguided
+Bomb,BL755,Unguided
+Bomb,BLG-66,Unguided
+Bomb,BLU-110,Unguided
+Bomb,BLU-111,Unguided
+Bomb,BLU-117,Unguided
+Bomb,BR-250,Unguided
+Bomb,Mk-84,Unguided
+Bomb,Mk-83,Unguided
+Bomb,BR-500,Unguided
+Bomb,CBU-100,Unguided
+Bomb,CBU-103,GPS
+Bomb,CBU-105,GPS
+Bomb,CBU-52B,Unguided
+Bomb,CBU-87,Unguided
+Bomb,CBU-97,Unguided
+Bomb,CBU-99,Unguided
+Bomb,FAB-100,Unguided
+Bomb,FAB-100M,Unguided
+Bomb,Mk-82,Unguided
+Bomb,FAB-250,Unguided
+Bomb,FAB-250 M54 TU,Unguided
+Bomb,FAB-250 M62,Unguided
+Bomb,FAB-50,Unguided
+Bomb,FAB-500,Unguided
+Bomb,FAB-500 M62,Unguided
+Bomb,GB-GP-250LBS-MK4,Unguided
+Bomb,GB-GP-500LBS-MK4,Unguided
+Bomb,GB-6-SFW,GPS
+Bomb,GBU-10,Laser
+Bomb,GBU-12,Laser
+Bomb,GBU-16,Laser
+Bomb,GBU-24,Laser
+Bomb,GBU-31,GPS
+Bomb,GBU-32,GPS
+Bomb,GBU-38,GPS
+Bomb,KMGU-2 AO-2.5RT,Unguided
+Bomb,KMGU-2 PTAB-2.5KO,Unguided
+Bomb,LUU-2,Unguided
+Bomb,Lysbomb,Unguided
+Bomb,M/71,Unguided
+Bomb,M/71 Chute,Unguided
+Bomb,M117,Unguided
+Bomb,Mk 20 Rockeye,Unguided
+Bomb,Mk 81,Unguided
+Bomb,Mk 82,Unguided
+Bomb,Mk 82 AIR,Unguided
+Bomb,Mk 82 Snake Eye,Unguided
+Bomb,Mk 82Y,Unguided
+Bomb,Mk 83,Unguided
+Bomb,Mk 84,Unguided
+Bomb,OFAB-100 Jupiter,Unguided
+Bomb,P-50T,Unguided
+Bomb,RBK-250 PTAB-2.5M,Unguided
+Bomb,RBK-250-275 AO-1SCh,Unguided
+Bomb,RBK-500-255 PTAB-10-5,Unguided
+Bomb,RBK-500 PTAB-1M,Unguided
+Bomb,RBK-500U OAB-2.5RT,Unguided
+Bomb,RN-24,Unguided
+Bomb,RN-28,Unguided
+Bomb,SAB-100,Unguided
+Bomb,SC 1000,Unguided
+Bomb,SC 250,Unguided
+Bomb,SC 50,Unguided
+Bomb,SC 500,Unguided

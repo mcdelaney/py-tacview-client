@@ -1,4 +1,8 @@
 """Model definitions for database."""
+import csv
+import os
+
+import asyncpg
 import sqlalchemy as sa
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
@@ -199,8 +203,32 @@ async def create_tables():
             """
             )
         )
-    LOG.info("All tables and views created successfully!")
 
+    this_dir, _ = os.path.split(__file__)
+    weapon_db_path = os.path.join(this_dir, "weapon-db.csv")
+    LOG.info('Syncing weapon file with DB...')
+    weapons = []
+    with open(weapon_db_path, mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file, fieldnames=['category', 'name', 'type'])
+        for row in csv_reader:
+            weapons.append(row)
+
+    async with engine.begin() as con:
+        current_weapons = await con.execute(text("""SELECT * FROM weapon_types"""))
+        current_weapons = [weapon['name'] for weapon in current_weapons]
+
+    for record in weapons:
+        if record['name'] in current_weapons:
+            continue
+        try:
+            async with engine.begin() as con:
+                await con.execute(text(
+                    f"""INSERT into weapon_types VALUES('{record["name"]}', '{record["category"]}', '{record["type"]}')"""))
+            LOG.info(f"New weapon added to database: {record['name']}...")
+        except asyncpg.exceptions.UniqueViolationError:
+            pass
+
+    LOG.info("All tables and views created successfully!")
 
 async def drop_tables():
     """Drop all existing tables."""
