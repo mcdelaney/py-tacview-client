@@ -6,7 +6,7 @@ import sys
 
 import typer  # type: ignore
 
-from tacview_client import client, serve_file, db, config
+from tacview_client import client, serve_file, config
 
 LOG = config.get_logger()
 app = typer.Typer()
@@ -133,8 +133,8 @@ def process_stream(
 @app.command("dropdb")
 def dropdb():
     """Drop database tables."""
+    from tacview_client import db
     LOG.info("Dropping tables from specified database...")
-
     async def drop_and_recreate():
         await db.drop_tables()
         await db.create_tables()
@@ -146,5 +146,6 @@ def dropdb():
 @app.command("createdb")
 def createdb():
     """Create database tables."""
+    from tacview_client import db
     LOG.info("Creating tables in specified database...")
     asyncio.run(db.create_tables())
