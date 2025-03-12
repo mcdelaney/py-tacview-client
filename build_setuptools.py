@@ -1,8 +1,4 @@
 import os
-
-from distutils.core import Extension
-
-
 try:
     from Cython.Build import cythonize
 except ImportError:
@@ -10,8 +6,8 @@ except ImportError:
         pass
 
 else:
-    from setuptools import Extension
-    from setuptools.dist import Distribution
+    # from setuptools import Extension
+    # from setuptools.dist import Distribution
     from distutils.command.build_ext import build_ext
     import numpy
     def build(setup_kwargs):

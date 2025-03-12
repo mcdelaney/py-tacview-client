@@ -34,7 +34,7 @@ setup_kwargs = {
     'entry_points': entry_points,
     'python_requires': '>=3.9',
 }
-from build import *
-build(setup_kwargs)
+from build_setuptools import *
+build_setuptools(setup_kwargs)
 
 setup(**setup_kwargs)
