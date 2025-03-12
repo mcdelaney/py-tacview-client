@@ -5,7 +5,7 @@ description = ""
 authors = ["mcdelaney <mcdelaney@gmail.com>"]
 repository = "https://github.com/mcdelaney/py-tacview-client.git"
 
-build = 'build.py'
+build = 'build_setuptools.py'
 
 [tool.poetry.dependencies]
 python = ">=3.9"
